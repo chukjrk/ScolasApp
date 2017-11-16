@@ -13,14 +13,14 @@ import {
 import _ from 'lodash'
 import moment from 'moment'
 import { firebaseRef } from '../../services/Firebase'
-import Icon from 'react-native-vector-icons/Ionicons'
-import { getColor } from '../config'
+// import Icon from 'react-native-vector-icons/Ionicons'
+// import { getColor } from '../config'
 import { observer,inject } from 'mobx-react/native'
 import { Actions } from 'react-native-mobx'
 
 
 @inject("appStore") @observer
-export default class MyChats extends Component {
+export default class ChatHome extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -33,7 +33,7 @@ export default class MyChats extends Component {
     this.data = []
     const uid = this.props.appStore.user.uid
     console.log("--------- MY CHATS --------- " + this.props.appStore.chat_count)
-    firebaseApp.database().ref('user_chats/'+ uid +'/posts').orderByChild('updatedAt').limitToLast(this.state.counter).on('child_added',
+    firebaseRef.database().ref('user_chats/'+ uid +'/posts').orderByChild('updatedAt').limitToLast(this.state.counter).on('child_added',
     (snapshot) => {
       console.log("--------->>>> CHAT ADDED ");
       this.data.unshift( {id: snapshot.key, postData: snapshot.val()} )
@@ -42,7 +42,7 @@ export default class MyChats extends Component {
       })
       this.setState({ isLoading: false })
     })
-    firebaseApp.database().ref('user_chats/'+ uid +'/posts').orderByChild('updatedAt').limitToLast(this.state.counter).on('child_changed',
+    firebaseRef.database().ref('user_chats/'+ uid +'/posts').orderByChild('updatedAt').limitToLast(this.state.counter).on('child_changed',
     (snapshot) => {
       console.log("--------->>>> CHAT CHANGED TWICE, very weird bug !!!");
       this.data = this.data.filter((x) => x.id !== snapshot.key)
@@ -94,7 +94,6 @@ export default class MyChats extends Component {
             <View style={styles.RightContainer}><Text style={styles.author}>{ data.postData.username }</Text></View>
           </View>
           <View style={styles.RawContainer}>
-            <View style={styles.LeftContainer}><Text style={styles.info}>{ data.postData.price }</Text></View>
             { newMessageCounter }
           </View>
           <View style={styles.RawContainer}>
@@ -109,8 +108,8 @@ export default class MyChats extends Component {
     if (!this.state.isEmpty && !this.state.isFinished && !this.state.isLoading) {
       this.setState({ counter: this.state.counter + 10 })
       this.setState({ isLoading: true })
-      firebaseApp.database().ref('user_chats/'+ this.props.appStore.user.uid +'/posts').off()
-      firebaseApp.database().ref('user_chats/'+ this.props.appStore.user.uid +'/posts').orderByChild('updatedAt').limitToLast(this.state.counter+10).on('value',
+      firebaseRef.database().ref('user_chats/'+ this.props.appStore.user.uid +'/posts').off()
+      firebaseRef.database().ref('user_chats/'+ this.props.appStore.user.uid +'/posts').orderByChild('updatedAt').limitToLast(this.state.counter+10).on('value',
       (snapshot) => {
         console.log("---- USER CHATS RETRIEVED ----");
         if (_.toArray(snapshot.val()).length < this.state.counter) {
@@ -151,7 +150,7 @@ export default class MyChats extends Component {
   }
 
   componentWillUnmount() {
-    firebaseApp.database().ref('user_chats/'+ this.props.appStore.user.uid +'/posts').off()
+    firebaseRef.database().ref('user_chats/'+ this.props.appStore.user.uid +'/posts').off()
   }
 }
 

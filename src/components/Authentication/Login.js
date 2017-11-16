@@ -81,7 +81,7 @@ export default class Login extends Component {
 				<View style={styles.titleWrapper}>
 					<Image
 						// style={styles.}
-						source={require('../../assets/images/ScolasPic.png')}
+						source={require('../../assets/images/Scolaspic1.png')}
 						resizeMode="cover" 
 						/>
 				</View>
