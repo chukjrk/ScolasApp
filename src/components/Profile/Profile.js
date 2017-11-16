@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { View, ScrollView, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { RkText, RkButton, RkStyleSheet } from 'react-native-ui-kitten';
-import { Avatar, Icon } from 'react-native-elements'
-//import Registration from '../Authentication/RegistrationForm';
+import { Avatar, Icon, Header } from 'react-native-elements'
+import StickyHeaderFooterScrollView from 'react-native-sticky-header-footer-scroll-view'
+import { observer,inject } from 'mobx-react/native';
 
+@inject("appStore") @observer
 export default class Profile extends React.Component {
 
   // constructor(props) {
@@ -26,11 +28,19 @@ export default class Profile extends React.Component {
   }
 
   render() {
-    const name = `${this.username}`;
+    const name = this.props.appStore.username;
+    const points = this.props.appStore.user_point;
 
     return (
-      <ScrollView style={styles.root}>
+      <StickyHeaderFooterScrollView 
+        renderStickyHeader={() => (
+        <Header 
+        centerComponent={{ text: 'HOME', style: { color: '#fff', fontSize: 20 } }}
+        outerContainerStyles= {{ backgroundColor: '#01579B'}}
+        />
+      )}>
 
+        <ScrollView style={styles.root}>
         <View style={[styles.header, styles.bordered]}>
           <View style={styles.row}>
             <TouchableOpacity style={styles.buttons}>
@@ -45,7 +55,6 @@ export default class Profile extends React.Component {
               rounded
               xlarge 
               source={require('../../assets/images/faceO.png')} />
-            {/*<Imagez source={require('../../assets/images/faceO.png')} style={styles.loImage}/>*/}
             <View style={styles.buttons}>
               {/*<RkButton style={styles.button} rkType='icon circle'>*/}
                 <Icon 
@@ -66,8 +75,8 @@ export default class Profile extends React.Component {
             <RkText rkType='secondary1 hintColor'>Posts</RkText>
           </View>
           <View style={styles.section}>
-            <RkText rkType='header3' style={styles.space}>123</RkText>
-            <RkText rkType='secondary1 hintColor'>Followers</RkText>
+            <RkText rkType='header3' style={styles.space}>{points}</RkText>
+            <RkText rkType='secondary1 hintColor'>Points</RkText>
           </View>
           <View style={styles.section}>
             <RkText rkType='header3' style={styles.space}>890</RkText>
@@ -83,7 +92,8 @@ export default class Profile extends React.Component {
             <Text> Archives </Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+        </ScrollView>
+      </StickyHeaderFooterScrollView>
     );
   }
 }
@@ -91,6 +101,7 @@ export default class Profile extends React.Component {
 
 const styles = RkStyleSheet.create(theme => ({
   root: {
+    paddingTop: 30,
     backgroundColor: theme.colors.screen.base
   },
 
@@ -101,7 +112,6 @@ const styles = RkStyleSheet.create(theme => ({
 
   row: {
     flexDirection: 'row',
-
   },
 
   userInfo: {
@@ -153,6 +163,10 @@ const styles = RkStyleSheet.create(theme => ({
     height: 100,
     borderRadius: 150,
     width: 100
+  },
+
+  stickyheader: {
+    color: '#fff'
   }
 }));
 

@@ -5,9 +5,11 @@ import Login from '../components/Authentication/Login';
 import Register from '../components/Authentication/Register';
 import Profile from "../components/Profile/Profile";
 import CreateNew from "../components/Listings/CreateNew"
+// import ChatHome from "../components/Chat/ChatHome"
 import StoreView from "../components/Listings/StoreView"
 import Chat from '../components/Chat/Chat'
 import { observer,inject } from 'mobx-react/native';
+import { Icon } from 'react-native-elements'
 
 // added navigation to Chat using StackNavigator. Somehow using routeName
 // is not working
@@ -16,7 +18,7 @@ const ChildPage = StackNavigator({
 	Store: {
 		screen: StoreView,
 		navigationOptions: {
-			title : "ThirdPage"
+			header: null
 		}
 	},
 
@@ -52,20 +54,47 @@ export const SignedIn = TabNavigator({
 		screen: Profile,
 		navigationOptions: {
 			tabBarLabel: "Home",
+			tabBarIcon: ({ tintColor }) => (
+				<Icon 
+                  name='home'
+                  color={tintColor}/>
+            ),
 		}
 	},
 
 	Add: {
 		screen: CreateNew,
 		navigationOptions: {
-			tabBarLabel: "Add Book"
+			tabBarLabel: "Add Book",
+			tabBarIcon: ({ tintColor }) => (
+				<Icon 
+                  name='add'
+                  color={tintColor}/>
+            ),
 		}
 	},
+
+	// ChatHome: {
+	// 	screen: ChatHome,
+	// 	navigationOptions: {
+	// 		tabBarLabel: "Messages",
+	// 		tabBarIcon: ({ tintColor }) => (
+	// 			<Icon 
+ //                  name='chat bubble'
+ //                  color={tintColor}/>
+ //            ),
+	// 	}
+	// },
 
 	Store: {
 		screen: ChildPage,
 		navigationOptions: {
 			tabBarLabel: "Store",
+			tabBarIcon: ({ tintColor }) => (
+				<Icon 
+                  name='store'
+                  color={tintColor}/>
+            ),
 		}
 	},
 }, {
@@ -77,6 +106,7 @@ export const SignedIn = TabNavigator({
 	lazy: true,
 	tabBarOptions: {
 		activeTintColor: 'white',
+		showIcon: true,
 		style: {
 			backgroundColor: '#01579B'
 		},

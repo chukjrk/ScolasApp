@@ -21,7 +21,8 @@ import firebase from 'firebase';
 import { Actions } from 'react-native-router-flux';
 import { observer,inject } from 'mobx-react/native';
 import { navigationOptions } from 'react-navigation';
-//import StoreView from './StoreView'
+import StickyHeaderFooterScrollView from 'react-native-sticky-header-footer-scroll-view'
+import { Header, Button } from 'react-native-elements'
 
 
 const Blob = RNFetchBlob.polyfill.Blob
@@ -65,7 +66,6 @@ export default class CreateNew extends Component {
 			postStatus: null,
 			postText: '',
 			postTitle: '',
-			postPrice: '',
 			Author: '',
  			imagePath: null,
 			imageHeight: null,
@@ -102,12 +102,22 @@ export default class CreateNew extends Component {
        </View>
     return (
       <View style={styles.container}>
+      {/*<StickyHeaderFooterScrollView 
+        renderStickyHeader={() => (
+          <Header
+            centerComponent={{ text: 'NEW ITEM', style: { color: '#fff', fontSize: 20 } }}
+            outerContainerStyles= {{ backgroundColor: '#01579B'}}/>
+        )}>*/}
         <ScrollView showsVerticalScrollIndicator={false} ref='scrollContent'>
-          <RkText style={styles.title}>{'NEW ITEM'}</RkText>
+
+          <RkText style={styles.title}>{'PICTURE'}</RkText>
           { photo }
-          <TouchableOpacity style={styles.btnAdd} onPress={this._takePicture}>
-          	<Text>ADD</Text>
-          </TouchableOpacity>
+          <Button
+            small
+            icon={{name: 'add'}}
+            onPress={this._takePicture}
+            buttonStyle={{width: 180, borderRadius: 2, alignSelf: 'center' }}
+             />            
           <RkText style={styles.message}>{this.state.postStatus}</RkText>
           <View style={styles.titleContainer}>
             <TextInput
@@ -134,24 +144,9 @@ export default class CreateNew extends Component {
               this.refs.ThirdInput.focus();
             }} />
           </View>
-          <View style={styles.titleContainer}>
-            <TextInput
-            ref='ThirdInput'
-            maxLength={34}
-            style={styles.inputField}
-            value={this.state.postPrice}
-            onChangeText={(text) => this.setState({ postPrice: text })}
-            underlineColorAndroid='transparent'
-            placeholder='Price'
-            placeholderTextColor='rgba(0,0,0,.6)'
-            onSubmitEditing={(event) => {
-              this.refs.FourthInput.focus();
-            }}
-            />
-          </View>
           <View style={styles.inputContainer}>
             <TextInput
-            ref='FourthInput'
+            ref='ThirdInput'
             multiline={true}
             style={styles.inputField}
             underlineColorAndroid='transparent'
@@ -175,11 +170,16 @@ export default class CreateNew extends Component {
               this.refs.SecondInput.focus();
             }} />
           </View>*/}
-          <TouchableOpacity style={styles.btnAdd} onPress={this._handleNewPost}>
-            <Text>POST</Text>
-          </TouchableOpacity>
+          <Button
+            raised
+            icon={{name: 'send'}}
+            onPress={this._handleNewPost}
+            title= 'POST'
+            backgroundColor= '#397af8'
+            fontWeight= '800' />
         </ScrollView>
       </View>
+      // </StickyHeaderFooterScrollView>
     )
   }
 
@@ -272,8 +272,8 @@ export default class CreateNew extends Component {
             let updates = {}
             this.props.appStore.post_count = this.props.appStore.post_count + 1
             updates['/users/' + uid + '/post_count'] = this.props.appStore.post_count
-            //this.props.appStore.chat_count = this.props.appStore.chat_count + 1
-            //updates['/users/' + uid + '/chat_count'] = this.props.appStore.chat_count
+            this.props.appStore.chat_count = this.props.appStore.chat_count + 1
+            updates['/users/' + uid + '/chat_count'] = this.props.appStore.chat_count
             updates['/posts/' + newPostKey] = postData
             updates['/user_posts/' + uid + '/posts/' + newPostKey] = postData
             updates['/user_chats/' + uid + '/posts/' + newPostKey] = postData
@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     paddingBottom: 10,
     fontSize: 15,
-    fontWeight: '800',
+    // fontWeight: '800',
     textAlign: 'center',
   },
   message: {
@@ -387,5 +387,5 @@ const styles = StyleSheet.create({
     width: 140,
     marginBottom: 10,
     backgroundColor: '#fff',
-  },
+  }
 })

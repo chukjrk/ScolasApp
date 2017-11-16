@@ -16,12 +16,11 @@ import {
   Alert,
 } from 'react-native'
 import { StackNavigator, } from 'react-navigation'
-
 import { RkText, RkButton, RkStyleSheet, RkTextInput } from 'react-native-ui-kitten';
 import { Actions } from 'react-native-router-flux';
 import _ from 'lodash';
 import moment from 'moment';
-// import { observer,inject } from 'mobx-react/native'
+import { SearchBar } from 'react-native-elements'
 import { firebaseRef } from '../../services/Firebase'
 import { NavigationActions } from 'react-navigation';
 import Chat from '../../components/Chat/Chat'
@@ -41,6 +40,7 @@ export default class StoreView extends Component {
       isLoading: true,
       isEmpty: false,
       isFinished: false,
+      searchText: '',
       dataSource: new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2}),
     }
   }
@@ -65,9 +65,47 @@ export default class StoreView extends Component {
     //LayoutAnimation.configureNext(LayoutAnimation.Presets.spring)
   }
 
+  setSearchText() {
+    const searchText = this.state.searchText
+    if (searchText == ""){
+      firebaseRef.database().ref('posts').orderByChild('createdAt').limitToLast(this.state.counter).on('value',
+      (snapshot) => {
+        if (snapshot.val()) {
+          this.setState({ isEmpty: false })
+          this.setState({ dataSource: this.state.dataSource.cloneWithRows(_.reverse(_.toArray(snapshot.val()))) })
+        }
+        else {
+          this.setState({ isEmpty: true })
+        }
+        this.setState({ isLoading: false })
+      })
+    } else {
+      firebaseRef.database().ref('posts').orderByChild('createdAt').startAt(searchText).endAt(searchText).on("value", 
+      (snapshot) => {
+        if (snapshot.val()) {
+          this.setState({ isEmpty: false })
+          this.setState({ dataSource: this.state.dataSource.cloneWithRows(_.reverse(_.toArray(snapshot.val()))) })
+        } 
+        else {
+          this.setState({ isEmpty: true })
+        }
+        this.setState({ isLoading: false })
+      })
+    }
+  }  
+
   render() {
     return (
       <View style={styles.container}>
+        <SearchBar
+          value={this.state.searchText}
+          // onChangeText={this.setSearchText.bind(this)}
+          onChangeText={(text) => this.setState({searchText: text})}
+          placeholder='Search Books' 
+          lightTheme
+          clearIcon 
+          onSubmitEditing={() => this.setSearchText()}
+          returnKeyType= "go" />
         <ListView
           automaticallyAdjustContentInsets={false}
           initialListSize={1}
@@ -87,7 +125,7 @@ export default class StoreView extends Component {
     const height = screenWidth*data.imageHeight/data.imageWidth
     const shareOptions = {
       title: data.title + " for sale",
-      url: "http://myapp.shop/post/" + data.puid,
+      url: "http://scolas.shop/post/" + data.puid,
       subject: "Share this item"
     }
     const BuyButton = (data.status === 'available') ?
@@ -111,62 +149,14 @@ export default class StoreView extends Component {
           />
         </TouchableWithoutFeedback>
         <View style={styles.postInfo}>
-          <Text style={styles.info}><Text style={styles.bold}>{data.price}</Text></Text>
           { Status }
           <Text style={styles.info}><Text style={styles.bold}>{data.username}</Text> - {timeString}</Text>
           { data.text ? <Text style={styles.info}>{ data.text }</Text> : null }
         </View>
         <View style={styles.postButtons}>
           { BuyButton }
-          <TouchableOpacity style={styles.button} onPress={()=> this._flagPost(data)}>
-            <RkText>No. 2</RkText>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={()=>{ Share.open(shareOptions) }}>
-            <RkText>No. 3</RkText>
-          </TouchableOpacity>
         </View>
       </View>
-    )
-  }
-
-  _flagPost = (postData) => {
-    console.log("--------> FLAG !!!!!!")
-    console.log(postData)
-    Alert.alert(
-      'Flag Confirmation',
-      'Are you sure you want to flag this item? If yes, a moderator will decide within 24 hours if this item should be removed.',
-      [
-        { text: 'No', onPress: () => {}, style: 'cancel' },
-        { text: 'Yes', onPress: () => {
-
-          fetch('https://onesignal.com/api/v1/notifications',
-          {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': this.props.appStore.onesignal_api_key,
-            },
-            body: JSON.stringify(
-            {
-              app_id: this.props.appStore.onesignal_app_id,
-              included_segments: ["All"],
-              headings: {"en": "🏴🏴🏴🏴 Item flaged! 🏴🏴🏴🏴"},
-              android_sound: "fishing",
-              data: postData,
-              big_picture: postData.image,
-              ios_sound: "fishing.caf",
-              contents: {"en": this.props.appStore.user.displayName + " just flaged: " + postData.title + " for " + postData.price},
-              filters: [{"field":"tag","key":"username","relation":"=","value":"Herve f"}],
-            })
-          })
-          .then((responseData) => {
-            console.log("Push POST:" + JSON.stringify(responseData));
-          })
-          .done()
-
-         } },
-      ]
     )
   }
 
@@ -183,6 +173,7 @@ export default class StoreView extends Component {
     this.props.navigation.navigate('Chat',{ title:postData.title, puid:postData.puid, uid:postData.uid , wantToBuy:true });
   }
 
+    
 
   _onEndReached = () => {
     //console.log("TIMELINE ----> _onEndReached :+++:");

@@ -14,7 +14,7 @@ import {
 //import { getColor } from '../components/config'
 import { firebaseRef } from '../../services/Firebase'
 import firebase from 'firebase'
-//import Icon from 'react-native-vector-icons/Ionicons'
+import { Icon } from 'react-native-elements'
 // import EvilIcon from 'react-native-vector-icons/EvilIcons'
 import { observer,inject } from 'mobx-react/native'
 import { Actions } from 'react-native-router-flux'
@@ -70,21 +70,6 @@ export default class Chat extends Component {
           }
         })
       }
-      if (snapshot.val().price) {
-        this.setState((previousState) => {
-          return {
-            messages: GiftedChat.append(previousState.messages, {
-              _id: 2,
-              text: snapshot.val().price,
-              createdAt: new Date(snapshot.val().createdAt),
-              user: {
-                _id: snapshot.val().uid,
-                name: snapshot.val().username,
-              },
-            }),
-          }
-        })
-      }
       if (snapshot.val().text) {
         this.setState((previousState) => {
           return {
@@ -111,7 +96,7 @@ export default class Chat extends Component {
             user: {
               _id: 0,
               name: "Scolas",
-              avatar: 'https://raw.githubusercontent.com/jsappme/react-native-firebase-starter/wip/graphics/myapp-48.png',
+              // avatar: 'https://raw.githubusercontent.com/jsappme/react-native-firebase-starter/wip/graphics/myapp-48.png',
             },
           }),
         }
@@ -434,6 +419,14 @@ export default class Chat extends Component {
       return Accessory
   }
 
+  renderActions(props) {
+        return (
+          <View style={{marginRight: 10, marginBottom: 5}}>
+            <Icon name='event' resizeMode={'center'}/>
+          </View>
+        );
+    }
+
   renderLightboxContent = (props) => {
     return (
             <Image
@@ -490,6 +483,7 @@ export default class Chat extends Component {
                     }}
                     renderMessageImage={this.renderMessageImage}
                     renderFooter={this.renderFooter}
+                    renderActions={this.renderActions}
                   />
     return (
             <View style={{marginTop:56,flex:1,}}>
