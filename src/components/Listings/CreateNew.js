@@ -262,7 +262,6 @@ export default class CreateNew extends Component {
               new_messages: 0,
               text: this.state.postText.replace(/(\r\n|\n|\r)/gm,""),
               title: this.state.postTitle,
-              price: this.state.postPrice,
               Author: this.state.Author,
               puid: newPostKey,
               image: url,
@@ -283,7 +282,6 @@ export default class CreateNew extends Component {
               this.setState({
                               postStatus: 'Posted! Thank You.',
                               postTitle: '',
-                              postPrice: '',
                               postText: '',
                               Author:'',
                               imagePath: null,

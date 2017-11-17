@@ -421,7 +421,7 @@ export default class Chat extends Component {
 
   renderActions(props) {
         return (
-          <View style={{marginRight: 10, marginBottom: 5}}>
+          <View style={{marginLeft: 10, marginBottom: 5}}>
             <Icon name='event' resizeMode={'center'}/>
           </View>
         );

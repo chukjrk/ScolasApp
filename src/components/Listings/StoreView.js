@@ -157,8 +157,16 @@ export default class StoreView extends Component {
           { BuyButton }
         </View>
       </View>
-    )
+    );
   }
+
+  // buySel(postData) {
+  //   if (this.props.appStore.user == postData.username) {
+  //     const seller = this.props.appStore.user
+  //   } else {
+  //     const buyer = this.props.appStore.user
+  //   }
+  // }
 
   _openChat = (postData) => {
     console.log(" *************** Opening CHAT ROOM *************** " + postData.puid);
@@ -171,9 +179,7 @@ export default class StoreView extends Component {
     //Since that Chat navigator in router.js was using StackNavigator,  this.props.navigation.navigate required to
     // handle navigation
     this.props.navigation.navigate('Chat',{ title:postData.title, puid:postData.puid, uid:postData.uid , wantToBuy:true });
-  }
-
-    
+  }    
 
   _onEndReached = () => {
     //console.log("TIMELINE ----> _onEndReached :+++:");
