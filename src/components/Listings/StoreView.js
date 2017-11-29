@@ -14,20 +14,21 @@ import {
   Image,
   ListView,
   Alert,
+  RefreshControl
 } from 'react-native'
-import { StackNavigator, } from 'react-navigation'
+import { StackNavigator, NavigationActions  } from 'react-navigation'
 import { RkText, RkButton, RkStyleSheet, RkTextInput } from 'react-native-ui-kitten';
-import { Actions } from 'react-native-router-flux';
 import _ from 'lodash';
 import moment from 'moment';
 import { SearchBar } from 'react-native-elements'
 import { firebaseRef } from '../../services/Firebase'
-import { NavigationActions } from 'react-navigation';
 import Chat from '../../components/Chat/Chat'
-
+import Book from '../Listings/Book'
+import { observer,inject } from 'mobx-react/native';
 
 const screenWidth = Dimensions.get('window').width
 
+@inject("appStore") @observer
 export default class StoreView extends Component {
 
   constructor(props) {
@@ -36,13 +37,17 @@ export default class StoreView extends Component {
       UIManager.setLayoutAnimationEnabledExperimental(true)
     }
     this.state = {
+      usertype: false,
       counter: 1,
       isLoading: true,
       isEmpty: false,
       isFinished: false,
       searchText: '',
+      refreshing: false,
       dataSource: new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2}),
     }
+
+    this._setSearchText = this._setSearchText.bind(this)
   }
 
   componentDidMount() {
@@ -65,8 +70,9 @@ export default class StoreView extends Component {
     //LayoutAnimation.configureNext(LayoutAnimation.Presets.spring)
   }
 
-  setSearchText() {
+  _setSearchText() {
     const searchText = this.state.searchText
+    this.setState({ isLoading: true })
     if (searchText == ""){
       firebaseRef.database().ref('posts').orderByChild('createdAt').limitToLast(this.state.counter).on('value',
       (snapshot) => {
@@ -80,31 +86,33 @@ export default class StoreView extends Component {
         this.setState({ isLoading: false })
       })
     } else {
-      firebaseRef.database().ref('posts').orderByChild('createdAt').startAt(searchText).endAt(searchText).on("value", 
+      this.setState({refreshing: true});
+      firebaseRef.database().ref('posts').orderByChild('createdAt').equalTo(searchText).limitToLast(this.state.counter).on("value", 
       (snapshot) => {
         if (snapshot.val()) {
-          this.setState({ isEmpty: false })
+          this.setState({ isEmpty: false }) 
           this.setState({ dataSource: this.state.dataSource.cloneWithRows(_.reverse(_.toArray(snapshot.val()))) })
         } 
         else {
           this.setState({ isEmpty: true })
         }
         this.setState({ isLoading: false })
+        this.setState({refreshing: false});
       })
     }
-  }  
+  }
 
   render() {
     return (
       <View style={styles.container}>
         <SearchBar
           value={this.state.searchText}
-          // onChangeText={this.setSearchText.bind(this)}
+          // onChangeText={this._setSearchText.bind(this)}
           onChangeText={(text) => this.setState({searchText: text})}
           placeholder='Search Books' 
           lightTheme
           clearIcon 
-          onSubmitEditing={() => this.setSearchText()}
+          onSubmitEditing={() => this._setSearchText()}
           returnKeyType= "go" />
         <ListView
           automaticallyAdjustContentInsets={false}
@@ -114,6 +122,11 @@ export default class StoreView extends Component {
           renderFooter={this._renderFooter}
           onEndReached={this._onEndReached}
           onEndReachedThreshold={1}
+          // refreshControl= {
+            //< RefreshControl
+              // refreshing={this.state.refreshing} 
+              // onRefresh= {this.setSearchText.bind(this)} />
+          // } 
         />
       </View>
     )
@@ -129,57 +142,43 @@ export default class StoreView extends Component {
       subject: "Share this item"
     }
     const BuyButton = (data.status === 'available') ?
-            <TouchableOpacity style={styles.button} onPress={() => this._BuyNow(data)}>
+            <TouchableOpacity style={styles.button} onPress={() => this._BookPage(data)}>
               <RkText>Here</RkText>
             </TouchableOpacity>
           : null
-    const Status = (data.status === 'available') ? <Text style={{fontWeight:'bold',color:"green"}}>{data.status.toUpperCase()}</Text> : <Text style={{fontWeight:'bold',color:"red"}}>{data.status.toUpperCase()}</Text>
+    const Status = ( data.status === 'available') ? <Text style={{fontWeight:'bold',color:"green"}}>{data.status.toUpperCase()}</Text> : null
+    data.status === 'sold' ? firebaseRef.database().ref('posts').child(data.puid).remove() : null
+    
     return (
-      <View style={styles.card}>
-        <Text style={styles.title}>{ data.title }</Text>
-        <TouchableWithoutFeedback style={styles.postImage} onPress={() => this._openChat(data)}>
+      <TouchableWithoutFeedback onPress={() => this._BookPage(data)}>
+        <View style={styles.card}>
           <Image
             source={{ uri:data.image }}
             resizeMode='contain'
             style={{
-              height: height,
-              width: screenWidth,
-              alignSelf: 'center',
+              height: 150,
+              width: 120,
+              alignSelf: 'flex-start',
             }}
           />
-        </TouchableWithoutFeedback>
-        <View style={styles.postInfo}>
-          { Status }
-          <Text style={styles.info}><Text style={styles.bold}>{data.username}</Text> - {timeString}</Text>
-          { data.text ? <Text style={styles.info}>{ data.text }</Text> : null }
+        
+          <View style={styles.postInfo}>
+            <Text style={styles.title}>{ data.title }</Text>
+            <Text style={{fontStyle: 'italic'}}>{data.Author}</Text>
+            <Text style={styles.info}><Text style={styles.bold}>{data.username}</Text> - {timeString}</Text>
+{/*            { data.text ? <Text style={styles.info}>{ data.text }</Text> : null }*/}
+          </View>
         </View>
-        <View style={styles.postButtons}>
-          { BuyButton }
-        </View>
-      </View>
+      </TouchableWithoutFeedback>
     );
   }
 
-  // buySel(postData) {
-  //   if (this.props.appStore.user == postData.username) {
-  //     const seller = this.props.appStore.user
-  //   } else {
-  //     const buyer = this.props.appStore.user
-  //   }
-  // }
-
-  _openChat = (postData) => {
-    console.log(" *************** Opening CHAT ROOM *************** " + postData.puid);
-    Actions.chat({ title:postData.title, puid:postData.puid })
-  }
-
-  _BuyNow = (postData) => {
-    //  Actions.chat({ title:postData.title, puid:postData.puid, wantToBuy:true })
+  _BookPage = (postData) => {
+      this.props.navigation.navigate('Book',{ title:postData.title, puid:postData.puid, uid:postData.uid});
 
     //Since that Chat navigator in router.js was using StackNavigator,  this.props.navigation.navigate required to
     // handle navigation
-    this.props.navigation.navigate('Chat',{ title:postData.title, puid:postData.puid, uid:postData.uid , wantToBuy:true });
-  }    
+  } 
 
   _onEndReached = () => {
     //console.log("TIMELINE ----> _onEndReached :+++:");
@@ -240,24 +239,24 @@ const styles = StyleSheet.create({
     marginTop: 100,
   },
   card: {
-    flex: 1,
+    flex: 0.2,
+    flexDirection: 'row',
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderColor: '#d6d7da'
   },
   title: {
     fontSize: 20,
     fontWeight: '800',
-    padding: 5,
     color: '#444',
   },
-  postImage: {
-    backgroundColor: '#eee',
-  },
   postInfo: {
-    padding: 3,
-    alignItems: 'center',
+    padding: 5,
+    // alignItems: 'center',
   },
   postButtons: {
     padding: 5,
-    flexDirection: 'row',
     flex: 1,
     alignItems: 'center',
   },
@@ -270,6 +269,7 @@ const styles = StyleSheet.create({
     borderColor: '#999',
     alignItems: 'center',
     backgroundColor: '#4285f4',
+    alignSelf: 'flex-start'
   },
   info: {
     fontSize: 15,

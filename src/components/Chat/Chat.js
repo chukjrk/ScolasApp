@@ -11,11 +11,9 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native'
-//import { getColor } from '../components/config'
 import { firebaseRef } from '../../services/Firebase'
 import firebase from 'firebase'
 import { Icon } from 'react-native-elements'
-// import EvilIcon from 'react-native-vector-icons/EvilIcons'
 import { observer,inject } from 'mobx-react/native'
 import { Actions } from 'react-native-router-flux'
 import { GiftedChat, Bubble } from 'react-native-gifted-chat'

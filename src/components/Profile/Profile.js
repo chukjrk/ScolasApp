@@ -4,32 +4,15 @@ import { RkText, RkButton, RkStyleSheet } from 'react-native-ui-kitten';
 import { Avatar, Icon, Header } from 'react-native-elements'
 import StickyHeaderFooterScrollView from 'react-native-sticky-header-footer-scroll-view'
 import { observer,inject } from 'mobx-react/native';
+import { StackNavigator, NavigationActions  } from 'react-navigation'
 
 @inject("appStore") @observer
 export default class Profile extends React.Component {
 
-  // constructor(props) {
-  //   super(props);
-  //   this.user = Name();
-  // }
-
-  _logOut() {
-    firebaseRef.auth().signOut()
-    .then(() => {
-      this.props.appStore.username = ""
-      this.props.appStore.user = {}
-      this.props.appStore.post_count = 0
-      this.props.appStore.chat_count = 0
-      this.props.appStore.order_count = 0
-      console.log('Signed Out');
-    }, function(error) {
-      console.log('Sign Out Error', error)
-    });
-  }
-
   render() {
     const name = this.props.appStore.username;
     const points = this.props.appStore.user_point;
+    const { navigate } = this.props.navigation;
 
     return (
       <StickyHeaderFooterScrollView 
@@ -41,55 +24,51 @@ export default class Profile extends React.Component {
       )}>
 
         <ScrollView style={styles.root}>
-        <View style={[styles.header, styles.bordered]}>
-          <View style={styles.row}>
-            <TouchableOpacity style={styles.buttons}>
-              {/*<RkButton style={styles.button} rkType='icon circle' onPress={this._logout}>*/}
-                <Icon 
-                  name='settings'
-                  onPress={this._logout} />
-                {/*<RkText rkType='moon large primary' style={styles.buttonText}>Sign Out</RkText>*/}
-              {/*</RkButton>*/}
-            </TouchableOpacity>
-            <Avatar
-              rounded
-              xlarge 
-              source={require('../../assets/images/faceO.png')} />
-            <View style={styles.buttons}>
-              {/*<RkButton style={styles.button} rkType='icon circle'>*/}
-                <Icon 
-                  name='settings'
-                  type='material-icons' />
-                {/*<RkText rkType='moon large primary'>Thing 2</RkText>*/}
-              {/*</RkButton>*/}
+          <View style={styles.container}>
+            <View style={[styles.header, styles.bordered]}>
+              <View style= {{alignSelf: 'center'}}>
+                <Avatar
+                  rounded
+                  xlarge 
+                  source={require('../../assets/images/faceO.jpeg')} />
+              </View>
+              <View style={styles.section}>
+                <RkText rkType='header2' style={{fontSize: 18}}>{name}</RkText>
+              </View>
             </View>
-          </View>
-          <View style={styles.section}>
-            <RkText rkType='header2'>{name}</RkText>
-          </View>
-        </View>
 
-        <View style={styles.userInfo}>
-          <View style={styles.section}>
-            <RkText rkType='header3' style={styles.space}>12</RkText>
-            <RkText rkType='secondary1 hintColor'>Posts</RkText>
-          </View>
-          <View style={styles.section}>
-            <RkText rkType='header3' style={styles.space}>{points}</RkText>
-            <RkText rkType='secondary1 hintColor'>Points</RkText>
-          </View>
-          <View style={styles.section}>
-            <RkText rkType='header3' style={styles.space}>890</RkText>
-            <RkText rkType='secondary1 hintColor'>Following</RkText>
+            <View style={styles.userInfo}>
+              <View style={styles.section}>
+              {/*<RkText rkType='header3' style={styles.space}>12</RkText>*/}
+              <TouchableOpacity style={styles.buttons, { paddingTop: 17}} onPress={() => navigate('Settings')}>
+                <Icon 
+                  name='settings'
+                  />
+                  {/*<Text onPress={() => navigate('Register')} > Set </Text>*/}
+                {/*<RkText rkType='moon large primary' style={styles.buttonText}>Sign Out</RkText>*/}
+                {/*</RkButton>*/}
+              </TouchableOpacity>
+            </View>
+            <View style={styles.section}>
+              <RkText rkType='header3' style={styles.space}>{points}</RkText>
+              <RkText rkType='secondary1 hintColor'>Points</RkText>
+            </View>
+            <View style={styles.buttons}>
+              <Icon 
+                name='settings'
+                type='material-icons' />
+            </View>
           </View>
         </View>
 
         <View style={styles.bottomContainer}>
-          <TouchableOpacity>
-            <RkText> Purchases </RkText>
+          <TouchableOpacity style={styles.purchase}>
+            <Icon name='history' color= '#898989' />
+            <Text style={{fontSize: 16, paddingLeft: 7}}> Purchases </Text>
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Text> Archives </Text>
+          <TouchableOpacity style={styles.archive}>
+            <Icon name='archive' color= '#898989'/>
+            <Text style={{fontSize: 16, paddingLeft: 7}} > Archives </Text>
           </TouchableOpacity>
         </View>
         </ScrollView>
@@ -101,13 +80,27 @@ export default class Profile extends React.Component {
 
 const styles = RkStyleSheet.create(theme => ({
   root: {
-    paddingTop: 30,
-    backgroundColor: theme.colors.screen.base
+    flex: -1.5,
+    paddingTop: 15,
+    backgroundColor: '#f0f0f0'
   },
 
   header: {
-    paddingTop: 25,
-    paddingBottom: 17,
+    // paddingTop: 25,
+    // paddingBottom: 17,
+  },
+
+  container: {
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 15,
+    margin: 10,
+    marginBottom: 20,
+    paddingTop: 15,
+    paddingBottom:5,
+    borderColor: '#f0f0f0',
+    shadowColor: '#000',
+    backgroundColor: '#fff'
   },
 
   row: {
@@ -116,7 +109,7 @@ const styles = RkStyleSheet.create(theme => ({
 
   userInfo: {
     flexDirection: 'row',
-    paddingVertical: 18,
+    paddingVertical: 5,
   },
 
   bordered: {
@@ -126,11 +119,16 @@ const styles = RkStyleSheet.create(theme => ({
 
   section: {
     flex: 1,
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingVertical:10,
+    borderRightWidth: 1,
+    borderColor: '#eeeeee'
+    // borderLeftWidth: 1
   },
 
   space: {
-    marginBottom: 3
+    marginBottom: 3,
+    fontSize: 25,
   },
 
   separator: {
@@ -143,7 +141,8 @@ const styles = RkStyleSheet.create(theme => ({
   },
 
   buttons: {
-    flex: 1
+    flex: 1,
+    alignSelf: 'center'
   },
 
   button: {
@@ -156,17 +155,32 @@ const styles = RkStyleSheet.create(theme => ({
   },
 
   bottomContainer: {
-    paddingTop: 20
-  },
-
-  loImage: {
-    height: 100,
-    borderRadius: 150,
-    width: 100
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 10,
+    margin: 10,
+    marginBottom: 40,
+    borderColor: '#f0f0f0',
+    backgroundColor: '#fff',
+    shadowColor: '#000'
   },
 
   stickyheader: {
     color: '#fff'
+  },
+
+  archive: {
+    flexDirection: 'row',
+    padding: 15,
+    backgroundColor: '#fafafa',
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    shadowColor: '#000'
+  },
+
+  purchase: {
+    flexDirection: 'row',
+    padding: 15,
   }
 }));
 
