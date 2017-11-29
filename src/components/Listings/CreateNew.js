@@ -18,7 +18,6 @@ import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'react-native-fetch-blob';
 import { firebaseRef } from '../../services/Firebase';
 import firebase from 'firebase';
-import { Actions } from 'react-native-router-flux';
 import { observer,inject } from 'mobx-react/native';
 import { navigationOptions } from 'react-navigation';
 import StickyHeaderFooterScrollView from 'react-native-sticky-header-footer-scroll-view'
@@ -183,10 +182,6 @@ export default class CreateNew extends Component {
     )
   }
 
-  _Store() {
-		Actions.storeview()
-	}
-
   _takePicture = () => {
     const cam_options = {
       mediaType: 'photo',
@@ -259,6 +254,12 @@ export default class CreateNew extends Component {
               status: "available",
               clientId: "",
               clientName: "",
+              // if (this.props.appStore.user == postData.username) {
+              //   const seller = this.props.appStore.user
+              // } else {
+              //   const buyer = this.props.appStore.user
+              // },
+              
               new_messages: 0,
               text: this.state.postText.replace(/(\r\n|\n|\r)/gm,""),
               title: this.state.postTitle,

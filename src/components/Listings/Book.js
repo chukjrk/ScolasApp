@@ -4,25 +4,33 @@
 
 // React native and others libraries imports
 import React, { Component } from 'react';
-import { Image, Dimensions, TouchableWithoutFeedback, AsyncStorage } from 'react-native';
 import { View, Container, Content, Button, Left, Right, Icon, Picker, Item, Grid, Col, Toast, Text as NBText } from 'native-base';
-import { Actions } from 'react-native-router-flux';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
-
-// Our custom files and classes import
-import Text from '../component/Text';
-import Navbar from '../component/Navbar';
-import {default as ProductComponent} from '../component/Product';
-
-import { Actions } from 'react-native-router-flux';
+// import Carousel, { Pagination } from 'react-native-snap-carousel';
 import _ from 'lodash';
 import moment from 'moment';
 import { observer,inject } from 'mobx-react/native'
 import { firebaseRef } from '../../services/Firebase'
 import { SearchBar } from 'react-native-elements'
-import base from "re-base";
+// import base from "re-base";
+
+import {
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+  ListView,
+  LayoutAnimation,
+  Platform,
+  UIManager,
+  Dimensions,
+  Image,
+  Alert,
+  TouchableWithoutFeedback, 
+  AsyncStorage
+} from 'react-native'
 
 
+const screenWidth = Dimensions.get('window').width
 
 @inject("appStore") @observer
 export default class Book extends Component {
@@ -33,19 +41,19 @@ export default class Book extends Component {
       product: {},
       activeSlide: 0,
       quantity: 1,
-      // messages: [],
       postProps: {},
       status: ""
     };
 
-    this.props.appStore.current_puid = this.props.puid
+    this.props.appStore.current_page = 'book'
+    this.props.appStore.current_puid = this.props.navigation.state.params.puid
   }
 
   componentWillMount() {
     //get the product with id of this.props.product.id from your server
-    this.setState({product: dummyProduct});
-    console.log("---- CHAT WILL MOUNT ----- " + this.props.puid)
-    firebaseRef.database().ref('posts').child(this.props.puid).once('value',
+    // this.setState({product: dummyProduct});
+    console.log("---- CHAT WILL MOUNT ----- " + this.props.navigation.state.params.puid)
+    firebaseRef.database().ref('posts').child(this.props.navigation.state.params.puid).once('value',
     (snapshot) => {
       //console.log(snapshot.val())
       // Actions.refresh({title: snapshot.val().title})
@@ -55,45 +63,39 @@ export default class Book extends Component {
                       postProps: snapshot.val(),
                     })
       if (snapshot.val().image) {
-        this.setState((previousState) => {
-          return {
+        this.setState({
+          product: {
             _id: 1,
-            text: snapshot.val().title,
+            title: snapshot.val().title,
+            description: snapshot.val().text,
             createdAt: snapshot.val().createdAt,
             user: {
               _id: snapshot.val().uid,
               name: snapshot.val().username,
-             },
+            },
             image: snapshot.val().image,
-            ),
-          }
-        })
-      }
-
-      if (snapshot.val().text) {
-        this.setState((previousState) => {
-          return {
-            messages: GiftedChat.append(previousState.messages, {
-              _id: 3,
-              text: snapshot.val().text,
-              // createdAt: new Date(snapshot.val().createdAt),
-              user: {
-                _id: snapshot.val().uid,
-                name: snapshot.val().username,
-              },
-            }),
           }
         })
       }
     })
   }
 
-  render() {
+  render(data) {
+    // const height = screenWidth*data.imageHeight/data.imageWidth
     return(
       <Container style={{backgroundColor: '#fdfdfd'}}>
-        <Navbar left={left} right={right} title={this.props.postProps.title} />
         <Content>
-          <Carousel
+          <Image
+            source={{ uri:this.state.postProps.image }}
+            resizeMode='contain'
+            style={{
+              height: 480,
+              width: screenWidth,
+              alignSelf: 'center',
+              paddingTop: 5,
+            }}
+          />
+          {/*<Carousel
               ref={(carousel) => { this._carousel = carousel; }}
               sliderWidth={Dimensions.get('window').width}
               itemWidth={Dimensions.get('window').width}
@@ -115,44 +117,48 @@ export default class Book extends Component {
               }}
               inactiveDotOpacity={0.4}
               inactiveDotScale={0.6}
-            />
+            />*/}
           <View style={{backgroundColor: '#fdfdfd', paddingTop: 10, paddingBottom: 10, paddingLeft: 12, paddingRight: 12, alignItems: 'center'}}>
             <Grid>
               <Col size={3}>
-                <Text style={{fontSize: 18}}>{this.state.postProps.title}</Text>
-              </Col>
-              <Col>
-                <Text style={{fontSize: 20, fontWeight: 'bold'}}>{this.state.postProps.price}</Text>
+                <Text style={{fontSize: 18, alignSelf: 'center', fontWeight: 'bold'}}>{this.state.postProps.title}</Text>
               </Col>
             </Grid> 
-            <Grid style={{marginTop: 15}}>
-              <Col size={3}>
-                <Button block onPress={this.addToCart.bind(this)} style={{backgroundColor: Colors.navbarBackgroundColor}}>
-                  <Text style={{color: "#fdfdfd", marginLeft: 5}}>Add to cart</Text>
-                </Button>
-              </Col>
+            <Grid>
               <Col>
-              <Button block onPress={this.addToWishlist.bind(this)} icon transparent style={{backgroundColor: '#fdfdfd'}}>
-                <Icon style={{color: Colors.navbarBackgroundColor}} name='ios-heart' />
-              </Button>
+                <Text style={{fontSize: 18, fontStyle: 'italic'}}> - {this.state.postProps.Author}</Text>
               </Col>
             </Grid>
+            
             <View style={{marginTop: 15, padding: 10, borderWidth: 1, borderRadius: 3, borderColor: 'rgba(149, 165, 166, 0.3)'}}>
               <Text style={{marginBottom: 5}}>Description</Text>
               <View style={{width: 50, height: 1, backgroundColor: 'rgba(44, 62, 80, 0.5)', marginLeft: 7, marginBottom: 10}} />
               <NBText note>
-                {this.state.postProps.description}
+                {this.state.postProps.text}
               </NBText>
             </View>
+
+            <Grid style={{marginTop: 15}}>
+              <Col size={3}>
+                <Button block onPress={() => this._BuyNow(data)}>
+                  <Text style={{color: "#fdfdfd", marginLeft: 5}}>CONTACT SELLER</Text>
+                </Button>
+              </Col>
+            </Grid>
+
           </View>
         </Content>
       </Container>
     );
   }
 
-  _openChat = (postData) => {
-    console.log(" *************** Opening CHAT ROOM *************** " + postData.puid);
-    Actions.chat({ title:postData.title, puid:postData.puid })
+  _BuyNow = () => {
+    if (this.props.appStore.user.uid == this.state.postProps.uid) {
+      seller_id = this.props.appStore.user.uid
+    } else {
+      buyer_id = this.props.appStore.user.uid
+      this.props.navigation.navigate('Chat',{ title:this.state.postProps.title, puid:this.state.postProps.puid, uid:this.props.appStore.user.uid , wantToBuy:true });
+    }
   }
 
   renderImages() {
@@ -251,3 +257,54 @@ export default class Book extends Component {
   // }
 
 }
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  waitView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 100,
+  },
+  card: {
+    flex: 1,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: '800',
+    padding: 5,
+    color: '#444',
+  },
+  postImage: {
+    backgroundColor: '#eee',
+  },
+  postInfo: {
+    padding: 3,
+    alignItems: 'center',
+  },
+  postButtons: {
+    padding: 5,
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center',
+  },
+  button: {
+    flex: 3,
+    padding: 5,
+    margin: 6,
+    borderRadius: 2,
+    borderWidth: 1,
+    borderColor: '#999',
+    alignItems: 'center',
+    backgroundColor: '#4285f4',
+  },
+  info: {
+    fontSize: 15,
+  },
+  bold: {
+    fontWeight: 'bold',
+  },
+})
