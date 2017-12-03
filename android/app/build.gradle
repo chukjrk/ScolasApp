@@ -140,6 +140,7 @@ android {
 
 dependencies {
     compile project(':react-native-onesignal')
+    compile project(':react-native-add-calendar-event')
     compile project(':react-native-fetch-blob')
     compile project(':react-native-background-task')
     compile project(':react-native-image-picker')

@@ -1,6 +1,7 @@
 package com.scolas;
 
 import com.facebook.react.ReactActivity;
+import com.vonovak.AddCalendarEventPackage;
 
 public class MainActivity extends ReactActivity {
 

@@ -24,8 +24,9 @@ import { SearchBar } from 'react-native-elements'
 import { firebaseRef } from '../../services/Firebase'
 import { NavigationActions } from 'react-navigation';
 import Chat from '../../components/Chat/Chat'
+import Rebase from 're-base'; //import rebase
 
-
+let base = Rebase.createClass(firebaseRef.database()); //initiate rebase with firebase setup
 const screenWidth = Dimensions.get('window').width
 
 export default class StoreView extends Component {
@@ -65,34 +66,61 @@ export default class StoreView extends Component {
     //LayoutAnimation.configureNext(LayoutAnimation.Presets.spring)
   }
 
+  //filter post execute here
+  filterPosts(searchText, posts) {
+    let text = searchText.toLowerCase();
+    console.log(text)
+    return _.filter(posts, (n) => {
+      let post = n.title.toLowerCase(); //change title to any name that exist in firebase's child
+      return post.search(text) !== -1;
+    });
+  }
+
   setSearchText() {
+    ////// comment temporary as the codes somehow cannot run properly  ////
+    // if (searchText == ""){
+    //   firebaseRef.database().ref('posts').orderByChild('createdAt').limitToLast(this.state.counter).on('value',
+    //   (snapshot) => {
+    //     if (snapshot.val()) {
+    //       this.setState({ isEmpty: false })
+    //       this.setState({ dataSource: this.state.dataSource.cloneWithRows(_.reverse(_.toArray(snapshot.val()))) })
+    //     }
+    //     else {
+    //       this.setState({ isEmpty: true })
+    //     }
+    //     this.setState({ isLoading: false })
+    //   })
+    // } else {
+    //   firebaseRef.database().ref('posts').orderByChild('createdAt').startAt(searchText).endAt(searchText).on("value",
+    //   (snapshot) => {
+    //     if (snapshot.val()) {
+    //       this.setState({ isEmpty: false })
+    //       this.setState({ dataSource: this.state.dataSource.cloneWithRows(_.reverse(_.toArray(snapshot.val()))) })
+    //     }
+    //     else {
+    //       this.setState({ isEmpty: true })
+    //     }
+    //     this.setState({ isLoading: false })
+    //   })
+    // }
     const searchText = this.state.searchText
-    if (searchText == ""){
-      firebaseRef.database().ref('posts').orderByChild('createdAt').limitToLast(this.state.counter).on('value',
-      (snapshot) => {
-        if (snapshot.val()) {
-          this.setState({ isEmpty: false })
-          this.setState({ dataSource: this.state.dataSource.cloneWithRows(_.reverse(_.toArray(snapshot.val()))) })
-        }
-        else {
-          this.setState({ isEmpty: true })
-        }
-        this.setState({ isLoading: false })
-      })
-    } else {
-      firebaseRef.database().ref('posts').orderByChild('createdAt').startAt(searchText).endAt(searchText).on("value", 
-      (snapshot) => {
-        if (snapshot.val()) {
-          this.setState({ isEmpty: false })
-          this.setState({ dataSource: this.state.dataSource.cloneWithRows(_.reverse(_.toArray(snapshot.val()))) })
-        } 
-        else {
-          this.setState({ isEmpty: true })
-        }
-        this.setState({ isLoading: false })
-      })
-    }
-  }  
+    base.fetch("posts", {
+      context: this,
+      asArray: true,
+      queries: {
+        // can add more options. see rebase react for more info
+        orderByChild:'createdAt'
+      },
+      then(data){
+        console.log(data);
+        let filteredData = this.filterPosts(searchText, data);
+        console.log(filteredData);
+        this.setState({
+          dataSource: this.state.dataSource.cloneWithRows(_.reverse(_.toArray(filteredData)))
+        });
+      }
+    });
+  }
 
   render() {
     return (
@@ -101,9 +129,10 @@ export default class StoreView extends Component {
           value={this.state.searchText}
           // onChangeText={this.setSearchText.bind(this)}
           onChangeText={(text) => this.setState({searchText: text})}
-          placeholder='Search Books' 
+          placeholder='Search Books'
+          onChange={this.setSearchText.bind(this)} // added onChange to make live search
           lightTheme
-          clearIcon 
+          clearIcon
           onSubmitEditing={() => this.setSearchText()}
           returnKeyType= "go" />
         <ListView
@@ -114,6 +143,7 @@ export default class StoreView extends Component {
           renderFooter={this._renderFooter}
           onEndReached={this._onEndReached}
           onEndReachedThreshold={1}
+          enableEmptySections={true}
         />
       </View>
     )
@@ -179,7 +209,7 @@ export default class StoreView extends Component {
     //Since that Chat navigator in router.js was using StackNavigator,  this.props.navigation.navigate required to
     // handle navigation
     this.props.navigation.navigate('Chat',{ title:postData.title, puid:postData.puid, uid:postData.uid , wantToBuy:true });
-  }    
+  }
 
   _onEndReached = () => {
     //console.log("TIMELINE ----> _onEndReached :+++:");

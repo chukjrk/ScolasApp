@@ -3,6 +3,8 @@ package com.scolas;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.vonovak.AddCalendarEventPackage;
+import com.vonovak.AddCalendarEventPackage;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
@@ -28,6 +30,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new AddCalendarEventPackage(),
             new ReactNativeOneSignalPackage(),
             new RNFetchBlobPackage(),
             new BackgroundTaskPackage(),
