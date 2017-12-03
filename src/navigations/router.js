@@ -55,7 +55,7 @@ export const SignedIn = TabNavigator({
 		navigationOptions: {
 			tabBarLabel: "Home",
 			tabBarIcon: ({ tintColor }) => (
-				<Icon 
+				<Icon
                   name='home'
                   color={tintColor}/>
             ),
@@ -67,7 +67,7 @@ export const SignedIn = TabNavigator({
 		navigationOptions: {
 			tabBarLabel: "Add Book",
 			tabBarIcon: ({ tintColor }) => (
-				<Icon 
+				<Icon
                   name='add'
                   color={tintColor}/>
             ),
@@ -79,7 +79,7 @@ export const SignedIn = TabNavigator({
 	// 	navigationOptions: {
 	// 		tabBarLabel: "Messages",
 	// 		tabBarIcon: ({ tintColor }) => (
-	// 			<Icon 
+	// 			<Icon
  //                  name='chat bubble'
  //                  color={tintColor}/>
  //            ),
@@ -91,7 +91,7 @@ export const SignedIn = TabNavigator({
 		navigationOptions: {
 			tabBarLabel: "Store",
 			tabBarIcon: ({ tintColor }) => (
-				<Icon 
+				<Icon
                   name='store'
                   color={tintColor}/>
             ),

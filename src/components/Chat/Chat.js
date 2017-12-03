@@ -36,6 +36,7 @@ export default class Chat extends Component {
       clientName: "",
       spinnervisible: true,
     }
+    this.renderActions = this.renderActions.bind(this)
     this.props.appStore.current_page = 'chat'
     this.props.appStore.current_puid = this.props.navigation.state.params.puid
     //changed this.props.uid to this.props.navigation.state.params.puid because using Chat stacknavigator in router.js
@@ -421,9 +422,9 @@ export default class Chat extends Component {
 
   renderActions(props) {
         return (
-          <View style={{marginLeft: 10, marginBottom: 5}}>
+          <TouchableOpacity>
             <Icon name='event' resizeMode={'center'}/>
-          </View>
+          </TouchableOpacity>
         );
     }
 
