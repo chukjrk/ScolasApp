@@ -2,38 +2,67 @@ import React, { Component } from 'react';
 import { StackNavigator, TabNavigator, TabView, NavigationActions, TabBarBottom } from 'react-navigation';
 import { firebaseRef } from '../services/Firebase'
 import Login from '../components/Authentication/Login';
+import PasswordRecovery from '../components/Authentication/PasswordRecovery';
 import Register from '../components/Authentication/Register';
 import Profile from "../components/Profile/Profile";
+import Settings from "../components/Profile/Settings";
 import CreateNew from "../components/Listings/CreateNew"
 // import ChatHome from "../components/Chat/ChatHome"
 import StoreView from "../components/Listings/StoreView"
 import Chat from '../components/Chat/Chat'
+import Book from '../components/Listings/Book'
 import { observer,inject } from 'mobx-react/native';
 import { Icon } from 'react-native-elements'
 
 // added navigation to Chat using StackNavigator. Somehow using routeName
 // is not working
 const ChildPage = StackNavigator({
-
 	Store: {
 		screen: StoreView,
 		navigationOptions: {
 			header: null
 		}
 	},
-
+	Book: {
+		screen: Book,
+		navigationOptions: {
+			title: "Book"
+		}
+	},
 	Chat: {
 		screen: Chat,
 		navigationOptions: {
 			title : "Chat"
 		}
-	}
+	},
+})
+
+const ChildPage2 = StackNavigator({
+	Home: {
+		screen: Profile,
+		navigationOptions: {
+			header: null
+		}
+	},
+	Settings: {
+		screen: Settings,
+		navigationOptions: {
+		}
+	},
 })
 
 export const SignedOut = StackNavigator ({
 	Login: {
 		screen: Login,
 		navigationOptions: {
+		},
+		children: []
+	},
+
+	PasswordReset: {
+		screen: PasswordRecovery,
+		navigationOptions: {
+			header: null
 		}
 	},
 
@@ -43,15 +72,13 @@ export const SignedOut = StackNavigator ({
 			title: "Register"
 		}
 	},
-
-
 }, {
 	headerMode: 'screen',
 });
 
 export const SignedIn = TabNavigator({
 	Home: {
-		screen: Profile,
+		screen: ChildPage2,
 		navigationOptions: {
 			tabBarLabel: "Home",
 			tabBarIcon: ({ tintColor }) => (
@@ -61,7 +88,6 @@ export const SignedIn = TabNavigator({
             ),
 		}
 	},
-
 	Add: {
 		screen: CreateNew,
 		navigationOptions: {
