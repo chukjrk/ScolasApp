@@ -8,7 +8,6 @@ import { View,
  KeyboardAvoidingView,
  Image
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
 import { firebaseRef } from '../../services/Firebase'
 import Profile from '../Profile/Profile'
 import OneSignal from 'react-native-onesignal';
@@ -34,7 +33,7 @@ export default class Login extends Component {
 	_login() {
 		firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
 		.then((user) => {
-      		firebaseApp.database().ref('users').child(user.uid).once('value')
+      		firebaseRef.database().ref('users').child(user.uid).once('value')
       		.then((snapshot) => {
 		        this.props.appStore.post_count = parseInt(snapshot.val().post_count)
 		        this.props.appStore.order_count = parseInt(snapshot.val().order_count)
@@ -110,7 +109,7 @@ export default class Login extends Component {
 						ref='SecondInput'/>
 
 					<View style={styles.buttonrow}>
-					<TouchableOpacity style={styles.forgotPass}>
+					<TouchableOpacity style={styles.forgotPass} onPress={() => navigate('PasswordReset')}>
 						<Text style={styles.forgotText}>Forgot Password</Text>
 					</TouchableOpacity>
 
