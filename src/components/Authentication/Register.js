@@ -38,6 +38,7 @@ export default class Register extends Component {
 				else {
 					firebaseRef.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
 					.then((user) => {
+						// user.sendEmailVerification().then()
 						firebaseRef.database().ref('usernameList').child(this.state.name.toLowerCase()).set(user.uid)
 						user.updateProfile({displayName: this.state.name})
 						.then(() => {

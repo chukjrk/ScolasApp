@@ -38,7 +38,8 @@ export default class Login extends Component {
 		        this.props.appStore.post_count = parseInt(snapshot.val().post_count)
 		        this.props.appStore.order_count = parseInt(snapshot.val().order_count)
 		        this.props.appStore.chat_count = parseInt(snapshot.val().chat_count)
-            this.props.appStore.user_point = parseInt(snapshot.val().user_point)
+            	this.props.appStore.user_point = parseInt(snapshot.val().user_point)
+            	this.props.appStore.uid = parseInt(snapshot.val().user.uid)
 		    })
 		    this.props.appStore.user = user
 		    this.props.appStore.username = user.displayName
@@ -80,9 +81,10 @@ export default class Login extends Component {
 				<View style={styles.titleWrapper}>
 					<Image
 						// style={styles.}
-						source={require('../../assets/images/Scolaspic1.png')}
+						source={require('../../assets/images/booc1.png')}
 						resizeMode="cover" 
 						/>
+					<Text>BooXchange</Text>
 				</View>
 				<View>
 					<TextInput
@@ -134,7 +136,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		padding: 20,
-		backgroundColor: '#01579B'
+		backgroundColor: '#25a1e0'
 	},
 
 	title: {

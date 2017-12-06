@@ -13,9 +13,9 @@ import {
 import _ from 'lodash'
 import moment from 'moment'
 import { firebaseRef } from '../../services/Firebase'
-import Icon from 'react-native-vector-icons/Ionicons'
+// import Icon from 'react-native-vector-icons/Ionicons'
 import { observer,inject } from 'mobx-react/native'
-import { Actions } from 'react-native-mobx'
+// import { Actions } from 'react-native-mobx'
 
 
 @inject("appStore") @observer
@@ -61,7 +61,7 @@ export default class Profile extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.profileInfoContainer}>
-          <View style={styles.profileNameContainer}>
+          {/*<View style={styles.profileNameContainer}>
             <Text style={styles.profileName}>
               {this.props.appStore.username}
             </Text>
@@ -70,16 +70,16 @@ export default class Profile extends Component {
             <Text style={styles.profileCounts}>
               {this.props.appStore.order_count}
             </Text>
-          </View>
+          </View>*/}
           <View style={styles.profileCountsContainer}>
-            <TouchableOpacity onPress={this._userEdit}>
+            {/*<TouchableOpacity onPress={this._userEdit}>
               <Icon name='md-settings' size={30} color='rgba(255,255,255,.9)'/>
-            </TouchableOpacity>
+            </TouchableOpacity>*/}
           </View>
           <View style={styles.profileCountsContainer}>
-            <TouchableOpacity onPress={this._logOut}>
+            {/*<TouchableOpacity onPress={this._logOut}>
               <Icon name='md-log-out' size={30} color='rgba(255,255,255,.9)'/>
-            </TouchableOpacity>
+            </TouchableOpacity>*/}
           </View>
         </View>
         <ListView
@@ -142,30 +142,14 @@ export default class Profile extends Component {
     if (this.state.isEmpty) {
       return (
         <View style={styles.waitView}>
-          <Text>- Here will be the list of the item you bought -</Text>
+          <Text>- . . . -</Text>
         </View>
       )
     }
   }
 
   _openChat = (postData) => {
-    Actions.chat({ title:postData.title, puid:postData.puid })
-  }
-
-  _userEdit = () => {
-    Actions.setting()
-  }
-
-  _logOut = () => {
-    firebaseRef.auth().signOut()
-    .then(() => {
-      this.props.appStore.username = ""
-      this.props.appStore.user = {}
-      this.props.appStore.post_count = 0
-      Actions.login({ type: 'replace' });
-    }, function(error) {
-      console.log(error)
-    });
+    this.props.navigation.navigate('Chat',{ title:postData.title, puid: postData.puid, uid:this.props.appStore.user.uid});
   }
 
   componentWillUnmount() {

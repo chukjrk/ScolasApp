@@ -1,17 +1,13 @@
 import React, {Component} from 'react';
-import {
-  View,
-  Image,
-  Keyboard
-} from 'react-native';
+import { View, Image, Keyboard, TextInput, Text } from 'react-native';
 import {
   RkStyleSheet,
   RkText,
   RkTextInput,
   RkTheme
 } from 'react-native-ui-kitten';
-// import {GradientButton} from '../../components/';
-// import {scale, scaleModerate, scaleVertical} from '../../utils/scale';
+import { Button } from 'react-native-elements'
+import { firebaseRef } from '../../services/Firebase'
 
 export default class PasswordRecovery extends Component {
   static navigationOptions = {
@@ -19,7 +15,21 @@ export default class PasswordRecovery extends Component {
   };
 
   constructor(props) {
-    super(props);
+    super(props)
+    this.state = {
+      email: "",
+    }
+
+    this._passRecover = this._passRecover.bind(this)
+  }
+
+  _passRecover(){
+    firebaseRef.auth().sendPasswordResetEmail(this.state.email).then((user) => {
+      alert("Password reset email has been sent")
+    }).catch(function(error) {
+      alert("error son!")
+      console.log(error)
+    });
   }
 
   render() {
@@ -36,17 +46,37 @@ export default class PasswordRecovery extends Component {
             onResponderRelease={ (e) => Keyboard.dismiss()}>
         <View style={styles.header}>
           {renderIcon()}
-          <RkText rkType='h1'>Password Recovery</RkText>
+          <RkText style={{fontSize: 35, color: 'white', textAlign: 'center'}}>Password Recovery</RkText>
         </View>
         <View style={styles.content}>
-          <RkTextInput rkType='rounded' placeholder='Email'/>
-          <RkText rkType='secondary5 secondaryColor center'>
-            Enter your email below to receive your password reset instructions
-          </RkText>
+          <TextInput
+            placeholder = "Email"
+            placeholderTextColor= "rgba(255,255,255,0.7)"
+            returnKeyType= "go"
+            keyboardType= "email-address"
+            autoCapitalize= "none"
+            autoCorrect={false}
+            underlineColorAndroid= "transparent"
+            onChangeText={(text) => this.setState({email: text})}
+            value = {this.state.email}
+            style={styles.input} />
+
+          <Text style={styles.instructions}>
+            Enter your email above to receive your password reset instructions
+          </Text>
+
+          <Button
+            large
+            color= 'white'
+            title= 'SEND'
+            onPress={this._passRecover}
+            backgroundColor='#f2a124' 
+            buttonStyle={{ width: 320, margin: 10}}/>
         </View>
-        <GradientButton style={styles.save} rkType='large' text='SEND' onPress={() => {
+          
+        {/*<GradientButton style={styles.save} rkType='large' text='SEND' onPress={() => {
           this.props.navigation.goBack()
-        }}/>
+        }}/>*/}
       </View>
     )
   }
@@ -58,9 +88,12 @@ let styles = RkStyleSheet.create(theme => ({
     paddingHorizontal: 16,
     // paddingVertical: scaleVertical(24),
     justifyContent: 'space-between',
-    backgroundColor: theme.colors.screen.base
+    backgroundColor: '#8A9FC6',
+    alignItems: 'center'
   },
   header: {
+    paddingTop: 70,
+    marginBottom: 10,
     alignItems: 'center'
   },
   image: {
@@ -70,5 +103,23 @@ let styles = RkStyleSheet.create(theme => ({
   },
   content: {
     alignItems: 'center'
-  }
+  },
+  input: {
+    borderRadius: 5,
+    borderColor: 'white',
+    borderWidth: 1,
+    width: 320,
+    // height: 80,
+    fontSize: 18,
+    margin: 10,
+    color: '#FFF',
+    paddingHorizontal: 10
+  },
+  instructions: {
+    paddingBottom: 100,
+    fontSize: 12,
+    fontStyle: 'italic',
+    color: 'grey',
+    textAlign: 'center'
+  },
 }));

@@ -7,9 +7,11 @@ import Register from '../components/Authentication/Register';
 import Profile from "../components/Profile/Profile";
 import Settings from "../components/Profile/Settings";
 import CreateNew from "../components/Listings/CreateNew"
-// import ChatHome from "../components/Chat/ChatHome"
+import Purchased from "../components/Listings/Purchased"
+import Archive from "../components/Listings/Archive"
 import StoreView from "../components/Listings/StoreView"
 import Chat from '../components/Chat/Chat'
+import ChatHome from "../components/Chat/ChatHome"
 import Book from '../components/Listings/Book'
 import { observer,inject } from 'mobx-react/native';
 import { Icon } from 'react-native-elements'
@@ -47,6 +49,18 @@ const ChildPage2 = StackNavigator({
 	Settings: {
 		screen: Settings,
 		navigationOptions: {
+		}
+	},
+	Purchased: {
+		screen: Purchased,
+		navigationOptions: {
+			title: "Books Purchased"
+		}
+	},
+	Archive: {
+		screen: Archive,
+		navigationOptions: {
+			title: "Books Posted"
 		}
 	},
 })
@@ -100,17 +114,17 @@ export const SignedIn = TabNavigator({
 		}
 	},
 
-	// ChatHome: {
-	// 	screen: ChatHome,
-	// 	navigationOptions: {
-	// 		tabBarLabel: "Messages",
-	// 		tabBarIcon: ({ tintColor }) => (
-	// 			<Icon 
- //                  name='chat bubble'
- //                  color={tintColor}/>
- //            ),
-	// 	}
-	// },
+	ChatHome: {
+		screen: ChatHome,
+		navigationOptions: {
+			tabBarLabel: "Messages",
+			tabBarIcon: ({ tintColor }) => (
+				<Icon 
+                  name='chat-bubble-outline'
+                  color={tintColor}/>
+            ),
+		}
+	},
 
 	Store: {
 		screen: ChildPage,
@@ -166,6 +180,7 @@ export default class LoginState extends Component {
 					this.props.appStore.chat_count = parseInt(snapshot.val().chat_count)
             		// added user_point to appStore.user_point after user login
             		this.props.appStore.user_point = parseInt(snapshot.val().user_point)
+            		this.props.appStore.uid = parseInt(snapshot.val().user.uid)
         		})
 				this.setState({ signedIn: true, checkSignIn: true })
 			} else {

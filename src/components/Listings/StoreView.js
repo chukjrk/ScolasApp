@@ -25,8 +25,14 @@ import { firebaseRef } from '../../services/Firebase'
 import Chat from '../../components/Chat/Chat'
 import Book from '../Listings/Book'
 import { observer,inject } from 'mobx-react/native';
+import BackgroundTask from 'react-native-background-task'
 
 const screenWidth = Dimensions.get('window').width
+
+// BackgroundTask.define(() => {
+//   data.status === 'sold' ? firebaseRef.database().ref('posts').child(data.puid).remove() : null
+//   BackgroundTask.finish()
+// })
 
 @inject("appStore") @observer
 export default class StoreView extends Component {
@@ -64,6 +70,7 @@ export default class StoreView extends Component {
       }
       this.setState({ isLoading: false })
     })
+    // BackgroundTask.schedule({period: 1200})
   }
 
   componentDidUpdate() {
@@ -146,9 +153,9 @@ export default class StoreView extends Component {
               <RkText>Here</RkText>
             </TouchableOpacity>
           : null
-    const Status = ( data.status === 'available') ? <Text style={{fontWeight:'bold',color:"green"}}>{data.status.toUpperCase()}</Text> : null
-    data.status === 'sold' ? firebaseRef.database().ref('posts').child(data.puid).remove() : null
-    
+    const Status = ( data.status === 'available') ? <Text style={{fontWeight:'bold',color:"green"}}>{data.status.toUpperCase()}</Text> : <Text style={{fontWeight:'bold',color:"red"}}>{data.status.toUpperCase()}</Text> 
+    // data.status === 'sold' ? firebaseRef.database().ref('posts').child(data.puid).remove() : null
+
     return (
       <TouchableWithoutFeedback onPress={() => this._BookPage(data)}>
         <View style={styles.card}>
@@ -167,6 +174,7 @@ export default class StoreView extends Component {
             <Text style={{fontStyle: 'italic'}}>{data.Author}</Text>
             <Text style={styles.info}><Text style={styles.bold}>{data.username}</Text> - {timeString}</Text>
 {/*            { data.text ? <Text style={styles.info}>{ data.text }</Text> : null }*/}
+            {Status}
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -174,7 +182,7 @@ export default class StoreView extends Component {
   }
 
   _BookPage = (postData) => {
-      this.props.navigation.navigate('Book',{ title:postData.title, puid:postData.puid, uid:postData.uid});
+      this.props.navigation.navigate('Book',{ title:postData.title, puid:postData.puid, uid:postData.uid });
 
     //Since that Chat navigator in router.js was using StackNavigator,  this.props.navigation.navigate required to
     // handle navigation

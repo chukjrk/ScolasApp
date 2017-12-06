@@ -47,6 +47,7 @@ export default class Settings extends Component {
     .then(() => {
       this.props.appStore.username = ""
       this.props.appStore.user = {}
+      this.props.appStore.uid = ""
       this.props.appStore.post_count = 0
       this.props.appStore.chat_count = 0
       this.props.appStore.order_count = 0
