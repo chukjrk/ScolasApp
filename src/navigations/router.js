@@ -83,7 +83,12 @@ export const SignedOut = StackNavigator ({
 	Register: {
 		screen: Register,
 		navigationOptions: {
-			title: "Register"
+			// header: {
+			// 	style: {
+			// 		textAlign: 'center'
+			// 	}
+			// },
+			title: "Create Account"
 		}
 	},
 }, {
@@ -96,7 +101,7 @@ export const SignedIn = TabNavigator({
 		navigationOptions: {
 			tabBarLabel: "Home",
 			tabBarIcon: ({ tintColor }) => (
-				<Icon 
+				<Icon
                   name='home'
                   color={tintColor}/>
             ),
@@ -107,7 +112,7 @@ export const SignedIn = TabNavigator({
 		navigationOptions: {
 			tabBarLabel: "Add Book",
 			tabBarIcon: ({ tintColor }) => (
-				<Icon 
+				<Icon
                   name='add'
                   color={tintColor}/>
             ),
@@ -131,7 +136,7 @@ export const SignedIn = TabNavigator({
 		navigationOptions: {
 			tabBarLabel: "Store",
 			tabBarIcon: ({ tintColor }) => (
-				<Icon 
+				<Icon
                   name='store'
                   color={tintColor}/>
             ),
