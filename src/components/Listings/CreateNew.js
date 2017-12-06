@@ -101,19 +101,18 @@ export default class CreateNew extends Component {
        </View>
     return (
       <View style={styles.container}>
-      {/*<StickyHeaderFooterScrollView 
+      {/* <StickyHeaderFooterScrollView 
         renderStickyHeader={() => (
           <Header
             centerComponent={{ text: 'NEW ITEM', style: { color: '#fff', fontSize: 20 } }}
             outerContainerStyles= {{ backgroundColor: '#01579B'}}/>
         )}>*/}
         <ScrollView showsVerticalScrollIndicator={false} ref='scrollContent'>
-
           <RkText style={styles.title}>{'PICTURE'}</RkText>
           { photo }
           <Button
             small
-            icon={{name: 'add'}}
+            icon={{name: 'camera-enhance'}}
             onPress={this._takePicture}
             buttonStyle={{width: 180, borderRadius: 2, alignSelf: 'center' }}
              />            

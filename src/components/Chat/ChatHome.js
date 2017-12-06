@@ -13,10 +13,10 @@ import {
 import _ from 'lodash'
 import moment from 'moment'
 import { firebaseRef } from '../../services/Firebase'
+import StickyHeaderFooterScrollView from 'react-native-sticky-header-footer-scroll-view'
 // import Icon from 'react-native-vector-icons/Ionicons'
-// import { getColor } from '../config'
 import { observer,inject } from 'mobx-react/native'
-import { Actions } from 'react-native-mobx'
+import { Header } from 'react-native-elements'
 
 
 @inject("appStore") @observer
@@ -68,6 +68,14 @@ export default class ChatHome extends Component {
     console.log("MY CHAT RENDERING AGAIN!!!");
     return (
       <View style={styles.container}>
+        <StickyHeaderFooterScrollView 
+          renderStickyHeader={() => (
+          <Header 
+          centerComponent={{ text: 'MESSAGES', style: { color: '#fff', fontSize: 20 } }}
+          outerContainerStyles= {{ backgroundColor: '#01579B'}}
+          />
+        )}>
+        
         <ListView
           automaticallyAdjustContentInsets={true}
           initialListSize={1}
@@ -77,7 +85,9 @@ export default class ChatHome extends Component {
           //onEndReached={this._onEndReached}
           onEndReachedThreshold={1}
         />
+        </StickyHeaderFooterScrollView>
       </View>
+
     )
   }
 
@@ -146,7 +156,7 @@ export default class ChatHome extends Component {
   }
 
   _openChat = (postData) => {
-    Actions.chat({ title:postData.title, puid:postData.puid })
+    this.props.navigation.navigate('Chat',{ title:postData.title, puid:postData.puid, uid:this.props.appStore.user.uid, wantToBuy:true });
   }
 
   componentWillUnmount() {
@@ -198,7 +208,7 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     borderBottomWidth: 1,
-    borderColor: '#999',
+    borderColor: '#d6d7da',
     margin: 2,
   },
   title: {

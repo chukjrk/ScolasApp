@@ -5,6 +5,7 @@ import { Avatar, Icon, Header } from 'react-native-elements'
 import StickyHeaderFooterScrollView from 'react-native-sticky-header-footer-scroll-view'
 import { observer,inject } from 'mobx-react/native';
 import { StackNavigator, NavigationActions  } from 'react-navigation'
+import UserAvatar from 'react-native-user-avatar'
 
 @inject("appStore") @observer
 export default class Profile extends React.Component {
@@ -27,10 +28,11 @@ export default class Profile extends React.Component {
           <View style={styles.container}>
             <View style={[styles.header, styles.bordered]}>
               <View style= {{alignSelf: 'center'}}>
-                <Avatar
+                {/*<Avatar
                   rounded
                   xlarge 
-                  source={require('../../assets/images/faceO.jpeg')} />
+                  source={require('../../assets/images/faceO.jpeg')} />*/}
+                  <UserAvatar size="150" name={name} colors={['#ccc', '#FFCA28', '#C62828', '#9CCC65', '#42A5F5']}/>
               </View>
               <View style={styles.section}>
                 <RkText rkType='header2' style={{fontSize: 18}}>{name}</RkText>
@@ -39,36 +41,30 @@ export default class Profile extends React.Component {
 
             <View style={styles.userInfo}>
               <View style={styles.section}>
-              {/*<RkText rkType='header3' style={styles.space}>12</RkText>*/}
-              <TouchableOpacity style={styles.buttons, { paddingTop: 17}} onPress={() => navigate('Settings')}>
-                <Icon 
-                  name='settings'
-                  />
-                  {/*<Text onPress={() => navigate('Register')} > Set </Text>*/}
-                {/*<RkText rkType='moon large primary' style={styles.buttonText}>Sign Out</RkText>*/}
-                {/*</RkButton>*/}
-              </TouchableOpacity>
-            </View>
-            <View style={styles.section}>
-              <RkText rkType='header3' style={styles.space}>{points}</RkText>
-              <RkText rkType='secondary1 hintColor'>Points</RkText>
-            </View>
-            <View style={styles.buttons}>
-              <Icon 
-                name='settings'
-                type='material-icons' />
+                <TouchableOpacity style={styles.buttons, { paddingTop: 17}} onPress={() => navigate('Settings')}>
+                  <Icon 
+                    name='settings'
+                    color='grey'
+                    />
+                </TouchableOpacity>
+              </View>
+                <View style={styles.section}>
+                  <RkText rkType='header3' style={styles.space}>{points}</RkText>
+                  <RkText rkType='secondary1 hintColor'>Points</RkText>
+                </View>
+                <View style={styles.buttons}>
+                </View>
             </View>
           </View>
-        </View>
 
         <View style={styles.bottomContainer}>
-          <TouchableOpacity style={styles.purchase}>
-            <Icon name='history' color= '#898989' />
+          <TouchableOpacity style={styles.purchase} onPress={() => navigate('Purchased')}>
+            <Icon name='history' color= '#898989'/>
             <Text style={{fontSize: 16, paddingLeft: 7}}> Purchases </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.archive}>
+          <TouchableOpacity style={styles.archive} onPress={() => navigate('Archive')}>
             <Icon name='archive' color= '#898989'/>
-            <Text style={{fontSize: 16, paddingLeft: 7}} > Archives </Text>
+            <Text style={{fontSize: 16, paddingLeft: 7}}> Archives </Text>
           </TouchableOpacity>
         </View>
         </ScrollView>

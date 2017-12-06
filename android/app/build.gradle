@@ -109,6 +109,14 @@ android {
         manifestPlaceholders = [onesignal_app_id: "e09d00d9-b019-471d-ab1a-17ada2fdcda2",
                                 onesignal_google_project_number: "648502346745"]
     }
+    signingConfigs {
+        release {
+            storeFile file(SCOLAS_RELEASE_STORE_FILE)
+            storePassword SCOLAS_RELEASE_STORE_PASSWORD
+            keyAlias SCOLAS_RELEASE_KEY_ALIAS
+            keyPassword SCOLAS_RELEASE_KEY_PASSWORD
+        }
+    }
     splits {
         abi {
             reset()
@@ -121,6 +129,8 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
+            // applicationIdSuffix ".debug"
         }
     }
     // applicationVariants are e.g. debug, release
@@ -139,14 +149,15 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-vector-icons')
     compile project(':react-native-onesignal')
+    compile project(':react-native-image-picker')
     compile project(':react-native-fetch-blob')
     compile project(':react-native-background-task')
-    compile project(':react-native-image-picker')
-    compile project(':react-native-vector-icons')
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules
+    compile "com.google.firebase:firebase-core:+"
 }
 
 // Run this once to be able to run the application with BUCK
@@ -155,3 +166,6 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+
+// apply the Google Services Plugin
+// apply plugin: 'com.google.gms.google-services'

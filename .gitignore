@@ -30,15 +30,19 @@ build/
 local.properties
 *.iml
 
+#src
+#
+src/services/
+
+#release
+#
+my-release-key
+
 # node.js
 #
 node_modules/
 npm-debug.log
 yarn-error.log
-
-#src
-#
-src/services/
 
 # BUCK
 buck-out/
