@@ -23,7 +23,8 @@ export default class Register extends Component {
 			name: '',
 			email: '',
 			password: '',
-			verifyPassword: ''
+			verifyPassword: '',
+			school: '',
 		}
 
 		this._register = this._register.bind(this)
@@ -139,10 +140,6 @@ export default class Register extends Component {
 		return (
 			<KeyboardAvoidingView style={styles.container}>
 
-				<View style={styles.title}>
-					<Text style={styles.title}>NEW ACCOUNT</Text>
-				</View>
-
 				<TextInput
 					placeholder = "NAME"
 					placeholderTextColor= "rgba(255,255,255,0.7)"
@@ -150,7 +147,7 @@ export default class Register extends Component {
 					onChangeText={(text) => this.setState({name: text})}
 					autoCorrect={false}
 					underlineColorsAndroid= "transparent"
-					style={styles.input}
+					style={styles.input,{marginTop: 30, paddingHorizontal: 10}}
 					onSubmitEditing={(event) => { this.refs.SecondInput.focus(); }} />
 
 				<TextInput
@@ -168,6 +165,18 @@ export default class Register extends Component {
 
 				<TextInput
 					ref = 'ThirdInput'
+					placeholder = "SCHOOL"
+					placeholderTextColor= "rgba(255,255,255,0.7)"
+					returnKeyType= "next"
+					onChangeText={(text) => this.setState({school: text})}
+					autoCapitalize= "none"
+					underlineColorAndroid= "transparent"
+					autoCorrect={false}
+					style={styles.input}
+					onSubmitEditing={(event) => { this.refs.FourthInput.focus(); }}/>
+
+				<TextInput
+					ref = 'FourthInput'
 					placeholder = "PASSWORD"
 					placeholderTextColor= "rgba(255,255,255,0.7)"
 					returnKeyType= "next"
@@ -175,10 +184,10 @@ export default class Register extends Component {
 					secureTextEntry = {true}
 					underlineColorAndroid= "transparent"
 					style={styles.input}
-					onSubmitEditing={(event) => { this.refs.FourthInput.focus(); }} />
+					onSubmitEditing={(event) => { this.refs.FifthInput.focus(); }} />
 
 				<TextInput
-					ref = 'FourthInput'
+					ref = 'FifthInput'
 					placeholder = "CONFIRM PASSWORD"
 					placeholderTextColor= "rgba(255,255,255,0.7)"
 					returnKeyType= "go"
@@ -208,7 +217,8 @@ const styles = StyleSheet.create({
 		backgroundColor: 'rgba(1, 87, 155, 0.2)',
 		marginBottom: 10,
 		color: '#FFF',
-		paddingHorizontal: 10
+		paddingHorizontal: 10,
+		fontSize: 15
 	},
 
 	buttonContainer: {
