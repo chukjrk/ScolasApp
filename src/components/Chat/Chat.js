@@ -15,11 +15,10 @@ import { firebaseRef } from '../../services/Firebase'
 import firebase from 'firebase'
 import { Icon } from 'react-native-elements'
 import { observer,inject } from 'mobx-react/native'
-import { Actions } from 'react-native-router-flux'
 import { GiftedChat, Bubble } from 'react-native-gifted-chat'
 import Lightbox from 'react-native-lightbox'
 import Spinner from 'react-native-loading-spinner-overlay'
-import BackgroundTask from 'react-native-background-task'
+// import BackgroundTask from 'react-native-background-task'
 
 const screenWidth = Dimensions.get('window').width
 
@@ -90,7 +89,7 @@ export default class Chat extends Component {
         return {
           messages: GiftedChat.append(previousState.messages, {
             _id: 4,
-            text: "Use this chat to communicate with the owner of the item when you are ready to get your book.",
+            text: "Use this chat to communicate with the owner of the item in order to get your book.",
             createdAt: new Date(),
             user: {
               _id: 0,
@@ -485,11 +484,11 @@ export default class Chat extends Component {
                     renderActions={this.renderActions}
                   />
     return (
-            <View style={{marginTop:56,flex:1,}}>
-            <Spinner visible={this.state.spinnervisible} />
-              { Chat }
-            </View>
-          )
+      <View style={{marginTop:56,flex:1,}}>
+      <Spinner visible={this.state.spinnervisible} />
+        { Chat }
+      </View>
+    )
   }
 }
 

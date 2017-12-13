@@ -70,7 +70,7 @@ export default class PasswordRecovery extends Component {
             color= 'white'
             title= 'SEND'
             onPress={this._passRecover}
-            backgroundColor='#f2a124' 
+            backgroundColor='rgb(101,73,114)'
             buttonStyle={{ width: 320, margin: 10}}/>
         </View>
           
@@ -88,7 +88,7 @@ let styles = RkStyleSheet.create(theme => ({
     paddingHorizontal: 16,
     // paddingVertical: scaleVertical(24),
     justifyContent: 'space-between',
-    backgroundColor: '#8A9FC6',
+    backgroundColor: 'rgb(51,204,102)',
     alignItems: 'center'
   },
   header: {
@@ -119,7 +119,7 @@ let styles = RkStyleSheet.create(theme => ({
     paddingBottom: 100,
     fontSize: 12,
     fontStyle: 'italic',
-    color: 'grey',
+    color: 'rgba(255,255,255,0.8)',
     textAlign: 'center'
   },
 }));

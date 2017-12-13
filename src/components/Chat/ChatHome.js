@@ -72,7 +72,7 @@ export default class ChatHome extends Component {
           renderStickyHeader={() => (
           <Header 
           centerComponent={{ text: 'MESSAGES', style: { color: '#fff', fontSize: 20 } }}
-          outerContainerStyles= {{ backgroundColor: '#01579B'}}
+          outerContainerStyles= {{ backgroundColor: '#27924a'}}
           />
         )}>
         
