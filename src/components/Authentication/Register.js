@@ -8,13 +8,25 @@ import { View,
 	KeyboardAvoidingView
 } from 'react-native';
 import { firebaseRef } from '../../services/Firebase';
-import { Actions } from 'react-native-router-flux';
 import { observer, inject } from 'mobx-react/native';
 import Login from './Login'
 import OneSignal from 'react-native-onesignal';
 
 @inject("appStore") @observer
 export default class Register extends Component {
+	static navigationOptions = {
+	    title: 'REGISTRATION', // to add letter spacing on Androi
+	    headerTitleStyle: {
+	    	alignSelf: 'center',
+	    	paddingRight: 56,
+	    	justifyContent: 'space-between',
+	    },
+	    headerStyle: {
+	    	backgroundColor: 'rgb(51,204,102)',
+	    	shadowOpacity: 0
+	    },
+	    headerTintColor: 'white'
+  	};
 
 	constructor(props) {
 		super(props)
@@ -139,7 +151,7 @@ export default class Register extends Component {
 
 		return (
 			<KeyboardAvoidingView style={styles.container}>
-
+				<Text style={styles.title}> User Details </Text>
 				<TextInput
 					placeholder = "NAME"
 					placeholderTextColor= "rgba(255,255,255,0.7)"
@@ -147,8 +159,22 @@ export default class Register extends Component {
 					onChangeText={(text) => this.setState({name: text})}
 					autoCorrect={false}
 					underlineColorsAndroid= "transparent"
-					style={styles.input,{marginTop: 30, paddingHorizontal: 10}}
+					style={styles.input}
 					onSubmitEditing={(event) => { this.refs.SecondInput.focus(); }} />
+
+				<TextInput
+					ref = 'ThirdInput'
+					placeholder = "SCHOOL"
+					placeholderTextColor= "rgba(255,255,255,0.7)"
+					returnKeyType= "next"
+					onChangeText={(text) => this.setState({school: text})}
+					autoCapitalize= "none"
+					underlineColorAndroid= "transparent"
+					autoCorrect={false}
+					style={styles.input}
+					onSubmitEditing={(event) => { this.refs.FourthInput.focus(); }}/>
+
+				<Text style={styles.title}> Account Details </Text>
 
 				<TextInput
 					ref = 'SecondInput'
@@ -162,18 +188,6 @@ export default class Register extends Component {
 					autoCorrect={false}
 					style={styles.input}
 					onSubmitEditing={(event) => { this.refs.ThirdInput.focus(); }}/>
-
-				<TextInput
-					ref = 'ThirdInput'
-					placeholder = "SCHOOL"
-					placeholderTextColor= "rgba(255,255,255,0.7)"
-					returnKeyType= "next"
-					onChangeText={(text) => this.setState({school: text})}
-					autoCapitalize= "none"
-					underlineColorAndroid= "transparent"
-					autoCorrect={false}
-					style={styles.input}
-					onSubmitEditing={(event) => { this.refs.FourthInput.focus(); }}/>
 
 				<TextInput
 					ref = 'FourthInput'
@@ -208,7 +222,8 @@ export default class Register extends Component {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#01579B',
+		backgroundColor: 'rgb(51,204,102)',
+		// backgroundColor: '#01579B',
 		padding: 20
 	},
 
@@ -233,8 +248,10 @@ const styles = StyleSheet.create({
 	},
 
 	title: {
-		//disable for temporary
-		// color: 'white',
+		color: 'white',
+		alignSelf: 'center',
+		paddingBottom: 10,
+		fontSize: 15,
 		// fontSize: 35,
 		// fontWeight: 'bold'
 	},

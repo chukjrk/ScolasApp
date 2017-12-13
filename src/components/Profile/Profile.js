@@ -20,7 +20,7 @@ export default class Profile extends React.Component {
         renderStickyHeader={() => (
         <Header 
         centerComponent={{ text: 'HOME', style: { color: '#fff', fontSize: 20 } }}
-        outerContainerStyles= {{ backgroundColor: '#01579B'}}
+        outerContainerStyles= {{ backgroundColor:'#27924a' }} //backgroundColor: '#01579B'}}
         />
       )}>
 

@@ -136,7 +136,8 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		padding: 20,
-		backgroundColor: '#25a1e0'
+		// backgroundColor: '#25a1e0'
+		backgroundColor: 'rgb(51,204,102)'
 	},
 
 	title: {
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		flex:1,
-		// height: -5,
+		height: 50,
 		// width: -5
 	},
 

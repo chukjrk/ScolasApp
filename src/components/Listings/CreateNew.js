@@ -173,7 +173,7 @@ export default class CreateNew extends Component {
             icon={{name: 'send'}}
             onPress={this._handleNewPost}
             title= 'POST'
-            backgroundColor= '#397af8'
+            backgroundColor= '#25a1e0'
             fontWeight= '800' />
         </ScrollView>
       </View>
