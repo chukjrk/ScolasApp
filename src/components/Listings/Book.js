@@ -202,7 +202,7 @@ export default class Book extends Component {
 
       //run the nofitication. This.constructor.function works if function called has static with it.
       //commented. uncomment if want notification pop up in foreground after user click buy item.
-          this.constructor.runSendNotification(this.props.appStore.user.uid);
+          // this.constructor.runSendNotification(this.props.appStore.user.uid);
 
       // Start and schedule BackgroundTask. See react-native-background-task docs for how to set specific schedule
       // like run after 30 minutes or etcetra
