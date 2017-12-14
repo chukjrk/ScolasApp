@@ -19,7 +19,7 @@ import {
   Dimensions,
   Image,
   Alert,
-  TouchableWithoutFeedback, 
+  TouchableWithoutFeedback,
   AsyncStorage,
 } from 'react-native'
 
@@ -34,7 +34,7 @@ export default class Book extends Component {
       paddingRight: 56,
     },
   };
-  
+
   constructor(props) {
     super(props);
     this.state = {
@@ -97,13 +97,13 @@ export default class Book extends Component {
               <Col size={3}>
                 <Text style={{fontSize: 18, alignSelf: 'center', fontWeight: 'bold', color: 'black'}}>{this.state.postProps.title}</Text>
               </Col>
-            </Grid> 
+            </Grid>
             <Grid>
               <Col size={3}>
                 <Text style={{fontSize: 16, fontStyle: 'italic'}}> - {this.state.postProps.Author}</Text>
               </Col>
             </Grid>
-            
+
             <View style={{marginTop: 15, padding: 10, borderWidth: 1, borderRadius: 3, borderColor: 'rgba(149, 165, 166, 0.3)'}}>
               <NBText style={{marginBottom: 5}}>Description</NBText>
               <View style={{width: 50, height: 1, backgroundColor: 'rgba(44, 62, 80, 0.5)', marginLeft: 7, marginBottom: 10}} />
@@ -203,6 +203,21 @@ export default class Book extends Component {
       //run the nofitication. This.constructor.function works if function called has static with it.
       //commented. uncomment if want notification pop up in foreground after user click buy item.
           // this.constructor.runSendNotification(this.props.appStore.user.uid);
+
+          firebaseRef.database().ref('users/' + this.props.appStore.user.uid).once('value')
+      .then(snapshot => {
+        var get_total = snapshot.val().user_point - 1
+        firebaseRef.database().ref('users')
+        .child(this.props.appStore.user.uid).update( { user_point : get_total } )
+        });
+
+  //get current user's user_point from firebase and updated it
+    firebaseRef.database().ref('users/' + this.props.appStore.seller_uid).once('value')
+      .then(snapshot => {
+        var get_total = snapshot.val().user_point + 1
+        firebaseRef.database().ref('users')
+        .child(this.props.appStore.seller_uid).update( { user_point : get_total } )
+        });
 
       // Start and schedule BackgroundTask. See react-native-background-task docs for how to set specific schedule
       // like run after 30 minutes or etcetra
@@ -347,7 +362,7 @@ export default class Book extends Component {
   //   return items;
   // }
 
-  
+
 
 
 //******

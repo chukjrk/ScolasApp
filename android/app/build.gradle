@@ -111,10 +111,12 @@ android {
     }
     signingConfigs {
         release {
+            if (project.hasProperty('SCOLAS_RELEASE_STORE_FILE')) {
             storeFile file(SCOLAS_RELEASE_STORE_FILE)
             storePassword SCOLAS_RELEASE_STORE_PASSWORD
             keyAlias SCOLAS_RELEASE_KEY_ALIAS
             keyPassword SCOLAS_RELEASE_KEY_PASSWORD
+            }
         }
     }
     splits {
