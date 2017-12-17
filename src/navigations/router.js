@@ -13,6 +13,7 @@ import StoreView from "../components/Listings/StoreView"
 import Chat from '../components/Chat/Chat'
 import ChatHome from "../components/Chat/ChatHome"
 import Book from '../components/Listings/Book'
+import appStore from '../store/AppStore'
 import { observer,inject } from 'mobx-react/native';
 import { Icon } from 'react-native-elements'
 import BackgroundTask from 'react-native-background-task'
