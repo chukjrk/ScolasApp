@@ -19,7 +19,6 @@ import { StackNavigator } from 'react-navigation';
 import { SignedOut, SignedIn } from "./src/navigations/router";
 import { firebaseRef } from './src/services/Firebase'
 import LoginState from "./src/navigations/router";
-import OneSignal from 'react-native-onesignal';
 import Chat from './src/components/Chat/Chat';
 import Book from './src/components/Listings/Book'
 
@@ -31,7 +30,7 @@ export default class App extends Component {
         this.state = {
             // signedIn: false,
             // checkSignIn: false,
-            device_id: '',
+            // device_id: '',
         }
     }
 
