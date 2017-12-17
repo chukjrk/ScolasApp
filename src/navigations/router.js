@@ -18,6 +18,7 @@ import { observer,inject } from 'mobx-react/native';
 import { Icon } from 'react-native-elements'
 import BackgroundTask from 'react-native-background-task'
 import OneSignal from 'react-native-onesignal';
+import appStore from '../store/AppStore';
 
 // added navigation to Chat using StackNavigator. Somehow using routeName
 // is not working
@@ -130,7 +131,7 @@ export const SignedIn = TabNavigator({
 		navigationOptions: {
 			tabBarLabel: "Messages",
 			tabBarIcon: ({ tintColor }) => (
-				<Icon 
+				<Icon
                   name='chat-bubble-outline'
                   color={tintColor}/>
             ),
