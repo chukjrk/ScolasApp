@@ -42,7 +42,8 @@ export default class Book extends Component {
       activeSlide: 0,
       quantity: 1,
       postProps: {},
-      status: ""
+      status: "",
+      disabled:false
     };
 
     this.props.appStore.current_page = 'book'
@@ -78,7 +79,21 @@ export default class Book extends Component {
   }
 
   render(data) {
+
     // const height = screenWidth*data.imageHeight/data.imageWidth
+    firebaseRef.database().ref('users/' + this.props.appStore.user.uid).once('value')
+    .then(snapshot => {
+        if(snapshot.val().user_point == 0){
+          this.setState({
+              disabled: true
+          });
+        }else{
+          this.setState({
+              disabled: false
+          });
+        }
+      });
+
     return(
       <Container style={{backgroundColor: '#fdfdfd'}}>
         <Content>
@@ -114,9 +129,12 @@ export default class Book extends Component {
 
             <Grid style={{marginTop: 15}}>
               <Col size={3}>
-                <Button block onPress={() => this._onBuyConfirm(data)} style={{backgroundColor: '#25a1e0'}}>
-                  <Text style={{color: "#fdfdfd", marginLeft: 5}}>PURCHASE</Text>
-                </Button>
+              <Button block onPress={() => this._onBuyConfirm(data)}
+                                    style={this.state.disabled == true
+                                      ? {backgroundColor: '#707070'} : {backgroundColor: '#25a1e0'}}
+                                    disabled = {this.state.disabled}>
+                                    <Text style={{color: "#fdfdfd", marginLeft: 5}}>PURCHASE</Text>
+                                    </Button>
               </Col>
             </Grid>
           </View>
@@ -203,21 +221,6 @@ export default class Book extends Component {
       //run the nofitication. This.constructor.function works if function called has static with it.
       //commented. uncomment if want notification pop up in foreground after user click buy item.
           this.constructor.runSendNotification(this.props.appStore.user.uid);
-
-          firebaseRef.database().ref('users/' + this.props.appStore.user.uid).once('value')
-      .then(snapshot => {
-        var get_total = snapshot.val().user_point - 1
-        firebaseRef.database().ref('users')
-        .child(this.props.appStore.user.uid).update( { user_point : get_total } )
-        });
-
-  //get current user's user_point from firebase and updated it
-    firebaseRef.database().ref('users/' + this.props.appStore.seller_uid).once('value')
-      .then(snapshot => {
-        var get_total = snapshot.val().user_point + 1
-        firebaseRef.database().ref('users')
-        .child(this.props.appStore.seller_uid).update( { user_point : get_total } )
-        });
 
       // Start and schedule BackgroundTask. See react-native-background-task docs for how to set specific schedule
       // like run after 30 minutes or etcetra
