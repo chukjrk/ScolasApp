@@ -42,7 +42,8 @@ export default class Book extends Component {
       activeSlide: 0,
       quantity: 1,
       postProps: {},
-      status: ""
+      status: "",
+      disabled:false
     };
 
     this.props.appStore.current_page = 'book'
@@ -78,7 +79,21 @@ export default class Book extends Component {
   }
 
   render(data) {
+
     // const height = screenWidth*data.imageHeight/data.imageWidth
+    firebaseRef.database().ref('users/' + this.props.appStore.user.uid).once('value')
+    .then(snapshot => {
+        if(snapshot.val().user_point == 0){
+          this.setState({
+              disabled: true
+          });
+        }else{
+          this.setState({
+              disabled: false
+          });
+        }
+      });
+
     return(
       <Container style={{backgroundColor: '#fdfdfd'}}>
         <Content>
@@ -114,9 +129,12 @@ export default class Book extends Component {
 
             <Grid style={{marginTop: 15}}>
               <Col size={3}>
-                <Button block onPress={() => this._onBuyConfirm(data)} style={{backgroundColor: '#25a1e0'}}>
-                  <Text style={{color: "#fdfdfd", marginLeft: 5}}>PURCHASE</Text>
-                </Button>
+              <Button block onPress={() => this._onBuyConfirm(data)}
+                                    style={this.state.disabled == true
+                                      ? {backgroundColor: '#707070'} : {backgroundColor: '#25a1e0'}}
+                                    disabled = {this.state.disabled}>
+                                    <Text style={{color: "#fdfdfd", marginLeft: 5}}>PURCHASE</Text>
+                                    </Button>
               </Col>
             </Grid>
           </View>
