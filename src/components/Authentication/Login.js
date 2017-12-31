@@ -19,7 +19,9 @@ export default class Login extends Component {
 		this.state = {
 			email: '',
 			password: '',
-			status: ''
+			status: '',
+			accountStatus: 1,
+			errorMessage: null,
 		}
 
 		this._login = this._login.bind(this)
@@ -51,18 +53,21 @@ export default class Login extends Component {
               { device_id: this.props.appStore.device_id,})
             this.props.appStore.device_id = status.userId
             });
+      		// OneSignal.sendTag("username", user.displayName)
+      		// OneSignal.sendTag("uid", user.uid)
 
-
-      // OneSignal.sendTag("username", user.displayName)
-      // OneSignal.sendTag("uid", user.uid)
+      		this.setState({ accountStatus: 0 }) 
     	})
 		.catch(function(error) {
 			//Handle Errors here.
-			console.log(error.codse)
+			console.log(error.code)
 			console.log(error.message)
 			// ...
+			var eChange = error.message
+            eChange.toString()
 		});
-
+		// this.state.accountStatus === 1 ? this.setState({ errorMessage: 'Authentication failed check email or password'}) : 
+		// this.setState({ errorMessage: null})
 	}
 
 	_register() {
@@ -82,10 +87,16 @@ export default class Login extends Component {
 					<Image
 						// style={styles.}
 						source={require('../../assets/images/booc1.png')}
-						resizeMode="cover" 
+						resizeMode="cover"
+						// style={{height: 450}} 
 						/>
-					<Text>BooXchange</Text>
 				</View>
+				<View>
+					<Text style={styles.title}>BooXchange</Text>
+				</View>
+
+				{/*<Text style={{color: 'red', fontSize: 13}}>{this.state.errorMessage}</Text>*/}
+
 				<View>
 					<TextInput
 						placeholder = "EMAIL"
@@ -142,15 +153,16 @@ const styles = StyleSheet.create({
 
 	title: {
 		color: 'white',
-		fontSize: 35,
-		fontWeight: 'bold'
+		fontSize: 20,
+		fontWeight: 'bold',
+		alignSelf: 'center'
 	},
 
 	titleWrapper: {
 		justifyContent: 'center',
 		alignItems: 'center',
 		flex:1,
-		height: 50,
+		height: 150,
 		// width: -5
 	},
 

@@ -32,11 +32,6 @@ let base = Rebase.createClass(firebaseRef.database()); //initiate rebase with fi
 
 const screenWidth = Dimensions.get('window').width
 
-// BackgroundTask.define(() => {
-//   data.status === 'sold' ? firebaseRef.database().ref('posts').child(data.puid).remove() : null
-//   BackgroundTask.finish()
-// })
-
 @inject("appStore") @observer
 export default class StoreView extends Component {
 
@@ -140,6 +135,10 @@ export default class StoreView extends Component {
     });
   }
 
+  static deletePost(postData){
+    firebaseRef.database().ref('posts').child(postData.puid).remove()
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -208,7 +207,6 @@ export default class StoreView extends Component {
               <Text style={{fontStyle: 'italic'}}>{data.Author}</Text>
               <Text style={styles.info}><Text style={styles.bold}>{data.username}</Text> - {timeString}</Text>
               {/* { data.text ? <Text style={styles.info}>{ data.text }</Text> : null }*/}
-              {Status}
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -286,10 +284,9 @@ const styles = StyleSheet.create({
     marginTop: 100,
   },
   card: {
-    flex: 0.2,
+    flex: 1,
     flexDirection: 'row',
-    paddingHorizontal: 8,
-    paddingVertical: 8,
+    margin: 8,
     borderBottomWidth: 1,
     borderColor: '#d6d7da'
   },
@@ -297,6 +294,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '800',
     color: '#444',
+    textAlign: 'left',
   },
   postInfo: {
     padding: 5,
