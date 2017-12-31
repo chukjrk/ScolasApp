@@ -29,6 +29,7 @@ const screenWidth = Dimensions.get('window').width
 @inject("appStore") @observer
 export default class Book extends Component {
   static navigationOptions = {
+    // title: `${navigation.state.params.title}`,
     headerTitleStyle: {
       alignSelf: 'center',
       paddingRight: 56,
@@ -194,9 +195,11 @@ export default class Book extends Component {
           console.log(responseJson.action.actionID);
 
         });
-    }
-  )
+    })
+  }
 
+  static deletePost(data) {
+    firebaseRef.database().ref('posts').child(data).remove()
   }
 
   _onBuy = () => {
@@ -218,13 +221,21 @@ export default class Book extends Component {
       // get seller_uid and set it to app.Store.seller_uid
       this.props.appStore.seller_uid = this.props.navigation.state.params.uid
 
+      // Deduct Points per each purchase
+      firebaseRef.database().ref('users/' + this.props.appStore.user.uid).once('value')
+      .then(snapshot => {
+          var get_total = snapshot.val().user_point - 1
+          firebaseRef.database().ref('users')
+          .child(this.props.appStore.user.uid).update( { user_point : get_total } )
+      });
+
       //run the nofitication. This.constructor.function works if function called has static with it.
       //commented. uncomment if want notification pop up in foreground after user click buy item.
-          this.constructor.runSendNotification(this.props.appStore.user.uid);
+          // this.constructor.runSendNotification(this.props.appStore.user.uid);
 
       // Start and schedule BackgroundTask. See react-native-background-task docs for how to set specific schedule
       // like run after 30 minutes or etcetra
-      // BackgroundTask.schedule({period: 15});
+      BackgroundTask.schedule({period: 86400});
 
 
       firebaseRef.database().ref('user_posts/'+this.state.postProps.uid+'/posts').child(this.props.navigation.state.params.puid).update(
@@ -273,11 +284,11 @@ export default class Book extends Component {
                 headers: {
                   'Accept': 'application/json',
                   'Content-Type': 'application/json',
-                  'Authorization': this.props.appStore.onesignal_api_key,
+                  'Authorization': "Basic NGEwMGZmMjItY2NkNy0xMWUzLTk5ZDUtMDAwYzI5NDBlNjJj",
                 },
                 body: JSON.stringify(
                 {
-                  app_id: this.props.appStore.onesignal_app_id,
+                  app_id: "e09d00d9-b019-471d-ab1a-17ada2fdcda2",
                   included_segments: ["All"],
                   android_sound: "fishing",
                   ios_sound: "fishing.caf",

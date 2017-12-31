@@ -15,18 +15,18 @@ import OneSignal from 'react-native-onesignal';
 @inject("appStore") @observer
 export default class Register extends Component {
 	static navigationOptions = {
-	    title: 'REGISTRATION', // to add letter spacing on Androi
-	    headerTitleStyle: {
-	    	alignSelf: 'center',
-	    	paddingRight: 56,
-	    	justifyContent: 'space-between',
-	    },
-	    headerStyle: {
-	    	backgroundColor: 'rgb(51,204,102)',
-	    	shadowOpacity: 0
-	    },
-	    headerTintColor: 'white'
-  	};
+    title: 'REGISTRATION', // to add letter spacing on Androi
+    headerTitleStyle: {
+    	alignSelf: 'center',
+    	paddingRight: 56,
+    	justifyContent: 'space-between',
+    },
+    headerStyle: {
+    	backgroundColor: 'rgb(51,204,102)',
+    	shadowOpacity: 0
+    },
+    headerTintColor: 'white'
+	};
 
 	constructor(props) {
 		super(props)
@@ -37,113 +37,109 @@ export default class Register extends Component {
 			password: '',
 			verifyPassword: '',
 			school: '',
+			wordStatus: null,
+			emailStatus: 1,
+      errorMessage: null,
 		}
 
 		this._register = this._register.bind(this)
 	}
 
 	_register() {
-		if (this.state.password == this.state.verifyPassword) {
-			firebaseRef.database().ref('usernameList').child(this.state.name.toLowerCase()).once('value')
-			.then((snapshot) => {
-				if (snapshot.val()){
-				}
-				else {
-					firebaseRef.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-					.then((user) => {
-						// user.sendEmailVerification().then()
-						firebaseRef.database().ref('usernameList').child(this.state.name.toLowerCase()).set(user.uid)
-						user.updateProfile({displayName: this.state.name})
-						.then(() => {
-							//Get device_id using OneSignal.getPermissionSubscriptionState() and registered it to firebase
-							OneSignal.getPermissionSubscriptionState((status) => {
-								const uid = user.uid
-								const username = user.displayName
-								const post_count = 0
-								const chat_count = 0
-								const order_count = 0
-								const email = user.email
-								const user_point = 1 //added and set user_point default to 1
-								const device_id = status.userId // added
+		if (this.state.email.includes('.edu')) {
+			this.setState({ errorMessage: null })
+			if (this.state.password == this.state.verifyPassword) {
+				this.setState({ wordStatus: null})
+				firebaseRef.database().ref('usernameList').child(this.state.name.toLowerCase()).once('value')
+				.then((snapshot) => {
+					if (snapshot.val()){
+					} else {
+						firebaseRef.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+						.then((user) => {
+							user.sendEmailVerification().then(() => {
+								firebaseRef.database().ref('usernameList').child(this.state.name.toLowerCase()).set(user.uid)
+  							user.updateProfile({displayName: this.state.name})
+  							.then(() => {
+  								// this.setState({emailStatus: 0})
+  								//Get device_id using OneSignal.getPermissionSubscriptionState() and registered it to firebase
+  								OneSignal.getPermissionSubscriptionState((status) => {
+  									const uid = user.uid
+	  								const username = user.displayName
+	  								const post_count = 0
+	  								const chat_count = 0
+	  								const order_count = 0
+	  								const email = user.email
+	  								const user_point = 1 //added and set user_point default to 1
+	  								const device_id = status.userId // added
 
-								firebaseRef.database().ref('users/' + user.uid)
-								.set({
-									uid,
-									username,
-									post_count,
-									chat_count,
-									order_count,
-									email,
-									user_point,
-									device_id
-								})
+	  								firebaseRef.database().ref('users/' + user.uid)
+	  								.set({
+	  									uid,
+	  									username,
+	  									post_count,
+	  									chat_count,
+	  									order_count,
+	  									email,
+	  									user_point,
+	  									device_id
+	  								})
 
+	  								this.props.appStore.uid = user.uid
+		  							this.props.appStore.username = user.displayName
+		  							this.props.appStore.post_count = post_count
+		  							this.props.appStore.order_count = order_count
+		  							this.props.appStore.chat_count = chat_count
+		  							this.props.appStore.user = user
+		  							this.props.appStore.user_point = user_point
 
-							this.props.appStore.uid = user.uid
-							this.props.appStore.username = user.displayName
-							this.props.appStore.post_count = post_count
-							this.props.appStore.order_count = order_count
-							this.props.appStore.chat_count = chat_count
-							this.props.appStore.user = user
-							this.props.appStore.user_point = user_point
+		  							console.log("------------get the data from input fields or set the default-----------------")
+		  							console.log("username:" + user.displayName)
+		  							console.log("post_count:" + post_count)
+		  							console.log("order_count:" + order_count)
+		  							console.log("chat_count:" + chat_count)
+		  							console.log("user:" + user)
+		  							console.log("user1:" + user.displayName)
+		  							console.log("user2:" + user.email)
+		  							console.log("user3:" + user.photoURL)
+		  							console.log("user4:" + user.emailVerified)
+		  							console.log("user5:" + user.uid)
+		  							console.log("user_point:" + user_point)
 
-							console.log("------------get the data from input fields or set the default-----------------")
-							console.log("username:" + user.displayName)
-							console.log("post_count:" + post_count)
-							console.log("order_count:" + order_count)
-							console.log("chat_count:" + chat_count)
-							console.log("user:" + user)
-							console.log("user1:" + user.displayName)
-							console.log("user2:" + user.email)
-							console.log("user3:" + user.photoURL)
-							console.log("user4:" + user.emailVerified)
-							console.log("user5:" + user.uid)
-							console.log("user_point:" + user_point)
+		  							console.log("--------------------After save in appstore, then load back data in appstore-----------------")
+		  							console.log("username:" + this.props.appStore.username)
+		  							console.log("post_count:" + this.props.appStore.post_count)
+		  							console.log("order_count:" + this.props.appStore.order_count)
+		  							console.log("chat_count:" + this.props.appStore.chat_count)
+		  							console.log("user:" + this.props.appStore.user)
+		  							console.log("user1:" + this.props.appStore.user.displayName)
+		  							console.log("user2:" + this.props.appStore.user.email)
+		  							console.log("user3:" + this.props.appStore.user.photoURL)
+		  							console.log("user4:" + this.props.appStore.user.emailVerified)
+		  							console.log("user5:" + this.props.appStore.user.uid)
+		  							console.log("user_point:" + this.props.appStore.user_point)
 
-							console.log("--------------------After save in appstore, then load back data in appstore-----------------")
-							console.log("username:" + this.props.appStore.username)
-							console.log("post_count:" + this.props.appStore.post_count)
-							console.log("order_count:" + this.props.appStore.order_count)
-							console.log("chat_count:" + this.props.appStore.chat_count)
-							console.log("user:" + this.props.appStore.user)
-							console.log("user1:" + this.props.appStore.user.displayName)
-							console.log("user2:" + this.props.appStore.user.email)
-							console.log("user3:" + this.props.appStore.user.photoURL)
-							console.log("user4:" + this.props.appStore.user.emailVerified)
-							console.log("user5:" + this.props.appStore.user.uid)
-							console.log("user_point:" + this.props.appStore.user_point)
-															});
-						});
-						this.props.navigator.push ({
-							component: Login
-						});
-					})
-					.catch(function(error) {
-						//Handle Errors here.
-						console.log(error.code)
-						console.log(error.message)
-						// ...
-					})
-				}
-			})
+  								});
+  							});
+							})
+							this.props.navigation.navigate('VerifyMessage')
+						}) .catch(function(error) {
+							//Handle Errors here.
+							console.log(error.code)
+							console.log(error.message)
+							// ...
+	            var eChange = error.message
+	            eChange.toString()
+						})
+					}
+				})
+			} else {
+				console.log("Passwords do not match");
+      	this.setState({ wordStatus: 'Passwords do not match'})
+			}
 		} else {
-			console.log("Passwords does not match");
+			this.setState({errorMessage: 'Email must be a school email (e.g .edu)'})
 		}
 	}
-
-	// componentDidMount() {
- //    console.log("--------- SIGN UP --------- ")
- //    this.props.appStore.tracker.trackScreenView('SIGN UP')
- //    BackAndroid.addEventListener('backBtnPressed', this._handleBackBtnPress)
- //  }
-
- //  componentDidUpdate() {
- //    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring)
- //  }
-
- //  componentWillUnmount() {
- //    BackAndroid.removeEventListener('backBtnPressed', this._handleBackBtnPress)
- //  }
 
 	render() {
 		//const Name = this.state.name;
@@ -151,6 +147,8 @@ export default class Register extends Component {
 
 		return (
 			<KeyboardAvoidingView style={styles.container}>
+        <Text style={{color: 'red', fontSize: 13}}>{this.state.wordStatus}</Text>
+        <Text style={{color: 'red', fontSize: 13}}>{this.state.errorMessage}</Text>
 				<Text style={styles.title}> User Details </Text>
 				<TextInput
 					placeholder = "NAME"

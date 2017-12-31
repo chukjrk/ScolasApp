@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingTop: 4,
     paddingBottom: 4,
-    fontSize: 13,
+    fontSize: 15,
   },
   btnAdd: {
     width: 280,

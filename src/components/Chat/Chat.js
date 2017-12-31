@@ -24,6 +24,10 @@ const screenWidth = Dimensions.get('window').width
 
 @inject("appStore") @observer
 export default class Chat extends Component {
+  static navigationOptions = {
+    // title: `${navigation.state.params.title}`,
+  };
+
   constructor(props) {
     super(props)
     this.state = {
@@ -146,164 +150,6 @@ export default class Chat extends Component {
     //console.log("---------------------------------- componentDidUpdate ---------------------------------")
   }
 
-  // _onBuyConfirm = () => {
-  //   Alert.alert(
-  //     'Order Confirmation',
-  //     'Are you sure you want to purchase this item?',
-  //     [
-  //       { text: 'No', onPress: () => {}, style: 'cancel' },
-  //       { text: 'Yes', onPress: () => { this._onBuy() } },
-  //     ]
-  //   )
-  // }
-
-// this function will process the nofitication. static used for
-// to access function from other outside class.
-  // static runSendNotification(uid){
-  //   firebaseRef.database().ref('users').child(uid).once('value')
-  //   .then((snapshot) => {
-
-  //     fetch('https://onesignal.com/api/v1/notifications',
-  //     { method: 'POST',
-  //     headers: { "Content-Type": "application/json; charset=utf-8", //required, set by onsignal
-  //               "Authorization": "Basic NGEwMGZmMjItY2NkNy0xMWUzLTk5ZDUtMDAwYzI5NDBlNjJj" }, //required, set by onsignal
-  //     body: JSON.stringify ({
-  //       // changed app_id value if own onesignal app_id
-  //       app_id: "67bdeb03-7db4-4cf5-95b6-616d0530e030",
-  //       // set what to display in notification
-  //       contents: {"en": "Have you received your item?"},
-  //       // this include_player_ids will target user with notification. Can add more target users
-  //       include_player_ids: [snapshot.val().device_id],
-  //       // Custom action buttons. IOS can add more to 3 buttons. See react-native-onesignal docs for more info
-  //       buttons: [{"id": "id1", "text": "Yes", "icon": "ic_menu_share"},
-  //       {"id": "id2", "text": "No", "icon": "ic_menu_send"}],
-  //     })
-  //     }).then((response) => response.json())
-  //       .then((responseJson) => {
-  //         //execute something after fetch executed
-  //         console.log(responseJson.action.actionID);
-
-  //       });
-  //   }
-  // )
-
-  // }
-
-  // _onBuy = () => {
-  //   if (this.state.status === 'available') {
-  //     console.log("AVAILABLE")
-  //     this.setState({
-  //                     status: 'sold',
-  //                     clientName: this.props.appStore.username,
-  //                   })
-  //     firebaseRef.database().ref('posts').child(this.props.navigation.state.params.puid).update(
-  //       {
-  //         updatedAt: firebase.database.ServerValue.TIMESTAMP,
-  //         status: 'sold',
-  //         clientId: this.props.appStore.uid,
-  //         clientName: this.props.appStore.username,
-  //       }
-  //     )
-
-  //     // get seller_uid and set it to app.Store.seller_uid
-  //     this.props.appStore.seller_uid = this.props.navigation.state.params.uid
-
-  //     //run the nofitication. This.constructor.function work if function called have static with it.
-  //     //commented. uncomment if want notification pop up in foreground after user click buy item.
-  //         // this.constructor.runSendNotification(this.props.appStore.user.uid);
-
-  //     // Start and schedule BackgroundTask. See react-native-background-task docs for how to set specific schedule
-  //     // like run after 30 minutes or etcetra
-  //     BackgroundTask.schedule();
-
-
-  //     firebaseRef.database().ref('user_posts/'+this.state.postProps.uid+'/posts').child(this.props.navigation.state.params.puid).update(
-  //       {
-  //         updatedAt: firebase.database.ServerValue.TIMESTAMP,
-  //         status: 'sold',
-  //         clientId: this.props.appStore.uid,
-  //         clientName: this.props.appStore.username,
-  //       }
-  //     )
-  //     this.props.appStore.order_count = this.props.appStore.order_count + 1
-  //     firebaseRef.database().ref('users').child(this.props.appStore.user.uid).update({ order_count: this.props.appStore.order_count })
-  //     firebaseRef.database().ref('user_orders/'+this.props.appStore.user.uid+'/posts').child(this.state.postProps.puid).set(this.state.postProps)
-  //     firebaseRef.database().ref('messages_notif').child(this.props.navigation.state.params.puid).once('value')
-  //     .then((snapshot) => {
-  //       console.log("player_ids: ");
-  //       console.log(snapshot.val());
-  //       if (snapshot.val()) {
-  //         snapshot.val().include_player_ids.map((playerId) => {
-  //           console.log("+-------> " + playerId)
-  //           firebaseRef.database().ref('user_chats/'+this.props.appStore.user.uid+'/posts').child(this.props.navigation.state.params.puid).update(
-  //             {
-  //               updatedAt: firebase.database.ServerValue.TIMESTAMP,
-  //               status: 'sold',
-  //               clientId: this.props.appStore.uid,
-  //               clientName: this.props.appStore.username,
-  //             }
-  //           )
-  //           if (playerId != this.props.appStore.user.uid) {
-  //             firebaseRef.database().ref('user_chats/'+playerId+'/posts').child(this.props.navigation.state.params.puid).transaction(
-  //               (post) => {
-  //                 if (post) {
-  //                   post.status = 'sold'
-  //                   post.clientId = this.props.appStore.uid
-  //                   post.clientName = this.props.appStore.username
-  //                   post.updatedAt = firebase.database.ServerValue.TIMESTAMP
-  //                   post.new_messages++
-  //                 }
-  //                 return post
-  //               }
-  //             )
-  //             console.log("PUSHING NOTIFICATION !!! " + this.props.navigation.state.params.title);
-  //             fetch('https://onesignal.com/api/v1/notifications',
-  //             {
-  //               method: 'POST',
-  //               headers: {
-  //                 'Accept': 'application/json',
-  //                 'Content-Type': 'application/json',
-  //                 'Authorization': this.props.appStore.onesignal_api_key,
-  //               },
-  //               body: JSON.stringify(
-  //               {
-  //                 app_id: this.props.appStore.onesignal_app_id,
-  //                 included_segments: ["All"],
-  //                 android_sound: "fishing",
-  //                 ios_sound: "fishing.caf",
-  //                 data: {"puid":this.props.navigation.state.params.puid, "new_message":true},
-  //                 headings: {"en": "Sold"},
-  //                 contents: {"en": this.props.appStore.user.displayName + " just bought " +  this.state.postProps.title},
-  //                 filters: [{"field":"tag","key":"uid","relation":"=","value":playerId}],
-  //               })
-  //             })
-  //             .then((responseData) => {
-  //               //console.log("Push POST:" + JSON.stringify(responseData))
-  //             })
-  //             .catch((errorData) => {
-  //               console.log("Push ERROR:" + JSON.stringify(errorData))
-  //             })
-  //             .done()
-  //           }
-  //         })
-  //         if (snapshot.val().include_player_ids.indexOf(this.props.appStore.user.uid) === -1) {
-  //           const playerIds = snapshot.val().include_player_ids
-  //           playerIds.push(this.props.appStore.user.uid)
-  //           console.log("ADDDDDING NEW PLAYER to " + this.props.navigation.state.params.puid);
-  //           console.log(playerIds)
-  //           firebaseRef.database().ref('messages_notif').child(this.props.navigation.state.params.puid).set({include_player_ids: playerIds})
-  //           firebaseRef.database().ref('user_chats/'+this.props.appStore.user.uid+'/posts').child(this.props.navigation.state.params.puid).set(this.state.postProps)
-  //           this.props.appStore.chat_count = this.props.appStore.chat_count + 1
-  //           firebaseRef.database().ref('users').child(this.props.appStore.user.uid).update( {chat_count: this.props.appStore.chat_count} )
-  //         }
-  //       }
-  //       else {
-  //         firebaseRef.database().ref('messages_notif').child(this.props.navigation.state.params.puid).set({include_player_ids: [this.props.appStore.user.uid]})
-  //       }
-  //     })
-  //   }
-  // }
-
   _onSend = (messages = []) => {
     for (let i = 0; i < messages.length; i++) {
       firebaseRef.database().ref('posts').child(this.props.navigation.state.params.puid).update( {updatedAt: firebase.database.ServerValue.TIMESTAMP} )
@@ -336,12 +182,11 @@ export default class Chat extends Component {
                 method: 'POST',
                 headers: {
                   'Accept': 'application/json',
-                  'Content-Type': 'application/json',
-                  'Authorization': this.props.appStore.onesignal_api_key,
+                  'Content-Type': 'application/json; charset=utf-8',
+                  'Authorization': 'Basic NGEwMGZmMjItY2NkNy0xMWUzLTk5ZDUtMDAwYzI5NDBlNjJj',
                 },
-                body: JSON.stringify(
-                {
-                  app_id: this.props.appStore.onesignal_app_id,
+                body: JSON.stringify({
+                  app_id: "e09d00d9-b019-471d-ab1a-17ada2fdcda2",
                   included_segments: ["All"],
                   android_sound: "fishing",
                   ios_sound: "fishing.caf",
@@ -481,7 +326,7 @@ export default class Chat extends Component {
                     }}
                     renderMessageImage={this.renderMessageImage}
                     renderFooter={this.renderFooter}
-                    renderActions={this.renderActions}
+                    // renderActions={this.renderActions}
                   />
     return (
       <View style={{marginTop:56,flex:1,}}>

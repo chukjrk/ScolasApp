@@ -32,7 +32,7 @@ export default class Profile extends React.Component {
                   rounded
                   xlarge 
                   source={require('../../assets/images/faceO.jpeg')} />*/}
-                  <UserAvatar size="150" name={name} colors={['#ccc', '#FFCA28', '#C62828', '#9CCC65', '#42A5F5']}/>
+                  <UserAvatar size="150" name={name} colors={['#FFCA28', '#C62828', '#9CCC65', '#42A5F5']}/>
               </View>
               <View style={styles.section}>
                 <RkText rkType='header2' style={{fontSize: 18}}>{name}</RkText>

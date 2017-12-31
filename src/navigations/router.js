@@ -18,7 +18,7 @@ import { observer,inject } from 'mobx-react/native';
 import { Icon } from 'react-native-elements'
 import BackgroundTask from 'react-native-background-task'
 import OneSignal from 'react-native-onesignal';
-import appStore from '../store/AppStore';
+import VerifyMessage from '../components/Authentication/VerifyMessage'
 
 // added navigation to Chat using StackNavigator. Somehow using routeName
 // is not working
@@ -32,7 +32,7 @@ const ChildPage = StackNavigator({
 	Book: {
 		screen: Book,
 		navigationOptions: {
-			title: "Book"
+			// title: "Book"
 		}
 	},
 	Chat: {
@@ -87,15 +87,13 @@ export const SignedOut = StackNavigator ({
 	Register: {
 		screen: Register,
 		navigationOptions: {
-			// header: {
-			// 	style: {
-			// 		textAlign: 'center'
-			// 	}
-			// },
-			// title: "Create Account",
-			// titleStyle: {
-			// 	textAlign: 'center'
-			// }
+		}
+	},
+
+	VerifyMessage: {
+		screen: VerifyMessage,
+		navigationOptions: {
+			header: null
 		}
 	},
 }, {
@@ -168,13 +166,13 @@ export const SignedIn = TabNavigator({
 });
 
 
-
 // BackgroundTask executer. you can put any function to start process in background.
 // The executer must be on the top level js(outside class)
 BackgroundTask.define(() => {
   console.log('Hello from a back`ground task')
   //this will re-run notification in background every 7-15 minutes
-  Chat.runSendNotification(appStore.user.uid);
+  // data.status === 'sold' ? firebaseRef.database().ref('posts').child(data.puid).remove() : null
+  Book.runSendNotification(appStore.user.uid);
 })
 // added @inject on class because found issue after user login, this.props.appStore
 // was not kept in appStore which cause error of undefined props.
@@ -206,7 +204,8 @@ export default class LoginState extends Component {
       	// since the function above was reserved, must put .bind(this) if want to execute outside function
       	// or global variable.
 		firebaseRef.auth().onAuthStateChanged((user) => {
-			if (user) {
+			// user.sendEmailVerification().then(() => { 
+			if (user && user.emailVerified) {
 				console.log("--------- LOGGED AS " + user.displayName + " ---------")
 				this.props.appStore.user = user
 				this.props.appStore.username = user.displayName
@@ -236,20 +235,15 @@ export default class LoginState extends Component {
 		//If yes button clicked, execute something.
 		if(openResult.action.actionID == 'id1'){
 			//get current user's user_point from firebase and updated it
-			firebaseRef.database().ref('users/' + this.props.appStore.user.uid).once('value')
-			.then(snapshot => {
-			    var get_total = snapshot.val().user_point - 1
-			    firebaseRef.database().ref('users')
-			    .child(this.props.appStore.user.uid).update( { user_point : get_total } )
-		    });
-
-			//get current user's user_point from firebase and updated it
 			firebaseRef.database().ref('users/' + this.props.appStore.seller_uid).once('value')
 			.then(snapshot => {
 			    var get_total = snapshot.val().user_point + 1
 			    firebaseRef.database().ref('users')
 			    .child(this.props.appStore.seller_uid).update( { user_point : get_total } )
 		    });
+
+		    Book.deletePost(this.props.appStore.current_puid);
+		    // firebaseRef.database().ref('posts').child(data.puid).remove()
 
 			// cancel BackgroundTask after user clicked yes button
 			BackgroundTask.cancel()
@@ -284,7 +278,7 @@ export default class LoginState extends Component {
         if (!checkSignIn) {
             return null
         }
-
+        
         if (signedIn) {
             return (
                     <SignedIn>
