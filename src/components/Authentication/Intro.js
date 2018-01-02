@@ -41,7 +41,7 @@ const slides = [
     // text: 'I\'m already out of descriptions\n\nLorem ipsum bla bla bla',
     image: require('../../assets/images/slide3.png'),
     imageStyle: styles.image,
-    backgroundColor: '#879BAF',
+    backgroundColor: '#59b2ab',
   },
   {
     key: 'page4',
@@ -49,7 +49,7 @@ const slides = [
     // text: 'I\'m already out of descriptions\n\nLorem ipsum bla bla bla',
     image: require('../../assets/images/slide4.jpeg'),
     imageStyle: styles.image,
-    backgroundColor: '#59b2ab',
+    backgroundColor: '#FF4900',
   },
   {
     key: 'page5',
