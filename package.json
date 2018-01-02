@@ -1,5 +1,5 @@
 {
-  "name": "BooXchange",
+  "name": "booxchange",
   "version": "0.0.2",
   "private": true,
   "scripts": {
@@ -49,5 +49,17 @@
     "metro-bundler": "0.20.2",
     "color-convert": "1.9.1",
     "uglify-js": "github:alexlamsl/UglifyJS2#issue-2449"
-  }
+  },
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chukjrk/ScolasApp.git"
+  },
+  "author": "Chukwuebuka Kemdirim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chukjrk/ScolasApp/issues"
+  },
+  "homepage": "https://github.com/chukjrk/ScolasApp#readme",
+  "description": ""
 }
