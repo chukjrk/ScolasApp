@@ -204,7 +204,7 @@ export default class StoreView extends Component {
 
             <View style={styles.postInfo}>
               <Text style={styles.title}>{ data.title }</Text>
-              <Text style={{fontStyle: 'italic'}}>{data.Author}</Text>
+              <Text style={{fontStyle: 'italic', flexWrap: 'wrap'}}>{data.Author}</Text>
               <Text style={styles.info}><Text style={styles.bold}>{data.username}</Text> - {timeString}</Text>
               {/* { data.text ? <Text style={styles.info}>{ data.text }</Text> : null }*/}
             </View>
@@ -286,7 +286,9 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     flexDirection: 'row',
-    margin: 8,
+    // margin: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 8,
     borderBottomWidth: 1,
     borderColor: '#d6d7da'
   },
@@ -295,6 +297,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#444',
     textAlign: 'left',
+    flexWrap: 'wrap',
   },
   postInfo: {
     padding: 5,
@@ -318,6 +321,7 @@ const styles = StyleSheet.create({
   },
   info: {
     fontSize: 15,
+    flexWrap: 'wrap'
   },
   bold: {
     fontWeight: 'bold',
