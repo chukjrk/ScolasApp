@@ -19,6 +19,7 @@ import { Icon } from 'react-native-elements'
 import BackgroundTask from 'react-native-background-task'
 import OneSignal from 'react-native-onesignal';
 import VerifyMessage from '../components/Authentication/VerifyMessage'
+import Intro from '../components/Authentication/Intro'
 
 // added navigation to Chat using StackNavigator. Somehow using routeName
 // is not working
@@ -70,26 +71,29 @@ const ChildPage2 = StackNavigator({
 })
 
 export const SignedOut = StackNavigator ({
+	Intro: {
+		screen: Intro,
+		navigationOptions: {
+			header: null
+		}
+	},
 	Login: {
 		screen: Login,
 		navigationOptions: {
 		},
 		children: []
 	},
-
 	PasswordReset: {
 		screen: PasswordRecovery,
 		navigationOptions: {
 			header: null
 		}
 	},
-
 	Register: {
 		screen: Register,
 		navigationOptions: {
 		}
 	},
-
 	VerifyMessage: {
 		screen: VerifyMessage,
 		navigationOptions: {
