@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Image, Keyboard, TextInput, Text } from 'react-native';
+import { View, Image, Keyboard, TextInput, Text, Platform, KeyboardAvoidingView } from 'react-native';
 import {
   RkStyleSheet,
   RkText,
@@ -44,6 +44,7 @@ export default class PasswordRecovery extends Component {
             style={styles.screen}
             onStartShouldSetResponder={ (e) => true}
             onResponderRelease={ (e) => Keyboard.dismiss()}>
+
         <View style={styles.header}>
           {renderIcon()}
           <RkText style={{fontSize: 35, color: 'white', textAlign: 'center'}}>Password Recovery</RkText>
@@ -109,11 +110,11 @@ let styles = RkStyleSheet.create(theme => ({
     borderColor: 'white',
     borderWidth: 1,
     width: 320,
-    // height: 80,
     fontSize: 18,
     margin: 10,
     color: '#FFF',
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    height: Platform.OS === 'ios' ? 80 : 80
   },
   instructions: {
     paddingBottom: 100,

@@ -78,7 +78,9 @@ export default class Login extends Component {
 		const { navigate } = this.props.navigation;
 
 		return (
-			<KeyboardAvoidingView style={styles.container}>
+			<KeyboardAvoidingView
+			 style={styles.container}
+			 keyboardVerticalOffset={30} >
 
 				{/*<View style={styles.titleWrapper}>
 					<Text style={styles.title}>Scolas</Text>
