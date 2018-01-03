@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, View, TouchableOpacity, StyleSheet, TextInput, Text } from 'react-native';
+import { ScrollView, View, TouchableOpacity, StyleSheet, TextInput, Text, Platform } from 'react-native';
 import { RkText, RkStyleSheet, RkTheme, RkButton } from 'react-native-ui-kitten';
 import { StackNavigator, NavigationActions } from 'react-navigation';
 import { observer,inject } from 'mobx-react/native';
@@ -186,6 +186,7 @@ let styles = RkStyleSheet.create(theme => ({
     borderColor: 'grey',
     borderWidth: 1,
     borderRadius: 10,
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    height: Platform.OS === 'ios' ? 80 : 80,
   },
 }));

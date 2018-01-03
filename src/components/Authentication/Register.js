@@ -11,6 +11,7 @@ import { firebaseRef } from '../../services/Firebase';
 import { observer, inject } from 'mobx-react/native';
 import Login from './Login'
 import OneSignal from 'react-native-onesignal';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 @inject("appStore") @observer
 export default class Register extends Component {
@@ -39,7 +40,7 @@ export default class Register extends Component {
 			school: '',
 			wordStatus: null,
 			emailStatus: 1,
-      errorMessage: null,
+     		errorMessage: null,
 		}
 
 		this._register = this._register.bind(this)
@@ -146,9 +147,9 @@ export default class Register extends Component {
 		const { navigate } = this.props.navigation;
 
 		return (
-			<KeyboardAvoidingView style={styles.container}>
-        <Text style={{color: 'red', fontSize: 13}}>{this.state.wordStatus}</Text>
-        <Text style={{color: 'red', fontSize: 13}}>{this.state.errorMessage}</Text>
+			<KeyboardAwareScrollView style={styles.container}>
+        		<Text style={{color: 'red', fontSize: 13}}>{this.state.wordStatus}</Text>
+        		<Text style={{color: 'red', fontSize: 13}}>{this.state.errorMessage}</Text>
 				<Text style={styles.title}> User Details </Text>
 				<TextInput
 					placeholder = "NAME"
@@ -212,7 +213,7 @@ export default class Register extends Component {
 				<TouchableOpacity style={styles.buttonContainer} onPress={this._register}>
 					<Text style={styles.buttonText}>CREATE ACCOUNT</Text>
 				</TouchableOpacity>
-			</KeyboardAvoidingView>
+			</KeyboardAwareScrollView>
 		);
 	}
 }

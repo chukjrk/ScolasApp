@@ -14,7 +14,8 @@ import {
   Image,
   ListView,
   Alert,
-  RefreshControl
+  RefreshControl,
+  StatusBar
 } from 'react-native'
 import { StackNavigator, NavigationActions  } from 'react-navigation'
 import { RkText, RkButton, RkStyleSheet, RkTextInput } from 'react-native-ui-kitten';
@@ -54,6 +55,9 @@ export default class StoreView extends Component {
   }
 
   componentDidMount() {
+    if (Platform.OS === 'ios') {
+      StatusBar.setHidden(true);
+    }
     console.log("--------- TIMELINE --------- " + this.state.counter)
     firebaseRef.database().ref('posts').orderByChild('createdAt').limitToLast(this.state.counter).on('value',
     (snapshot) => {
@@ -141,6 +145,7 @@ export default class StoreView extends Component {
 
   render() {
     return (
+      // <StatusBar hidden />
       <View style={styles.container}>
         <SearchBar
           value={this.state.searchText}
@@ -284,13 +289,15 @@ const styles = StyleSheet.create({
     marginTop: 100,
   },
   card: {
-    flex: 1,
     flexDirection: 'row',
+    flexGrow: 1,
     // margin: 8,
     paddingHorizontal: 8,
     paddingVertical: 8,
     borderBottomWidth: 1,
-    borderColor: '#d6d7da'
+    borderColor: '#d6d7da',
+    flexShrink: 1
+    // flexWrap: 'wrap'
   },
   title: {
     fontSize: 20,
@@ -301,12 +308,8 @@ const styles = StyleSheet.create({
   },
   postInfo: {
     padding: 5,
-    // alignItems: 'center',
-  },
-  postButtons: {
-    padding: 5,
     flex: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   button: {
     flex: 3,
@@ -321,7 +324,9 @@ const styles = StyleSheet.create({
   },
   info: {
     fontSize: 15,
-    flexWrap: 'wrap'
+    // flexGrow: 1,
+    // width:0,
+    flexWrap: 'wrap',
   },
   bold: {
     fontWeight: 'bold',
