@@ -1,4 +1,4 @@
-package com.scolas;
+package com.booxchange;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -27,7 +27,7 @@ public class MainActivity extends ReactActivity {
 
     @Override
     protected String getMainComponentName() {
-        return "Scolas";
+        return "BooXchange";
     }
     @Override
     public void onCreate (Bundle savedInstanceState) {

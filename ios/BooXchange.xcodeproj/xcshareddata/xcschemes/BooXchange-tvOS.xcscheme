@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-               BuildableName = "Scolas-tvOS.app"
-               BlueprintName = "Scolas-tvOS"
-               ReferencedContainer = "container:Scolas.xcodeproj">
+               BuildableName = "BooXchange-tvOS.app"
+               BlueprintName = "BooXchange-tvOS"
+               ReferencedContainer = "container:BooXchange.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "Scolas-tvOSTests.xctest"
-               BlueprintName = "Scolas-tvOSTests"
-               ReferencedContainer = "container:Scolas.xcodeproj">
+               BuildableName = "BooXchange-tvOSTests.xctest"
+               BlueprintName = "BooXchange-tvOSTests"
+               ReferencedContainer = "container:BooXchange.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -61,9 +61,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "Scolas-tvOSTests.xctest"
-               BlueprintName = "Scolas-tvOSTests"
-               ReferencedContainer = "container:Scolas.xcodeproj">
+               BuildableName = "BooXchange-tvOSTests.xctest"
+               BlueprintName = "BooXchange-tvOSTests"
+               ReferencedContainer = "container:BooXchange.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -71,9 +71,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "Scolas-tvOS.app"
-            BlueprintName = "Scolas-tvOS"
-            ReferencedContainer = "container:Scolas.xcodeproj">
+            BuildableName = "BooXchange-tvOS.app"
+            BlueprintName = "BooXchange-tvOS"
+            ReferencedContainer = "container:BooXchange.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -94,9 +94,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "Scolas-tvOS.app"
-            BlueprintName = "Scolas-tvOS"
-            ReferencedContainer = "container:Scolas.xcodeproj">
+            BuildableName = "BooXchange-tvOS.app"
+            BlueprintName = "BooXchange-tvOS"
+            ReferencedContainer = "container:BooXchange.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -113,9 +113,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "Scolas-tvOS.app"
-            BlueprintName = "Scolas-tvOS"
-            ReferencedContainer = "container:Scolas.xcodeproj">
+            BuildableName = "BooXchange-tvOS.app"
+            BlueprintName = "BooXchange-tvOS"
+            ReferencedContainer = "container:BooXchange.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

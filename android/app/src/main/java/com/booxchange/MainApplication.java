@@ -1,4 +1,4 @@
-package com.scolas;
+package com.booxchange;
 
 import android.app.Application;
 
