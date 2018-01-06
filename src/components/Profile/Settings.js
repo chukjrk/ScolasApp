@@ -187,6 +187,6 @@ let styles = RkStyleSheet.create(theme => ({
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
-    height: Platform.OS === 'ios' ? 80 : 80,
+    height: Platform.OS === 'ios' ? 50 : null
   },
 }));
