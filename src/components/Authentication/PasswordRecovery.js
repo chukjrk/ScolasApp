@@ -114,7 +114,7 @@ let styles = RkStyleSheet.create(theme => ({
     margin: 10,
     color: '#FFF',
     paddingHorizontal: 10,
-    height: Platform.OS === 'ios' ? 80 : 80
+    height: Platform.OS === 'ios' ? 50 : null
   },
   instructions: {
     paddingBottom: 100,
