@@ -11,7 +11,7 @@ import { View,
 import { firebaseRef } from '../../services/Firebase'
 import Profile from '../Profile/Profile'
 import OneSignal from 'react-native-onesignal';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareView } from 'react-native-keyboard-aware-view'
 
 export default class Login extends Component {
 	constructor(props) {
@@ -79,9 +79,11 @@ export default class Login extends Component {
 		const { navigate } = this.props.navigation;
 
 		return (
-			<KeyboardAvoidingView
-			 style={styles.container}
-			 keyboardVerticalOffset={-30} >
+			// <KeyboardAvoidingView
+			//  style={styles.container}
+			//  keyboardVerticalOffset={-64} >
+			// <View style={{flex: 1}}>
+          		<KeyboardAwareView animated={true} style={styles.container}>
 
 				{/*<View style={styles.titleWrapper}>
 					<Text style={styles.title}>Scolas</Text>
@@ -141,7 +143,8 @@ export default class Login extends Component {
 						<Text style={styles.registerButtonText}>create account</Text>
 					</TouchableOpacity>
 				</View>
-			</KeyboardAvoidingView>
+
+        		</KeyboardAwareView>
 		);
 	}
 }

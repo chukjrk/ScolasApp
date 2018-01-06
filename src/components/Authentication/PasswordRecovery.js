@@ -8,6 +8,7 @@ import {
 } from 'react-native-ui-kitten';
 import { Button } from 'react-native-elements'
 import { firebaseRef } from '../../services/Firebase'
+import { KeyboardAwareView } from 'react-native-keyboard-aware-view'
 
 export default class PasswordRecovery extends Component {
   static navigationOptions = {
