@@ -92,6 +92,7 @@ export default class Register extends Component {
 		  							this.props.appStore.chat_count = chat_count
 		  							this.props.appStore.user = user
 		  							this.props.appStore.user_point = user_point
+		  							OneSignal.sendTag("uid", user.uid)
 
 		  							console.log("------------get the data from input fields or set the default-----------------")
 		  							console.log("username:" + user.displayName)

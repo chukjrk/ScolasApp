@@ -5,7 +5,6 @@ import { Avatar, Icon, Header } from 'react-native-elements'
 import StickyHeaderFooterScrollView from 'react-native-sticky-header-footer-scroll-view'
 import { observer,inject } from 'mobx-react/native';
 import { StackNavigator, NavigationActions  } from 'react-navigation'
-import UserAvatar from 'react-native-user-avatar'
 
 @inject("appStore") @observer
 export default class Profile extends React.Component {
@@ -28,11 +27,12 @@ export default class Profile extends React.Component {
           <View style={styles.container}>
             <View style={[styles.header, styles.bordered]}>
               <View style= {{alignSelf: 'center'}}>
-                {/*<Avatar
+                <Avatar
                   rounded
                   xlarge 
-                  source={require('../../assets/images/faceO.jpeg')} />*/}
-                  <UserAvatar size="150" name={name} colors={['#FFCA28', '#C62828', '#9CCC65', '#42A5F5']}/>
+                  title = {name.charAt(0).toUpperCase()}
+                  overlayContainerStyle={{backgroundColor: ('#FFCA28', '#C62828', '#9CCC65', '#42A5F5') }}/>
+                  {/*source={require('../../assets/images/faceO.jpeg')} />*/}
               </View>
               <View style={styles.section}>
                 <RkText rkType='header2' style={{fontSize: 18}}>{name}</RkText>
@@ -40,14 +40,14 @@ export default class Profile extends React.Component {
             </View>
 
             <View style={styles.userInfo}>
-              <View style={styles.section}>
+              <TouchableOpacity  style={styles.section} onPress={() => navigate('Settings')}>
                 <TouchableOpacity style={styles.buttons, { paddingTop: 17}} onPress={() => navigate('Settings')}>
                   <Icon 
                     name='settings'
                     color='grey'
                     />
                 </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
                 <View style={styles.section}>
                   <RkText rkType='header3' style={styles.space}>{points}</RkText>
                   <RkText rkType='secondary1 hintColor'>Points</RkText>
@@ -119,7 +119,6 @@ const styles = RkStyleSheet.create(theme => ({
     paddingVertical:10,
     borderRightWidth: 1,
     borderColor: '#eeeeee'
-    // borderLeftWidth: 1
   },
 
   space: {

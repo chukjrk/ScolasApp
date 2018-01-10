@@ -97,7 +97,7 @@ export default class Chat extends Component {
             createdAt: new Date(),
             user: {
               _id: 0,
-              name: "Scolas",
+              name: "BooXchange",
               // avatar: 'https://raw.githubusercontent.com/jsappme/react-native-firebase-starter/wip/graphics/myapp-48.png',
             },
           }),
@@ -187,7 +187,7 @@ export default class Chat extends Component {
                 },
                 body: JSON.stringify({
                   app_id: "e09d00d9-b019-471d-ab1a-17ada2fdcda2",
-                  included_segments: ["All"],
+                  included_segments: ["All"], 
                   android_sound: "fishing",
                   ios_sound: "fishing.caf",
                   data: {"puid":this.props.navigation.state.params.puid, "new_message":true},
