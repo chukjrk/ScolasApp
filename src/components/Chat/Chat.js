@@ -224,6 +224,35 @@ export default class Chat extends Component {
     }
   }
 
+  _cancelPurchase() {
+    if (this.state.status === 'sold') {
+      console.log("SOLD")
+      this.setState({
+                      status: 'available',
+                      clientName: this.props.appStore.username,
+                    })
+      firebaseRef.database().ref('posts').child(this.props.navigation.state.params.puid).update(
+        {
+          updatedAt: firebase.database.ServerValue.TIMESTAMP,
+          status: 'available',
+          clientId: this.props.appStore.uid,
+          clientName: this.props.appStore.username,
+        }
+      )
+
+      // get seller_uid and set it to app.Store.seller_uid
+      this.props.appStore.seller_uid = this.props.navigation.state.params.uid
+
+      // Deduct Points per each purchase
+      firebaseRef.database().ref('users/' + this.props.appStore.user.uid).once('value')
+      .then(snapshot => {
+          var get_total = snapshot.val().user_point + 1
+          firebaseRef.database().ref('users')
+          .child(this.props.appStore.user.uid).update( { user_point : get_total } )
+      });
+    }
+  }
+
   componentWillUnmount() {
     console.log("---- CHAT UNMOUNT ---")
     this.props.appStore.current_page = ''
@@ -245,21 +274,19 @@ export default class Chat extends Component {
   }
 
   renderAccessory = (props) => {
-      const Accessory = (this.state.status === 'available') ?
-        <View style={ styles.chatControl }>
-          <TouchableOpacity onPress={ this._onBuyConfirm }>
-            <View style={ styles.btnContainer }>
-              <Text style={ styles.btnText }>{ 'Buy this item'.toUpperCase() }</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      :
+    const Accessory = (this.state.status === 'sold') ?
       <View style={ styles.chatControl }>
         <View style={ styles.btnContainer }>
           <Text style={ styles.btnText }>SOLD</Text>
         </View>
+        <TouchableOpacity onPress={ this._cancelPurchase}>
+          <View style={ styles.btnContainer }>
+            <Text style={ styles.btnText }>{ 'Cancel Purchase'.toUpperCase() }</Text>
+          </View>
+        </TouchableOpacity>
       </View>
-      return Accessory
+    : null
+    return Accessory
   }
 
   renderActions(props) {
