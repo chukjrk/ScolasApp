@@ -225,7 +225,7 @@ export default class Chat extends Component {
   }
 
   _cancelPurchase() {
-    if (this.state.status === 'sold') {
+    if (this.state.status === 'sold') {u
       console.log("SOLD")
       this.setState({
                       status: 'available',
