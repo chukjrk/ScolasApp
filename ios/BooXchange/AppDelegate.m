@@ -11,6 +11,7 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <React/RCTPushNotificationManager.h>
 
 @implementation AppDelegate
 @synthesize oneSignal = _oneSignal;
