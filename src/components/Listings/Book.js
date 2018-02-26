@@ -139,12 +139,12 @@ export default class Book extends Component {
 
 
 
-              <Button block onPress={() => this._Test()}
+             {/* <Button block onPress={() => this._Test()}
                                     style={this.state.disabled == true
                                       ? {backgroundColor: '#707070'} : {backgroundColor: '#25a1e0'}}
                                     disabled = {this.state.disabled}>
                                     <Text style={{color: "#fdfdfd", marginLeft: 5}}>TEST</Text>
-                                    </Button>
+                                    </Button>*/}
               </Col>
             </Grid>
           </View>
@@ -243,13 +243,35 @@ export default class Book extends Component {
           .child(this.props.appStore.user.uid).update( { user_point : get_total } )
       });
 
+      //*****************************************************************************************************
+      // New change for point exchange to be added upon purchase
+      // Buyer will be able to flag seller if they do not receive their books
+      //*****************************************************************************************************
+      firebaseRef.database().ref('users/' + this.props.appStore.seller_uid).once('value')
+      .then(snapshot => {
+          var get_total = snapshot.val().user_point + 1
+          firebaseRef.database().ref('users')
+          .child(this.props.appStore.seller_uid).update( { user_point : get_total } )
+      });
+      //******************************************************************************************************
+      // End
+      //******************************************************************************************************
+
+
+      //******************************************************************************************************
+      // notification for book received 
+      //******************************************************************************************************
       //run the nofitication. This.constructor.function works if function called has static with it.
       //commented. uncomment if want notification pop up in foreground after user click buy item.
           // this.constructor.runSendNotification(this.props.appStore.user.uid);
 
       // Start and schedule BackgroundTask. See react-native-background-task docs for how to set specific schedule
       // like run after 30 minutes or etcetra
-      BackgroundTask.schedule({period: 900}); //period: 86400
+      // BackgroundTask.schedule({period: 900}); //period: 86400
+      
+      //******************************************************************************************************
+      // End
+      //******************************************************************************************************
 
 
       firebaseRef.database().ref('user_posts/'+this.state.postProps.uid+'/posts').child(this.props.navigation.state.params.puid).update(

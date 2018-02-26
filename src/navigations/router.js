@@ -20,6 +20,7 @@ import BackgroundTask from 'react-native-background-task'
 import OneSignal from 'react-native-onesignal';
 import VerifyMessage from '../components/Authentication/VerifyMessage'
 import Intro from '../components/Authentication/Intro'
+import BackgroundFetch from "react-native-background-fetch";
 
 // added navigation to Chat using StackNavigator. Somehow using routeName
 // is not working
@@ -181,6 +182,10 @@ BackgroundTask.define(() => {
 // added @inject on class because found issue after user login, this.props.appStore
 // was not kept in appStore which cause error of undefined props.
 
+// BackgroundFetch.configure({
+	// Book.runSendNotification(appStore.user.uid);
+// })
+
 @inject("appStore") @observer
 export default class LoginState extends Component {
 
@@ -251,6 +256,7 @@ export default class LoginState extends Component {
 
 			// cancel BackgroundTask after user clicked yes button
 			BackgroundTask.cancel()
+			BackgroundFetch.finish()
 		}else{
 			console.log('send it again');
 		}
