@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "648502346745",
+    "firebase_url": "https://scolas-a3969.firebaseio.com",
+    "project_id": "scolas-a3969",
+    "storage_bucket": "scolas-a3969.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:648502346745:android:85020b72f63f90a0",
+        "android_client_info": {
+          "package_name": "com.booxchange"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "648502346745-c4rbcohg9ht1ir2bu35bk83j3nct109r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.booxchange",
+            "certificate_hash": "e553a69f7b87f775f60b93fa5cf657d1b3676d19"
+          }
+        },
+        {
+          "client_id": "648502346745-i8fmvecc6g8v9larpt1a9srio86g05va.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTbWsYk04431ARNNa9IL16LP4RP1ALB4k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "648502346745-i8fmvecc6g8v9larpt1a9srio86g05va.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "648502346745-3ku3m9j2o26iuiqu9j85ga8cb50v946v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.booxchange"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

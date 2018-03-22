@@ -13,11 +13,16 @@
 #import <React/RCTRootView.h>
 #import <React/RCTPushNotificationManager.h>
 
+//---added Firebase inport and [FIRApp configure]; for the react-native-firebase package not needed for general firebase-----
+ #import <Firebase.h>
+//---------------------------------------------------------------------------------------------------------------------------
+
 @implementation AppDelegate
 @synthesize oneSignal = _oneSignal;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [FIRApp configure];
   NSURL *jsCodeLocation;
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];

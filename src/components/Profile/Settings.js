@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { ScrollView, View, TouchableOpacity, StyleSheet, TextInput, Text, Platform } from 'react-native';
+import { ScrollView, View, TouchableOpacity, StyleSheet, TextInput, Text, Platform, Share } from 'react-native';
 import { RkText, RkStyleSheet, RkTheme, RkButton } from 'react-native-ui-kitten';
 import { StackNavigator, NavigationActions } from 'react-navigation';
 import { observer,inject } from 'mobx-react/native';
 import { firebaseRef } from '../../services/Firebase'
+import firebase from 'react-native-firebase'
 
 @inject("appStore") @observer
 export default class Settings extends Component {
@@ -17,8 +18,12 @@ export default class Settings extends Component {
     this.state = {
       newEmail: "",
       newPassword: "",
+      result: "",
     }
-
+    // for sending the invites
+    this._showResult = this._showResult.bind(this)
+    this._inviting = this._inviting.bind(this)
+    // -------------
     this.changeEmail = this._changeEmail.bind(this)
     this.changePassword = this._changePassword.bind(this)
     this._logOut = this._logOut.bind(this)
@@ -120,27 +125,60 @@ export default class Settings extends Component {
           </View>
           <View style={styles.row}>
             <TouchableOpacity style={styles.rowButton}>
-              <RkText rkType='header6'>Help</RkText>
+              <RkText rkType='header6'>HELP</RkText>
             </TouchableOpacity>
           </View>
-          <View style={styles.row}>
+          {/*<View style={styles.row}>
             <TouchableOpacity style={styles.rowButton}>
               <RkText rkType='header6'>Privacy Policy</RkText>
             </TouchableOpacity>
-          </View>
+          </View>*/}
           <View style={styles.row}>
             <TouchableOpacity style={styles.rowButton}>
-              <RkText rkType='header6'>Terms & Conditions</RkText>
+              <RkText rkType='header6'>TERMS & CONDITIONS</RkText>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.row}>
+            <TouchableOpacity style={styles.rowButton} onPress={this._inviting}>
+              <RkText rkType='header6'>SHARE</RkText>
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
             <TouchableOpacity style={styles.rowButton} onPress={this._logOut} >
-              <Text rkType='header6' style={{color: 'red'}}>Logout</Text>
+              <Text rkType='header6' style={{color: 'red'}}>LOGOUT</Text>
             </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
     )
+  }
+
+  // ---------------------------------------------------------------------------------------------------------------
+  // Send Invite using react native share
+  _showResult(result){
+    this.setState({result});
+  }
+  _inviting(){
+    firebase.links()
+      .createDynamicLink({
+        dynamicLinkDomain: "nf6vn.app.goo.gl/rnix",
+        link: "https://booXchange.com/?invitedby=" + this.props.appStore.user.uid,
+        androidInfo: {
+          androidPackageName: "com.booxchange"
+        },
+        suffix: {
+          option: this.props.appStore.user.uid
+        },
+      })
+      .then((url) => {
+        // url: link
+        this.setState({sendlink: url})
+        Share.share({
+          title: 'Whyyye',
+          message: 'Inviting you to BooXchange ' + url,
+        }).then(this._showResult);  
+        console.log("---- This ish is URL BABABABABAS ---", url)
+    });
   }
 }
 
