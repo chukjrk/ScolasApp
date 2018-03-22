@@ -28,7 +28,6 @@ export default class PasswordRecovery extends Component {
     firebaseRef.auth().sendPasswordResetEmail(this.state.email).then((user) => {
       alert("Password reset email has been sent")
     }).catch(function(error) {
-      alert("error son!")
       console.log(error)
     });
   }

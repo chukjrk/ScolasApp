@@ -136,15 +136,6 @@ export default class Book extends Component {
                                     disabled = {this.state.disabled}>
                                     <Text style={{color: "#fdfdfd", marginLeft: 5}}>PURCHASE</Text>
                                     </Button>
-
-
-
-             {/* <Button block onPress={() => this._Test()}
-                                    style={this.state.disabled == true
-                                      ? {backgroundColor: '#707070'} : {backgroundColor: '#25a1e0'}}
-                                    disabled = {this.state.disabled}>
-                                    <Text style={{color: "#fdfdfd", marginLeft: 5}}>TEST</Text>
-                                    </Button>*/}
               </Col>
             </Grid>
           </View>

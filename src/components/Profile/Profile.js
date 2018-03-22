@@ -1,13 +1,40 @@
-import React, { Component } from 'react';
-import { View, ScrollView, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, { Component, PropTypes } from 'react';
+import { 
+  View, 
+  ScrollView, 
+  Text, 
+  StyleSheet, 
+  Image, 
+  TouchableOpacity, 
+  Share, 
+  AsyncStorage, 
+  TouchableHighlight 
+} from 'react-native';
 import { RkText, RkButton, RkStyleSheet } from 'react-native-ui-kitten';
 import { Avatar, Icon, Header } from 'react-native-elements'
 import StickyHeaderFooterScrollView from 'react-native-sticky-header-footer-scroll-view'
 import { observer,inject } from 'mobx-react/native';
-import { StackNavigator, NavigationActions  } from 'react-navigation'
+import { StackNavigator, NavigationActions } from 'react-navigation'
+import { firebaseRef } from '../../services/Firebase'
+import Modal from 'react-native-modal'
 
 @inject("appStore") @observer
 export default class Profile extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalVisible: false
+    };
+  }
+
+  componentDidMount() {
+    this.setModalVisible(true);
+  }
+
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
+  }
 
   render() {
     const name = this.props.appStore.username;
@@ -23,17 +50,46 @@ export default class Profile extends React.Component {
         />
       )}>
 
+        <View>
+          <Modal
+          animationType="slide"
+          // transparent={false}
+          isVisible={this.state.modalVisible}
+          style={styles.promoContainer} 
+          backdropOpacity = {0.5}
+          onBackButtonPress = {() => {this.setModalVisible(!this.state.modalVisible)}}
+          >
+            <View>
+              <View style={styles.modalTitle}>
+                <Text>PROMOTION</Text>
+              </View>
+              <View style={styles.modalHeader}>
+                <Text>Share</Text>
+                <Text>BooXchange</Text>
+              </View>
+              <View style={styles.modalInfo}>
+                <Icon>
+                </Icon>
+                <TouchableHighlight onPress={() => { this.setModalVisible(!this.state.modalVisible); }}>
+                  <Text>CLOSE</Text>
+                </TouchableHighlight>
+              </View>
+            </View>
+          </Modal>
+        </View>
+
         <ScrollView style={styles.root}>
+          
           <View style={styles.container}>
             <View style={[styles.header, styles.bordered]}>
-              <View style= {{alignSelf: 'center'}}>
+              <TouchableOpacity style= {{alignSelf: 'center'}} onPress={() => { this.setModalVisible(true);}} >
                 <Avatar
                   rounded
                   xlarge 
                   title = {name.charAt(0).toUpperCase()}
                   overlayContainerStyle={{backgroundColor: ('#FFCA28', '#C62828', '#9CCC65', '#42A5F5') }}/>
                   {/*source={require('../../assets/images/faceO.jpeg')} />*/}
-              </View>
+              </TouchableOpacity>
               <View style={styles.section}>
                 <RkText rkType='header2' style={{fontSize: 18}}>{name}</RkText>
               </View>
@@ -76,7 +132,7 @@ export default class Profile extends React.Component {
 
 const styles = RkStyleSheet.create(theme => ({
   root: {
-    flex: -1.5,
+    flex: -1,
     paddingTop: 15,
     backgroundColor: '#f0f0f0'
   },
@@ -176,6 +232,32 @@ const styles = RkStyleSheet.create(theme => ({
   purchase: {
     flexDirection: 'row',
     padding: 15,
+  },
+
+  promoContainer: {
+    flex: 1,
+    backgroundColor: 'white',
+    justifycontent: 'top',
+    borderRadius: 4,
+    borderColor: 'green',
+    borderWidth: 3,
+    marginHorizontal: 40,
+    marginTop: 30,
+    marginBottom: 40,
+  },
+
+  modalTitle: { 
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    fontSize: 5,
+    padding: 2,
+  },
+
+  modalHeader: {
+  },
+
+  modalInfo: {
+
   }
+
 }));
 

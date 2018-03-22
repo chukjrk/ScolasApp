@@ -12,6 +12,7 @@ import { observer, inject } from 'mobx-react/native';
 import Login from './Login'
 import OneSignal from 'react-native-onesignal';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import firebase from 'react-native-firebase'
 
 @inject("appStore") @observer
 export default class Register extends Component {
@@ -44,7 +45,76 @@ export default class Register extends Component {
 		}
 
 		this._register = this._register.bind(this)
+		this.unsubscriber = null;
 	}
+
+	// ------------------------------------------------------------------------------------------------------
+  // getting firebase dynamic links for user referrals
+  componentWillMount(){
+    firebase.links()
+    .getInitialLink()
+    .then((url) => {
+    	user = firebaseRef.auth().currentUser
+        if (url && user == null) {
+            // app opened from a url
+            referrerUid = DynamicLink.suffix.option//getUrlParamaeter("invitedby"); // link minus the booxchange string
+            createAnonymousAccountWithReferrerInfo(referrerUid);
+        } else {
+           // app NOT opened from a url
+        }
+    });
+  }
+  // for the anonymous firebase signin user info replacement
+  componentDidMount(){
+    this.unsubscriber = firebaseRef.auth().onAuthStateChanged((user) => {});
+  }
+
+  componentWillUnmount(){
+    if (this.unsubscriber) {
+      this.unsubscriber();
+    }
+  }
+  // ------------------------------------------------------------------------------------------------------
+  // function for signing up user from referral link
+  createAnonymousAccountWithReferrerInfo(refferalUid){
+    firebaseRef.auth().signInAnonymously().then(() => {
+      firebaseRef.auth().onAuthStateChanged((user) => {
+        if (user) {
+          // User is signed in.
+          isAnonymous = user.isAnonymous;
+          user = firebaseRef.auth().currentUser
+          firebaseRef.database().ref('users').child(user.uid).child("referred_by").setValue(referrerUid);
+          // ...
+        } else {
+          // User is signed out
+        }
+      });  
+    }).catch(function(error) {
+      // Handle Errors here.
+      console.log('--- referrer clap code', error.code);
+      console.log('--- referrer error message', error.message);
+    });
+  }
+
+  // referral reward function called when user registers after check if referred
+  rewardReferrals(){
+    firebaseRef.database.ref('/users/{uid}/last_signin_at')
+    .onCreate(event => {
+      firebaseRef.database().ref(`users/${uid}/referred_by`)
+        .once('value').then((data) => {
+         referrerUid = data.val();
+        if (referrerUid) {
+          firebaseRef.database().ref(`users/${referrerUid}`).once('value')
+          .then(snapshot => {
+              var get_total = snapshot.val().user_point + 0.2
+              firebaseRef.database().ref(`/users/${referrerUid}`)
+              .child(this.props.appStore.seller_uid).update( { user_point : get_total } )
+          });
+        }
+      });
+    });
+  }
+  //-------------------------------------------------------------------------------------------------------
 
 	_register() {
 		if (this.state.email.includes('.edu')) {
@@ -70,7 +140,7 @@ export default class Register extends Component {
 	  								const chat_count = 0
 	  								const order_count = 0
 	  								const email = user.email
-	  								const user_point = 1 //added and set user_point default to 1
+	  								const user_point = 0 //added and set user_point default to 1
 	  								const device_id = status.userId // added
 
 	  								firebaseRef.database().ref('users/' + user.uid)
@@ -119,7 +189,9 @@ export default class Register extends Component {
 		  							console.log("user4:" + this.props.appStore.user.emailVerified)
 		  							console.log("user5:" + this.props.appStore.user.uid)
 		  							console.log("user_point:" + this.props.appStore.user_point)
-
+		  							
+		  							// Give reward to link refferer
+		  							rewardReferrals();
   								});
   							});
 							})
@@ -149,8 +221,8 @@ export default class Register extends Component {
 
 		return (
 			<KeyboardAwareScrollView style={styles.container}>
-        		<Text style={{color: 'red', fontSize: 13}}>{this.state.wordStatus}</Text>
-        		<Text style={{color: 'red', fontSize: 13}}>{this.state.errorMessage}</Text>
+    		<Text style={{color: 'red', fontSize: 13}}>{this.state.wordStatus}</Text>
+    		<Text style={{color: 'red', fontSize: 13}}>{this.state.errorMessage}</Text>
 				<Text style={styles.title}> User Details </Text>
 				<TextInput
 					placeholder = "NAME"

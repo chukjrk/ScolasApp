@@ -250,7 +250,6 @@ export default class LoginState extends Component {
 			    firebaseRef.database().ref('users')
 			    .child(this.props.appStore.seller_uid).update( { user_point : get_total } )
 		    });
-
 		    Book.deletePost(this.props.appStore.current_puid);
 		    // firebaseRef.database().ref('posts').child(data.puid).remove()
 

@@ -9,6 +9,7 @@ import {
   LayoutAnimation,
   Platform,
   UIManager,
+  Alert
 } from 'react-native'
 import _ from 'lodash'
 import moment from 'moment'
@@ -16,8 +17,8 @@ import { firebaseRef } from '../../services/Firebase'
 import StickyHeaderFooterScrollView from 'react-native-sticky-header-footer-scroll-view'
 // import Icon from 'react-native-vector-icons/Ionicons'
 import { observer,inject } from 'mobx-react/native'
-import { Header } from 'react-native-elements'
-
+import { Header, Icon } from 'react-native-elements'
+import Swipeable from 'react-native-swipeable';
 
 @inject("appStore") @observer
 export default class ChatHome extends Component {
@@ -84,7 +85,7 @@ export default class ChatHome extends Component {
           renderFooter={this._renderFooter}
           //onEndReached={this._onEndReached}
           onEndReachedThreshold={1}
-        />
+          />
         </StickyHeaderFooterScrollView>
       </View>
 
@@ -97,20 +98,31 @@ export default class ChatHome extends Component {
       <View style={styles.CounterContainer}><Text style={styles.counter}>{ data.postData.new_messages }</Text></View>
     : null
     return (
+      <Swipeable
+        rightButtons={[
+          <TouchableOpacity style={[styles.rightSwipeItem, {backgroundColor: 'pink'}]} onPress={() => this._flagPost(data.postData)}>
+            <Icon style={[styles.flagicon]} name='flag' color='white' />
+          </TouchableOpacity>,
+          // onRightButtonsOpenRelease={onOpen}
+          // onRightButtonsCloseRelease={onClose}
+      ]}>
       <TouchableOpacity onPress={() => this._openChat(data.postData)}>
         <View style={styles.card}>
-          <View style={styles.RawContainer}>
-            <View style={styles.LeftContainer}><Text style={styles.title}>{ data.postData.title }</Text></View>
-            <View style={styles.RightContainer}><Text style={styles.author}>{ data.postData.username }</Text></View>
+          <View style={styles.content}>
+            <View style={styles.HeaderContainer}>
+              <Text style={styles.title}>{ data.postData.title }</Text>
+              <Text style={styles.author}>{ data.postData.username }</Text>
+            </View>
           </View>
-          <View style={styles.RawContainer}>
-            { newMessageCounter }
-          </View>
-          <View style={styles.RawContainer}>
-            <Text style={styles.info}>{timeString}</Text>
+          <View style={styles.content}>
+            <View style={styles.HeaderContainer}>
+              <Text style={styles.info}>{timeString}</Text>
+              { newMessageCounter }
+            </View>
           </View>
         </View>
       </TouchableOpacity>
+    </Swipeable>
     )
   }
 
@@ -136,6 +148,47 @@ export default class ChatHome extends Component {
         this.setState({ isLoading: false })
       })
     }
+  }
+
+  _flagPost = (postData) => {
+    console.log("--------> FLAG !!!!!!")
+    console.log(postData)
+    Alert.alert(
+      'Flag Confirmation',
+      'Flag this item for unreceived books? If yes, a moderator will decide within 24 hours if this item should be removed and points fixed.',
+      [
+        { text: 'No', onPress: () => {}, style: 'cancel' },
+        { text: 'Yes', onPress: () => {
+
+          fetch('https://onesignal.com/api/v1/notifications',
+          {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              "Content-Type": "application/json; charset=utf-8", //required, set by onsignal
+              "Authorization": "Basic NGEwMGZmMjItY2NkNy0xMWUzLTk5ZDUtMDAwYzI5NDBlNjJj",
+            },
+            body: JSON.stringify(
+            {
+              app_id: "e09d00d9-b019-471d-ab1a-17ada2fdcda2",
+              included_segments: ["All"],
+              headings: {"en": "🏴🏴🏴🏴 Item flaged! 🏴🏴🏴🏴"},
+              android_sound: "fishing",
+              data: postData,
+              big_picture: postData.image,
+              ios_sound: "fishing.caf",
+              contents: {"en": this.props.appStore.user.displayName + " just flaged: " + postData.title + " for " + postData.price},
+              filters: [{"field":"tag","key":"username","relation":"=","value":""}], // point notification to booxchange username notuf should come to account
+            })
+          })
+          .then((responseData) => {
+            console.log("Push POST:" + JSON.stringify(responseData));
+          })
+          .done()
+
+         } },
+      ]
+    )
   }
 
   _renderFooter = () => {
@@ -166,7 +219,11 @@ export default class ChatHome extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    // paddingLeft: 19,
+    // paddingRight: 16,
+    // paddingVertical: 12,
+    // flexDirection: 'row'
   },
   RawContainer: {
     flexDirection: 'row',
@@ -184,12 +241,21 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     //borderWidth: 1,
   },
+  HeaderContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 6
+  },
+  content: {
+    marginLeft: 16,
+    flex: 1,
+  },
   CounterContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     //borderWidth: 1,
-    height: 23,
-    width: 23,
+    height: 18,
+    width: 18,
     borderRadius: 90,
     marginRight: 25,
     backgroundColor: 'red',
@@ -209,6 +275,8 @@ const styles = StyleSheet.create({
     flex: 1,
     borderBottomWidth: 1,
     borderColor: '#d6d7da',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    // borderColor: '#dddddd',
     margin: 2,
   },
   title: {
@@ -220,10 +288,19 @@ const styles = StyleSheet.create({
   author: {
     fontSize: 16,
     padding: 5,
+    marginRight: 15,
   },
   info: {
     padding: 3,
     fontSize: 13,
   },
+  rightSwipeItem: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingLeft: 20
+  },
+  flagicon: {
+    alignItems: 'flex-start',
+  }
 
 })
