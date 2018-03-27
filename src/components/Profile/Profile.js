@@ -1,17 +1,17 @@
 import React, { Component, PropTypes } from 'react';
-import { 
-  View, 
-  ScrollView, 
-  Text, 
-  StyleSheet, 
-  Image, 
-  TouchableOpacity, 
-  Share, 
-  AsyncStorage, 
-  TouchableHighlight 
+import {
+  View,
+  ScrollView,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Share,
+  AsyncStorage,
+  TouchableHighlight
 } from 'react-native';
 import { RkText, RkButton, RkStyleSheet } from 'react-native-ui-kitten';
-import { Avatar, Icon, Header } from 'react-native-elements'
+import { Avatar, Icon, Header, Button } from 'react-native-elements'
 import StickyHeaderFooterScrollView from 'react-native-sticky-header-footer-scroll-view'
 import { observer,inject } from 'mobx-react/native';
 import { StackNavigator, NavigationActions } from 'react-navigation'
@@ -36,15 +36,41 @@ export default class Profile extends React.Component {
     this.setState({modalVisible: visible});
   }
 
+  _showResult(result){
+    this.setState({result});
+  }
+  _inviting(){
+    firebase.links()
+      .createDynamicLink({
+        dynamicLinkDomain: "nf6vn.app.goo.gl/rnix",
+        link: "https://booXchange.com/?invitedby=" + this.props.appStore.user.uid,
+        androidInfo: {
+          androidPackageName: "com.booxchange"
+        },
+        suffix: {
+          option: this.props.appStore.user.uid
+        },
+      })
+      .then((url) => {
+        // url: link
+        this.setState({sendlink: url})
+        Share.share({
+          title: 'Whyyye',
+          message: 'Inviting you to BooXchange ' + url,
+        }).then(this._showResult); 
+        console.log("---- This ish is URL BABABABABAS ---", url)
+    });
+  }
+
   render() {
     const name = this.props.appStore.username;
     const points = this.props.appStore.user_point;
     const { navigate } = this.props.navigation;
 
     return (
-      <StickyHeaderFooterScrollView 
+      <StickyHeaderFooterScrollView
         renderStickyHeader={() => (
-        <Header 
+        <Header
         centerComponent={{ text: 'HOME', style: { color: '#fff', fontSize: 20 } }}
         outerContainerStyles= {{ backgroundColor:'#27924a' }} //backgroundColor: '#01579B'}}
         />
@@ -55,37 +81,71 @@ export default class Profile extends React.Component {
           animationType="slide"
           // transparent={false}
           isVisible={this.state.modalVisible}
-          style={styles.promoContainer} 
+          style={styles.promoContainer}
           backdropOpacity = {0.5}
           onBackButtonPress = {() => {this.setModalVisible(!this.state.modalVisible)}}
           >
             <View>
               <View style={styles.modalTitle}>
-                <Text>PROMOTION</Text>
+                <Text style={{opacity: 0.5}}>P</Text>
+                <Text style={{opacity: 0.5}}>R</Text>
+                <Text style={{opacity: 0.5}}>O</Text>
+                <Text style={{opacity: 0.5}}>M</Text>
+                <Text style={{opacity: 0.5}}>O</Text>
+                <Text style={{opacity: 0.5}}>T</Text>
+                <Text style={{opacity: 0.5}}>I</Text>
+                <Text style={{opacity: 0.5}}>O</Text>
+                <Text style={{opacity: 0.5}}>N</Text>
               </View>
               <View style={styles.modalHeader}>
-                <Text>Share</Text>
-                <Text>BooXchange</Text>
+                <Text style={{fontSize: 45, fontFamily: 'sans-serif-condensed'}} >SHARE</Text>
+                <Text style={{fontSize: 45, marginBottom: 15, fontFamily: 'sans-serif-condensed'}}>BOOXCHANGE</Text>
               </View>
               <View style={styles.modalInfo}>
-                <Icon>
-                </Icon>
-                <TouchableHighlight onPress={() => { this.setModalVisible(!this.state.modalVisible); }}>
-                  <Text>CLOSE</Text>
-                </TouchableHighlight>
+                <Text style={{fontSize: 25, color: '#27924a'}}>5 INVITES</Text>
+                <Text style={{fontSize: 25, color: '#27924a'}}>1 POINT</Text>
+              </View>
+              <View style={styles.modalButtons}>
+                <Icon
+                  name='share'
+                  size= {50}
+                  color='#00aced'
+                  onPress= {this._inviting}
+                  iconStyle={{
+                    marginHorizontal: 30,
+                    opacity: 0.7,
+                    elevation: 0.1
+                  }} />
+                <Button
+                  title='CLOSE'
+                  onPress={() => { this.setModalVisible(!this.state.modalVisible); }}
+                  titleStyle={{ 
+                    fontWeight: '20',
+                    fontSize: 10,
+                  }}
+                  buttonStyle={{
+                    alignSelf: 'flex-end',
+                    margin: 15,
+                    width: 120,
+                    height: 45,
+                    // opacity: 0.7,
+                    backgroundColor: '#e1e0e0',
+                    elevation: 0.1
+                  }}
+                />
               </View>
             </View>
           </Modal>
         </View>
 
         <ScrollView style={styles.root}>
-          
+         
           <View style={styles.container}>
             <View style={[styles.header, styles.bordered]}>
-              <TouchableOpacity style= {{alignSelf: 'center'}} onPress={() => { this.setModalVisible(true);}} >
+              <TouchableOpacity style= {{alignSelf: 'center'}}> 
                 <Avatar
                   rounded
-                  xlarge 
+                  xlarge
                   title = {name.charAt(0).toUpperCase()}
                   overlayContainerStyle={{backgroundColor: ('#FFCA28', '#C62828', '#9CCC65', '#42A5F5') }}/>
                   {/*source={require('../../assets/images/faceO.jpeg')} />*/}
@@ -98,7 +158,7 @@ export default class Profile extends React.Component {
             <View style={styles.userInfo}>
               <TouchableOpacity  style={styles.section} onPress={() => navigate('Settings')}>
                 <TouchableOpacity style={styles.buttons, { paddingTop: 17}} onPress={() => navigate('Settings')}>
-                  <Icon 
+                  <Icon
                     name='settings'
                     color='grey'
                     />
@@ -236,28 +296,45 @@ const styles = RkStyleSheet.create(theme => ({
 
   promoContainer: {
     flex: 1,
+    justifyContent: 'flex-start',
     backgroundColor: 'white',
-    justifycontent: 'top',
     borderRadius: 4,
-    borderColor: 'green',
-    borderWidth: 3,
     marginHorizontal: 40,
-    marginTop: 30,
-    marginBottom: 40,
+    marginTop: 40,
+    marginBottom: 100,
   },
 
-  modalTitle: { 
+  modalTitle: {
+    justifyContent: 'space-between',
     borderBottomWidth: StyleSheet.hairlineWidth,
-    fontSize: 5,
     padding: 2,
+    borderBottomColor: '#93c8a4',
+    flexDirection: 'row'
   },
 
   modalHeader: {
+    marginTop: 30,
+    alignItems: 'center',
   },
 
   modalInfo: {
+    alignItems: 'center',
+    paddingVertical: 30,
+    borderWidth: 12,
+    margin: 15,
+    borderColor: '#93c8a4',
+    elevation: 1,
+    shadowColor: '#fbf8f8',
+    shadowOpacity: 0.3,
+    justifyContent: 'space-between'
+  },
 
+  modalButtons: {
+    alignContent: 'center',
+    // marginTop: 10,
+    flexDirection: 'row',
   }
 
 }));
+
 
