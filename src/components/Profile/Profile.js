@@ -42,10 +42,10 @@ export default class Profile extends React.Component {
   _inviting(){
     firebase.links()
       .createDynamicLink({
-        dynamicLinkDomain: "nf6vn.app.goo.gl/rnix",
+        dynamicLinkDomain: "ptt67.app.goo.gl/u9DC ",
         link: "https://booXchange.com/?invitedby=" + this.props.appStore.user.uid,
         androidInfo: {
-          androidPackageName: "com.booxchange"
+          androidPackageName: "com.scolas"
         },
         suffix: {
           option: this.props.appStore.user.uid
@@ -55,8 +55,8 @@ export default class Profile extends React.Component {
         // url: link
         this.setState({sendlink: url})
         Share.share({
-          title: 'Whyyye',
-          message: 'Inviting you to BooXchange ' + url,
+          title: 'BooXchange Invite',
+          message: 'Have you heard of BooXchange? Try it using my link: ' + url,
         }).then(this._showResult); 
         console.log("---- This ish is URL BABABABABAS ---", url)
     });
