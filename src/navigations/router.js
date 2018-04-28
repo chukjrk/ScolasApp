@@ -213,7 +213,8 @@ export default class LoginState extends Component {
       	// since the function above was reserved, must put .bind(this) if want to execute outside function
       	// or global variable.
 		firebaseRef.auth().onAuthStateChanged((user) => {
-			// user.sendEmailVerification().then(() => {  && user.emailVerified  
+			// user.sendEmailVerification().then(() => {  && user.emailVerified
+			// remember to add eemail verification after debugging  
 			if (user) {
 				console.log("--------- LOGGED AS " + user.displayName + " ---------")
 				this.props.appStore.user = user

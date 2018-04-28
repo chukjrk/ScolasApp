@@ -7,6 +7,8 @@ import android.provider.Settings;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import io.branch.rnbranch.*; // <-- add this for branch.io
+import android.content.Intent; // <-- and this for branch.io
 
 import com.facebook.react.ReactActivity;
 
@@ -29,13 +31,25 @@ public class MainActivity extends ReactActivity {
     protected String getMainComponentName() {
         return "BooXchange";
     }
+
+    // Override onStart, onNewIntent:
+    @Override
+    protected void onStart() {
+        super.onStart();
+        RNBranchModule.initSession(getIntent().getData(), this);
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        setIntent(intent);
+    }
+    
     @Override
     public void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Checking permissions on init
         checkPerms();
     }
-
 
     public void checkPerms() {
         // Checking if device version > 22 and we need to use new permission model 
@@ -77,7 +91,6 @@ public class MainActivity extends ReactActivity {
                 // checking permissions to prevent situation when user denied some permission
                 checkPerms();
                 break;
-
         }
 	}
 }

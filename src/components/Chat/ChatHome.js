@@ -160,27 +160,31 @@ export default class ChatHome extends Component {
         { text: 'No', onPress: () => {}, style: 'cancel' },
         { text: 'Yes', onPress: () => {
 
-          fetch('https://onesignal.com/api/v1/notifications',
-          {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              "Content-Type": "application/json; charset=utf-8", //required, set by onsignal
-              "Authorization": "Basic NGEwMGZmMjItY2NkNy0xMWUzLTk5ZDUtMDAwYzI5NDBlNjJj",
-            },
-            body: JSON.stringify(
-            {
-              app_id: "e09d00d9-b019-471d-ab1a-17ada2fdcda2",
-              included_segments: ["All"],
-              headings: {"en": "🏴🏴🏴🏴 Item flaged! 🏴🏴🏴🏴"},
-              android_sound: "fishing",
-              data: postData,
-              big_picture: postData.image,
-              ios_sound: "fishing.caf",
-              contents: {"en": this.props.appStore.user.displayName + " just flaged: " + postData.title + " for " + postData.price},
-              filters: [{"field":"tag","key":"username","relation":"=","value":""}], // point notification to booxchange username notuf should come to account
-            })
+          firebaseRef.database().ref('user_chats/'+this.props.appStore.user.uid+'/flagged?').update({
+            flagged: 'true',
           })
+
+          // fetch('https://onesignal.com/api/v1/notifications',
+          // {
+          //   method: 'POST',
+          //   headers: {
+          //     'Accept': 'application/json',
+          //     "Content-Type": "application/json; charset=utf-8", //required, set by onsignal
+          //     "Authorization": "Basic NGEwMGZmMjItY2NkNy0xMWUzLTk5ZDUtMDAwYzI5NDBlNjJj",
+          //   },
+          //   body: JSON.stringify(
+          //   {
+          //     app_id: "e09d00d9-b019-471d-ab1a-17ada2fdcda2",
+          //     included_segments: ["All"],
+          //     headings: {"en": "🏴🏴🏴🏴 Item flaged! 🏴🏴🏴🏴"},
+          //     android_sound: "fishing",
+          //     data: postData,
+          //     big_picture: postData.image,
+          //     ios_sound: "fishing.caf",
+          //     contents: {"en": this.props.appStore.user.displayName + " just flaged: " + postData.title + " for " + postData.price},
+          //     filters: [{"field":"tag","key":"username","relation":"=","value":""}], // point notification to booxchange username notuf should come to account
+          //   })
+          // })
           .then((responseData) => {
             console.log("Push POST:" + JSON.stringify(responseData));
           })
