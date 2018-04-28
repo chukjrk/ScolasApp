@@ -3,8 +3,8 @@ package com.booxchange;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import io.invertase.firebase.RNFirebasePackage;
-import io.invertase.firebase.links.RNFirebaseLinksPackage;
+import io.branch.rnbranch.RNBranchPackage;
+import io.branch.referral.Branch;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
@@ -31,8 +31,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNFirebasePackage(),
-            new RNFirebaseLinksPackage(),
+            new RNBranchPackage(),
             new ReactNativePushNotificationPackage(),
             new VectorIconsPackage(),
             new ReactNativeOneSignalPackage(),
@@ -58,5 +57,16 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
     BackgroundTaskPackage.useContext(this);
+    Branch.getAutoInstance(this);
   }
+
+  // added due to googleappinvites for activity class
+  // @Override
+  // protected void onActivityResult(int requestCode, int resultCode, android.content.Intent data) {
+  //     if (requestCode == RNGoogleAppInvitesModule.RC_APP_INVITES_IN) {
+  //         RNGoogleAppInvitesModule.onActivityResult(resultCode, data);
+  //     }
+  //     // super.onActivityResult(requestCode, resultCode, data);
+  // }
+
 }

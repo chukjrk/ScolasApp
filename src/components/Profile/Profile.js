@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import {
   View,
   ScrollView,
@@ -8,15 +8,16 @@ import {
   TouchableOpacity,
   Share,
   AsyncStorage,
-  TouchableHighlight
+  TouchableHighlight,
+  Platform,
 } from 'react-native';
 import { RkText, RkButton, RkStyleSheet } from 'react-native-ui-kitten';
 import { Avatar, Icon, Header, Button } from 'react-native-elements'
 import StickyHeaderFooterScrollView from 'react-native-sticky-header-footer-scroll-view'
 import { observer,inject } from 'mobx-react/native';
 import { StackNavigator, NavigationActions } from 'react-navigation'
-import { firebaseRef } from '../../services/Firebase'
 import Modal from 'react-native-modal'
+import branch from 'react-native-branch'
 
 @inject("appStore") @observer
 export default class Profile extends React.Component {
@@ -24,8 +25,9 @@ export default class Profile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      modalVisible: false
-    };
+      modalVisible: false,
+      modalVisible2: false,
+    }
   }
 
   componentDidMount() {
@@ -36,36 +38,50 @@ export default class Profile extends React.Component {
     this.setState({modalVisible: visible});
   }
 
-  _showResult(result){
+  setModalVisible2(visible) {
+    this.setState({modalVisible2: visible});
+  }
+
+  _showResult(result) {
     this.setState({result});
   }
-  _inviting(){
-    firebase.links()
-      .createDynamicLink({
-        dynamicLinkDomain: "ptt67.app.goo.gl/u9DC ",
-        link: "https://booXchange.com/?invitedby=" + this.props.appStore.user.uid,
-        androidInfo: {
-          androidPackageName: "com.scolas"
-        },
-        suffix: {
-          option: this.props.appStore.user.uid
-        },
-      })
-      .then((url) => {
-        // url: link
-        this.setState({sendlink: url})
-        Share.share({
-          title: 'BooXchange Invite',
-          message: 'Have you heard of BooXchange? Try it using my link: ' + url,
-        }).then(this._showResult); 
-        console.log("---- This ish is URL BABABABABAS ---", url)
-    });
+
+  async _inviting(UUid){
+    let branchUniversalObject = await branch.createBranchUniversalObject(UUid, {
+      locallyIndex: true,
+      title: 'Invitations',
+      contentDescription: 'Have you heard of BooXchange? Try it using my link: ',
+      contentMetadata: {
+        ratingAverage: 4.2,
+      }
+    })
+
+    let linkProperties = {
+      feature: 'referral',
+      // channel: 'facebook',
+      campaign: 'Local Launch Invites',
+      random: UUid,
+    }
+    // let shareOptions = { messageHeader: 'Join BooXchange', messageBody: 'Have you heard of BooXchange? Try it using my link: ' }
+    let controlParams = {
+      // $desktop_url: 'http://desktop-url.com/monster/12345'
+    }
+    console.log("---- This isasdadad ")
+
+    let {url} = await branchUniversalObject.generateShortUrl(linkProperties, controlParams)
+    // let {channel, completed, error} = await branchUniversalObject.showShareSheet(shareOptions, linkProperties, controlParams)
+    console.log("---- This ish is URL BABABABABAS ---", url)
+    Share.share({
+      title: 'BooXchange Invite',
+      message: 'Have you heard of BooXchange? Try it using my link: ' + url,
+    })
   }
 
   render() {
     const name = this.props.appStore.username;
     const points = this.props.appStore.user_point;
     const { navigate } = this.props.navigation;
+    const memberUid = this.props.appStore.user.uid;
 
     return (
       <StickyHeaderFooterScrollView
@@ -98,7 +114,7 @@ export default class Profile extends React.Component {
                 <Text style={{opacity: 0.5}}>N</Text>
               </View>
               <View style={styles.modalHeader}>
-                <Text style={{fontSize: 45, fontFamily: 'sans-serif-condensed'}} >SHARE</Text>
+                <Text style={{fontSize: 45, fontFamily: 'sans-serif-condensed'}}>SHARE</Text>
                 <Text style={{fontSize: 45, marginBottom: 15, fontFamily: 'sans-serif-condensed'}}>BOOXCHANGE</Text>
               </View>
               <View style={styles.modalInfo}>
@@ -110,7 +126,7 @@ export default class Profile extends React.Component {
                   name='share'
                   size= {50}
                   color='#00aced'
-                  onPress= {this._inviting}
+                  onPress= {() => {this._inviting(memberUid)}}
                   iconStyle={{
                     marginHorizontal: 30,
                     opacity: 0.7,
@@ -118,18 +134,64 @@ export default class Profile extends React.Component {
                   }} />
                 <Button
                   title='CLOSE'
-                  onPress={() => { this.setModalVisible(!this.state.modalVisible); }}
+                  onPress={() => {this.setModalVisible(!this.state.modalVisible)}}
                   titleStyle={{ 
                     fontWeight: '20',
                     fontSize: 10,
                   }}
                   buttonStyle={{
                     alignSelf: 'flex-end',
-                    margin: 15,
-                    width: 120,
+                    marginRight: 15,
+                    width: 130,
                     height: 45,
                     // opacity: 0.7,
                     backgroundColor: '#e1e0e0',
+                    elevation: 0.1
+                  }}
+                />
+              </View>
+            </View>
+          </Modal>
+
+          <Modal
+          animationType="slide"
+          // transparent={false}
+          isVisible={this.state.modalVisible2}
+          style={styles.promoContainer}
+          backdropOpacity = {0.5}
+          onBackButtonPress = {() => {this.setModalVisible2( false )}}
+          >
+            <View>
+              <View style={styles.infoTitle}>
+                <Text style={{opacity: 0.5, fontWeight: 'bold', fontSize: 20, alignSelf: 'center'}}>INFO</Text>
+              </View>
+              <View>
+                <Text style={styles.infoHeader}>How does BooXchange work?</Text>
+                <Text style={styles.infoExpand}>BooXchange works with a point system. You get books by usng the points you earn. All boooks on BooXchange are 1 point.</Text>
+              </View>
+              <View>
+                <Text style={styles.infoHeader}>How do you earn points?</Text>
+                <Text style={styles.infoExpand}>You earn points for the textbbooks you trade. You get 1 point after yoour book has been traded with other members of BooXchange.</Text>
+              </View>
+              <View>
+                <Text style={styles.infoHeader}>Have not received textbook:</Text>
+                <Text style={styles.infoExpand}>If you have not received your textbook from a BooXchange member, head to your 'Chats'. Swipe left on the chat of the incomplete transaction. Tap the report flag and the transaction be cleared and taken care off.</Text>
+              </View>
+              <View style={styles.infoButton}>
+                <Button
+                  title='CLOSE'
+                  onPress={() => {this.setModalVisible2(!this.state.modalVisible2)}}
+                  titleStyle={{ 
+                    fontWeight: '20',
+                    fontSize: 10,
+                  }}
+                  buttonStyle={{
+                    alignSelf: 'center',
+                    margin: 10,
+                    width: 130,
+                    height: 45,
+                    // opacity: 0.7,
+                    backgroundColor: 'skyblue',
                     elevation: 0.1
                   }}
                 />
@@ -142,14 +204,14 @@ export default class Profile extends React.Component {
          
           <View style={styles.container}>
             <View style={[styles.header, styles.bordered]}>
-              <TouchableOpacity style= {{alignSelf: 'center'}}> 
+              <View style= {{alignSelf: 'center'}}> 
                 <Avatar
                   rounded
                   xlarge
                   title = {name.charAt(0).toUpperCase()}
                   overlayContainerStyle={{backgroundColor: ('#FFCA28', '#C62828', '#9CCC65', '#42A5F5') }}/>
                   {/*source={require('../../assets/images/faceO.jpeg')} />*/}
-              </TouchableOpacity>
+              </View>
               <View style={styles.section}>
                 <RkText rkType='header2' style={{fontSize: 18}}>{name}</RkText>
               </View>
@@ -169,6 +231,12 @@ export default class Profile extends React.Component {
                   <RkText rkType='secondary1 hintColor'>Points</RkText>
                 </View>
                 <View style={styles.buttons}>
+                  <TouchableOpacity style={styles.buttons, { paddingTop: 17, alignItems: 'center', paddingVertical: 10}} onPress = {() => {this.setModalVisible2( true )}} >
+                    <Icon
+                      name='info'
+                      color='grey'
+                      />
+                  </TouchableOpacity>
                 </View>
             </View>
           </View>
@@ -301,7 +369,7 @@ const styles = RkStyleSheet.create(theme => ({
     borderRadius: 4,
     marginHorizontal: 40,
     marginTop: 40,
-    marginBottom: 100,
+    marginBottom: 130,
   },
 
   modalTitle: {
@@ -309,7 +377,8 @@ const styles = RkStyleSheet.create(theme => ({
     borderBottomWidth: StyleSheet.hairlineWidth,
     padding: 2,
     borderBottomColor: '#93c8a4',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    marginHorizontal: 4,
   },
 
   modalHeader: {
@@ -321,6 +390,7 @@ const styles = RkStyleSheet.create(theme => ({
     alignItems: 'center',
     paddingVertical: 30,
     borderWidth: 12,
+    borderRadius: 5,
     margin: 15,
     borderColor: '#93c8a4',
     elevation: 1,
@@ -333,7 +403,31 @@ const styles = RkStyleSheet.create(theme => ({
     alignContent: 'center',
     // marginTop: 10,
     flexDirection: 'row',
-  }
+  },
+
+  infoHeader: {
+    fontWeight: 'bold',
+    marginHorizontal: 5,
+  },
+
+  infoExpand: {
+    marginBottom: 10,
+    // marginTop: 2,
+    marginHorizontal: 5,
+  },
+
+  infoButton:{
+    alignSelf: 'center',
+  },
+
+  infoTitle: {
+    justifyContent: 'space-between',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    padding: 2,
+    borderBottomColor: '#93c8a4',
+    marginHorizontal: 5,
+    marginBottom: 8
+  },
 
 }));
 

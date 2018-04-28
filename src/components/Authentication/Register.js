@@ -12,12 +12,30 @@ import { observer, inject } from 'mobx-react/native';
 import Login from './Login'
 import OneSignal from 'react-native-onesignal';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import firebase from 'react-native-firebase'
+import branch from 'react-native-branch'
+
+// ------------------------------------------------------------------------------------------------------
+// branch should read link if downloaded through a link
+branch.subscribe(({ error, params }) => {
+	if (error) {
+		console.log("------Branch Error-----")
+		console.log('Error from Branch: ' + error)
+		return
+	}
+	// set the refferred_by parameter for each user with a linked invitation
+	console.log("------Branch Accessed-----")
+
+	referrerUid = params.$canonical_identifier
+	// let installParams = await branch.getFirstReferringParams() // params from original installoero
+	// params will never be null if error is null
+	console.log('- Values from Params UUid-', params.$canonical_identifier)
+	console.log('- Values from Params printed whole -', params)
+})
 
 @inject("appStore") @observer
 export default class Register extends Component {
 	static navigationOptions = {
-    title: 'REGISTRATION', // to add letter spacing on Androi
+    title: 'REGISTRATION', // to add letter spacing on Android
     headerTitleStyle: {
     	alignSelf: 'center',
     	paddingRight: 56,
@@ -42,79 +60,49 @@ export default class Register extends Component {
 			wordStatus: null,
 			emailStatus: 1,
      		errorMessage: null,
+     		referred_by: '',
 		}
 
 		this._register = this._register.bind(this)
-		this.unsubscriber = null;
+		// this.unsubscriber = null;
 	}
 
 	// ------------------------------------------------------------------------------------------------------
-  // getting firebase dynamic links for user referrals
-  componentWillMount(){
-    firebase.links()
-    .getInitialLink()
-    .then((url) => {
-    	user = firebaseRef.auth().currentUser
-        if (url && user == null) {
-            // app opened from a url
-            referrerUid = DynamicLink.suffix.option//getUrlParamaeter("invitedby"); // link minus the booxchange string
-            createAnonymousAccountWithReferrerInfo(referrerUid);
-        } else {
-           // app NOT opened from a url
-        }
-    });
-  }
-  // for the anonymous firebase signin user info replacement
-  componentDidMount(){
-    this.unsubscriber = firebaseRef.auth().onAuthStateChanged((user) => {});
-  }
+	// function for signing up user from referral link
+	// createAnonymousAccountWithReferrerInfo(refferalUid){
+	// 	console.log('createAnonymousAccountWithReferrerInfo')
+	// 	firebaseRef.auth().signInAnonymously().then(() => {
+	// 		firebaseRef.auth().onAuthStateChanged((user) => {
+	// 			if (user) {
+	// 				// User is signed in.
+	// 				isAnonymous = user.isAnonymous;
+	// 				user = firebaseRef.auth().currentUser
+	// 				// ...
+	// 			} else {
+	// 			  	// User is signed out
+	// 			}
+	//   		});  
+	// 	}).catch(function(error) {
+	// 	  	// Handle Errors here.
+	// 	  	console.log('--- referrer clap code', error.code);
+	// 	  	console.log('--- referrer error message', error.message);
+	// 	});
+	// }
 
-  componentWillUnmount(){
-    if (this.unsubscriber) {
-      this.unsubscriber();
-    }
-  }
-  // ------------------------------------------------------------------------------------------------------
-  // function for signing up user from referral link
-  createAnonymousAccountWithReferrerInfo(refferalUid){
-    firebaseRef.auth().signInAnonymously().then(() => {
-      firebaseRef.auth().onAuthStateChanged((user) => {
-        if (user) {
-          // User is signed in.
-          isAnonymous = user.isAnonymous;
-          user = firebaseRef.auth().currentUser
-          firebaseRef.database().ref('users').child(user.uid).child("referred_by").setValue(referrerUid);
-          // ...
-        } else {
-          // User is signed out
-        }
-      });  
-    }).catch(function(error) {
-      // Handle Errors here.
-      console.log('--- referrer clap code', error.code);
-      console.log('--- referrer error message', error.message);
-    });
-  }
-
-  // referral reward function called when user registers after check if referred
-  rewardReferrals(){
-    firebaseRef.database.ref('/users/{uid}/last_signin_at')
-    .onCreate(event => {
-      firebaseRef.database().ref(`users/${uid}/referred_by`)
-        .once('value').then((data) => {
-         referrerUid = data.val();
-        if (referrerUid) {
-          firebaseRef.database().ref(`users/${referrerUid}`).once('value')
-          .then(snapshot => {
-              var get_total = snapshot.val().user_point + 0.2
-              firebaseRef.database().ref(`/users/${referrerUid}`)
-              .child(this.props.appStore.seller_uid).update( { user_point : get_total } )
-          });
-        }
-      });
-    });
-  }
-  //-------------------------------------------------------------------------------------------------------
+	//------------------------------------------------------------------------------------------------------------------------------
+	// referral reward function called when user registers if referred through branch link
+	//-----------------------------------------------------------------------------------------------------------------------------
+	rewardReferrals(){
+		// let installParams = await branch.getFirstReferringParams()
+		// console.log('Values form installparams printed whole', installParams)
+		firebaseRef.database().ref('users').child(referrerUid).once('value')
+		.then(snapshot => {
+			var get_total = snapshot.val().user_point + 0.2
+			firebaseRef.database().ref('users').child(referrerUid)
+			.update( { user_point : get_total } )
+		});		
+	}
+	//-------------------------------------------------------------------------------------------------------
 
 	_register() {
 		if (this.state.email.includes('.edu')) {
@@ -128,7 +116,7 @@ export default class Register extends Component {
 						firebaseRef.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
 						.then((user) => {
 							user.sendEmailVerification().then(() => {
-								firebaseRef.database().ref('usernameList').child(this.state.name.toLowerCase()).set(user.uid)
+							firebaseRef.database().ref('usernameList').child(this.state.name.toLowerCase()).set(user.uid)
   							user.updateProfile({displayName: this.state.name})
   							.then(() => {
   								// this.setState({emailStatus: 0})
@@ -142,6 +130,7 @@ export default class Register extends Component {
 	  								const email = user.email
 	  								const user_point = 0 //added and set user_point default to 1
 	  								const device_id = status.userId // added
+	  								// const refferred_by = this.state.referrerUid
 
 	  								firebaseRef.database().ref('users/' + user.uid)
 	  								.set({
@@ -152,7 +141,8 @@ export default class Register extends Component {
 	  									order_count,
 	  									email,
 	  									user_point,
-	  									device_id
+	  									device_id,
+	  									// referred_by
 	  								})
 
 	  								this.props.appStore.uid = user.uid
@@ -165,17 +155,17 @@ export default class Register extends Component {
 		  							OneSignal.sendTag("uid", user.uid)
 
 		  							console.log("------------get the data from input fields or set the default-----------------")
-		  							console.log("username:" + user.displayName)
-		  							console.log("post_count:" + post_count)
-		  							console.log("order_count:" + order_count)
-		  							console.log("chat_count:" + chat_count)
-		  							console.log("user:" + user)
-		  							console.log("user1:" + user.displayName)
-		  							console.log("user2:" + user.email)
-		  							console.log("user3:" + user.photoURL)
-		  							console.log("user4:" + user.emailVerified)
-		  							console.log("user5:" + user.uid)
-		  							console.log("user_point:" + user_point)
+		  							console.log("username: " + user.displayName)
+		  							console.log("post_count: " + post_count)
+		  							console.log("order_count: " + order_count)
+		  							console.log("chat_count: " + chat_count)
+		  							console.log("user: " + user)
+		  							console.log("user1: " + user.displayName)
+		  							console.log("user2: " + user.email)
+		  							console.log("user3: " + user.photoURL)
+		  							console.log("user4: " + user.emailVerified)
+		  							console.log("user5: " + user.uid)
+		  							console.log("user_point: " + user_point)
 
 		  							console.log("--------------------After save in appstore, then load back data in appstore-----------------")
 		  							console.log("username:" + this.props.appStore.username)
@@ -188,11 +178,12 @@ export default class Register extends Component {
 		  							console.log("user3:" + this.props.appStore.user.photoURL)
 		  							console.log("user4:" + this.props.appStore.user.emailVerified)
 		  							console.log("user5:" + this.props.appStore.user.uid)
-		  							console.log("user_point:" + this.props.appStore.user_point)
-		  							
-		  							// Give reward to link refferer
-		  							rewardReferrals();
+		  							console.log("user_point:" + this.props.appStore.user_point)		  							
   								});
+								console.log("------Branch Haead-----")
+								if (referrerUid){
+									this.rewardReferrals()
+								}
   							});
 							})
 							this.props.navigation.navigate('VerifyMessage')

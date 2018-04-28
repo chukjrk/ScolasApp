@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component} from 'react';
 import { ScrollView, View, TouchableOpacity, StyleSheet, TextInput, Text, Platform, Share } from 'react-native';
 import { RkText, RkStyleSheet, RkTheme, RkButton } from 'react-native-ui-kitten';
 import { StackNavigator, NavigationActions } from 'react-navigation';
 import { observer,inject } from 'mobx-react/native';
 import { firebaseRef } from '../../services/Firebase'
-import firebase from 'react-native-firebase'
+// import firebase from 'react-native-firebase'
+import branch from 'react-native-branch'
 
 @inject("appStore") @observer
 export default class Settings extends Component {
@@ -50,13 +51,13 @@ export default class Settings extends Component {
   _logOut() {
     firebaseRef.auth().signOut()
     .then(() => {
-      this.props.appStore.username = ""
+      this.props.appStore.username = ''
       this.props.appStore.user = {}
-      this.props.appStore.uid = ""
-      this.props.appStore.post_count = 0
-      this.props.appStore.chat_count = 0
-      this.props.appStore.order_count = 0
-      this.props.appsStore.user_point = 0
+      this.props.appStore.uid = ''
+      this.props.appStore.post_count = ''
+      this.props.appStore.chat_count = ''
+      this.props.appStore.order_count = ''
+      this.props.appsStore.user_point = ''
       // toHome = NavigationActions.reset({
       //   index:0
       //   actions: [NavigationActions.navigate({routeName: 'Home'})]
@@ -68,9 +69,12 @@ export default class Settings extends Component {
     .catch(function(error) {
       console.log('Sign Out Error', error)
     });
+    branch.logout()
   }
 
   render() {
+    const memberUid = this.props.appStore.user.uid;
+
     return (
       <ScrollView style={styles.container}>
         <View style={styles.section}>
@@ -139,7 +143,7 @@ export default class Settings extends Component {
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
-            <TouchableOpacity style={styles.rowButton} onPress={this._inviting}>
+            <TouchableOpacity style={styles.rowButton} onPress={this._inviting(memberUid)}>
               <RkText rkType='header6'>SHARE</RkText>
             </TouchableOpacity>
           </View>
@@ -158,27 +162,35 @@ export default class Settings extends Component {
   _showResult(result){
     this.setState({result});
   }
-  _inviting(){
-    firebase.links()
-      .createDynamicLink({
-        dynamicLinkDomain: "ptt67.app.goo.gl/u9DC ",
-        link: "https://booXchange.com/?invitedby=" + this.props.appStore.user.uid,
-        androidInfo: {
-          androidPackageName: "com.scolas"
-        },
-        suffix: {
-          option: this.props.appStore.user.uid
-        },
-      })
-      .then((url) => {
-        // url: link
-        this.setState({sendlink: url})
-        Share.share({
-          title: 'BooXchange Invite',
-          message: 'Have you heard of BooXchange? Try it using my link: ' + url,
-        }).then(this._showResult);  
-        console.log("---- This ish is URL BABABABABAS ---", url)
-    });
+  async _inviting(UUid){
+    let branchUniversalObject = await branch.createBranchUniversalObject(UUid, {
+      locallyIndex: true,
+      title: 'Invitations',
+      contentDescription: 'Have you heard of BooXchange? Try it using my link: ',
+      contentMetadata: {
+        ratingAverage: 4.2,
+      }
+    })
+
+    let linkProperties = {
+      feature: 'referral',
+      // channel: 'facebook',
+      campaign: 'Local Launch Invites',
+      random: UUid,
+    }
+    // let shareOptions = { messageHeader: 'Join BooXchange', messageBody: 'Have you heard of BooXchange? Try it using my link: ' }
+    let controlParams = {
+      // $desktop_url: 'http://desktop-url.com/monster/12345'
+    }
+    console.log("---- This isasdadad ")
+
+    let {url} = await branchUniversalObject.generateShortUrl(linkProperties, controlParams)
+    // let {channel, completed, error} = await branchUniversalObject.showShareSheet(shareOptions, linkProperties, controlParams)
+    console.log("---- This ish is URL BABABABABAS ---", url)
+    Share.share({
+      title: 'BooXchange Invite',
+      message: 'Have you heard of BooXchange? Try it using my link: ' + url,
+    })
   }
 }
 
