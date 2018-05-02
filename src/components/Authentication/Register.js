@@ -97,7 +97,7 @@ export default class Register extends Component {
 		// console.log('Values form installparams printed whole', installParams)
 		firebaseRef.database().ref('users').child(referrerUid).once('value')
 		.then(snapshot => {
-			var get_total = snapshot.val().user_point + 0.2
+			var get_total = snapshot.val().user_point + 0.334
 			firebaseRef.database().ref('users').child(referrerUid)
 			.update( { user_point : get_total } )
 		});		

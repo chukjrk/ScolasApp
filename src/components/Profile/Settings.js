@@ -143,7 +143,7 @@ export default class Settings extends Component {
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
-            <TouchableOpacity style={styles.rowButton} onPress={this._inviting(memberUid)}>
+            <TouchableOpacity style={styles.rowButton} onPress={() => this._inviting(memberUid)}>
               <RkText rkType='header6'>SHARE</RkText>
             </TouchableOpacity>
           </View>
@@ -162,6 +162,7 @@ export default class Settings extends Component {
   _showResult(result){
     this.setState({result});
   }
+
   async _inviting(UUid){
     let branchUniversalObject = await branch.createBranchUniversalObject(UUid, {
       locallyIndex: true,
