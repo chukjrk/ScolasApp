@@ -18,6 +18,7 @@ import { observer,inject } from 'mobx-react/native'
 import { GiftedChat, Bubble } from 'react-native-gifted-chat'
 import Lightbox from 'react-native-lightbox'
 import Spinner from 'react-native-loading-spinner-overlay'
+import OneSignal from 'react-native-onesignal'
 // import BackgroundTask from 'react-native-background-task'
 
 const screenWidth = Dimensions.get('window').width
@@ -156,6 +157,7 @@ export default class Chat extends Component {
       firebaseRef.database().ref('messages').child(this.props.navigation.state.params.puid).push({
         text: messages[i].text,
         user: messages[i].user,
+        // uid: messages[i].user.uid,
         createdAt: firebase.database.ServerValue.TIMESTAMP,
       })
       firebaseRef.database().ref('messages_notif').child(this.props.navigation.state.params.puid).once('value')
@@ -164,8 +166,9 @@ export default class Chat extends Component {
         console.log(snapshot.val());
         if (snapshot.val()) {
           snapshot.val().include_player_ids.map((playerId) => {
-            console.log("+-------> " + playerId)
             firebaseRef.database().ref('user_chats/'+this.props.appStore.user.uid+'/posts').child(this.props.navigation.state.params.puid).update({ updatedAt: firebase.database.ServerValue.TIMESTAMP })
+            console.log("+------->  playerId: ", playerId)
+            console.log("+------->  uid: ", this.props.appStore.user.uid)
             if (playerId != this.props.appStore.user.uid) {
               firebaseRef.database().ref('user_chats/'+playerId+'/posts').child(this.props.navigation.state.params.puid).transaction(
                 (post) => {
@@ -177,6 +180,7 @@ export default class Chat extends Component {
                 }
               )
               console.log("PUSHING NOTIFICATION !!! " + this.props.navigation.state.params.title);
+              // console.log("messages: ", messages[i-1].user._id)
               fetch('https://onesignal.com/api/v1/notifications',
               {
                 method: 'POST',
@@ -191,9 +195,9 @@ export default class Chat extends Component {
                   android_sound: "fishing",
                   ios_sound: "fishing.caf",
                   data: {"puid":this.props.navigation.state.params.puid, "new_message":true},
-                  headings: {"en": "New message from " + this.props.appStore.user.displayName},
+                  headings: {"en": "New message from " + this.props.appStore.username},
                   contents: {"en": messages[i].text },
-                  filters: [{"field":"tag","key":"uid","relation":"=","value":playerId}],
+                  filters: [{"field":"tag","key":"uid","relation":"=","value": playerId}],
                 })
               })
               .then((responseData) => {
@@ -225,7 +229,7 @@ export default class Chat extends Component {
   }
 
   _cancelPurchase() {
-    if (this.state.status === 'sold') {u
+    if (this.state.status === 'sold') {
       console.log("SOLD")
       this.setState({
                       status: 'available',

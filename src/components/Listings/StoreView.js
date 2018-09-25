@@ -27,7 +27,7 @@ import Chat from '../../components/Chat/Chat'
 import Rebase from 're-base'; //import rebase
 import Book from '../Listings/Book'
 import { observer,inject } from 'mobx-react/native';
-import BackgroundTask from 'react-native-background-task'
+// import BackgroundTask from 'react-native-background-task'
 
 let base = Rebase.createClass(firebaseRef.database()); //initiate rebase with firebase setup
 

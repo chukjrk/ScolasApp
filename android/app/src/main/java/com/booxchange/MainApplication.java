@@ -10,7 +10,6 @@ import com.oblador.vectoricons.VectorIconsPackage;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
-import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -36,8 +35,7 @@ public class MainApplication extends Application implements ReactApplication {
             new VectorIconsPackage(),
             new ReactNativeOneSignalPackage(),
             new ImagePickerPackage(),
-            new RNFetchBlobPackage(),
-            new BackgroundTaskPackage()
+            new RNFetchBlobPackage()
       );
     }
 
@@ -56,7 +54,7 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
-    BackgroundTaskPackage.useContext(this);
+    // BackgroundTaskPackage.useContext(this);
     Branch.getAutoInstance(this);
   }
 

@@ -57,7 +57,7 @@ export default class Settings extends Component {
       this.props.appStore.post_count = ''
       this.props.appStore.chat_count = ''
       this.props.appStore.order_count = ''
-      this.props.appsStore.user_point = ''
+      this.props.appsStore.user_point = 0
       // toHome = NavigationActions.reset({
       //   index:0
       //   actions: [NavigationActions.navigate({routeName: 'Home'})]

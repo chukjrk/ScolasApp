@@ -272,8 +272,8 @@ export default class CreateNew extends Component {
             // *********************************************************************************************************
             // Promotion for getting new users by offering them one point for posting their book on there
             // *********************************************************************************************************
-            this.props.appStore.user_point= this.props.appStore.user_point + 1
-            updates['/users/' + uid + '/user_point'] = this.props.appStore.user_point
+            // this.props.appStore.user_point= this.props.appStore.user_point + 1
+            // updates['/users/' + uid + '/user_point'] = this.props.appStore.user_point
             // *********************************************************************************************************
             this.props.appStore.post_count = this.props.appStore.post_count + 1
             updates['/users/' + uid + '/post_count'] = this.props.appStore.post_count

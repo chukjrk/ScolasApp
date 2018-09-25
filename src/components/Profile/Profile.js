@@ -32,6 +32,7 @@ export default class Profile extends React.Component {
 
   componentDidMount() {
     this.setModalVisible(true);
+    console.log("Device_id: ", this.props.appStore.device_id)
   }
 
   setModalVisible(visible) {
@@ -118,7 +119,7 @@ export default class Profile extends React.Component {
                 <Text style={{fontSize: 45, marginBottom: 15, fontFamily: 'sans-serif-condensed'}}>BOOXCHANGE</Text>
               </View>
               <View style={styles.modalInfo}>
-                <Text style={{fontSize: 25, color: '#27924a'}}>5 INVITES</Text>
+                <Text style={{fontSize: 25, color: '#27924a'}}>3 INVITES</Text>
                 <Text style={{fontSize: 25, color: '#27924a'}}>1 POINT</Text>
               </View>
               <View style={styles.modalButtons}>
@@ -171,7 +172,7 @@ export default class Profile extends React.Component {
               </View>
               <View>
                 <Text style={styles.infoHeader}>How do you earn points?</Text>
-                <Text style={styles.infoExpand}>You earn points for the textbbooks you trade. You get 1 point after yoour book has been traded with other members of BooXchange.</Text>
+                <Text style={styles.infoExpand}>You earn points for the textbooks you trade. You get 1 point by putting your book on BooXchange.</Text>
               </View>
               <View>
                 <Text style={styles.infoHeader}>Have not received textbook:</Text>
@@ -364,7 +365,7 @@ const styles = RkStyleSheet.create(theme => ({
 
   promoContainer: {
     flex: 1,
-    justifyContent: 'flex-start',
+    // justifyContent: 'flex-start',
     backgroundColor: 'white',
     borderRadius: 4,
     marginHorizontal: 40,

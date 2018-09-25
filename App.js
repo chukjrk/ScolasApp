@@ -27,6 +27,8 @@ import Book from './src/components/Listings/Book'
 export default class App extends Component {
 
     constructor(props) {
+      // disabble yellowboc warnings for update to React native
+      // console.disableYellowBox = true;
       super(props);
 
       this.state = {

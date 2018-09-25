@@ -128,8 +128,9 @@ export default class Register extends Component {
 	  								const chat_count = 0
 	  								const order_count = 0
 	  								const email = user.email
-	  								const user_point = 0 //added and set user_point default to 1
+	  								const user_point = 1 //added and set user_point default to 1
 	  								const device_id = status.userId // added
+	  								console.log("One_Signal device_id: ", device_id)
 	  								// const refferred_by = this.state.referrerUid
 
 	  								firebaseRef.database().ref('users/' + user.uid)
@@ -152,6 +153,7 @@ export default class Register extends Component {
 		  							this.props.appStore.chat_count = chat_count
 		  							this.props.appStore.user = user
 		  							this.props.appStore.user_point = user_point
+		  							this.props.appStore.device_id = device_id
 		  							OneSignal.sendTag("uid", user.uid)
 
 		  							console.log("------------get the data from input fields or set the default-----------------")
@@ -160,9 +162,8 @@ export default class Register extends Component {
 		  							console.log("order_count: " + order_count)
 		  							console.log("chat_count: " + chat_count)
 		  							console.log("user: " + user)
-		  							console.log("user1: " + user.displayName)
+		  							console.log("user displayname: " + user.displayName)
 		  							console.log("user2: " + user.email)
-		  							console.log("user3: " + user.photoURL)
 		  							console.log("user4: " + user.emailVerified)
 		  							console.log("user5: " + user.uid)
 		  							console.log("user_point: " + user_point)
@@ -175,7 +176,6 @@ export default class Register extends Component {
 		  							console.log("user:" + this.props.appStore.user)
 		  							console.log("user1:" + this.props.appStore.user.displayName)
 		  							console.log("user2:" + this.props.appStore.user.email)
-		  							console.log("user3:" + this.props.appStore.user.photoURL)
 		  							console.log("user4:" + this.props.appStore.user.emailVerified)
 		  							console.log("user5:" + this.props.appStore.user.uid)
 		  							console.log("user_point:" + this.props.appStore.user_point)		  							

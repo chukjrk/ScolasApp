@@ -16,11 +16,11 @@ import Book from '../components/Listings/Book'
 import appStore from '../store/AppStore'
 import { observer,inject } from 'mobx-react/native';
 import { Icon } from 'react-native-elements'
-import BackgroundTask from 'react-native-background-task'
+// import BackgroundTask from 'react-native-background-task'
 import OneSignal from 'react-native-onesignal';
 import VerifyMessage from '../components/Authentication/VerifyMessage'
 import Intro from '../components/Authentication/Intro'
-import BackgroundFetch from "react-native-background-fetch";
+// import BackgroundFetch from "react-native-background-fetch";
 
 // added navigation to Chat using StackNavigator. Somehow using routeName
 // is not working
@@ -173,12 +173,12 @@ export const SignedIn = TabNavigator({
 
 // BackgroundTask executer. you can put any function to start process in background.
 // The executer must be on the top level js(outside class)
-BackgroundTask.define(() => {
-  console.log('Hello from a back`ground task')
-  //this will re-run notification in background every 7-15 minutes
-  // data.status === 'sold' ? firebaseRef.database().ref('posts').child(data.puid).remove() : null
-  Book.runSendNotification(appStore.user.uid);
-})
+// BackgroundTask.define(() => {
+//   console.log('Hello from a back`ground task')
+//   //this will re-run notification in background every 7-15 minutes
+//   // data.status === 'sold' ? firebaseRef.database().ref('posts').child(data.puid).remove() : null
+//   Book.runSendNotification(appStore.user.uid);
+// })
 // added @inject on class because found issue after user login, this.props.appStore
 // was not kept in appStore which cause error of undefined props.
 
@@ -213,9 +213,9 @@ export default class LoginState extends Component {
       	// since the function above was reserved, must put .bind(this) if want to execute outside function
       	// or global variable.
 		firebaseRef.auth().onAuthStateChanged((user) => {
-			// user.sendEmailVerification().then(() => {  && user.emailVerified
-			// remember to add eemail verification after debugging  
-			if (user) {
+			// user.sendEmailVerification().then(() => {  
+			// remember to add email verification after debugging  
+			if (user && user.emailVerified) {
 				console.log("--------- LOGGED AS " + user.displayName + " ---------")
 				this.props.appStore.user = user
 				this.props.appStore.username = user.displayName
