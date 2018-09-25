@@ -5,7 +5,7 @@ import moment from 'moment';
 import { observer,inject } from 'mobx-react/native'
 import { firebaseRef } from '../../services/Firebase'
 import firebase from 'firebase'
-import BackgroundTask from 'react-native-background-task'
+// import BackgroundTask from 'react-native-background-task'
 // import base from "re-base";
 import {
   Text,
@@ -202,10 +202,10 @@ export default class Book extends Component {
     firebaseRef.database().ref('posts').child(data).remove()
   }
 
-  _Test(){
-    console.log("--------------------Task running -------")
-    BackgroundTask.schedule({period: 900});
-  }
+  // _Test(){
+  //   console.log("--------------------Task running -------")
+  //   BackgroundTask.schedule({period: 900});
+  // }
 
   _onBuy = () => {
     if (this.state.status === 'available') {
