@@ -10,6 +10,7 @@ import {
   AsyncStorage,
   TouchableHighlight,
   Platform,
+  PixelRatio
 } from 'react-native';
 import { RkText, RkButton, RkStyleSheet } from 'react-native-ui-kitten';
 import { Avatar, Icon, Header, Button } from 'react-native-elements'
@@ -18,6 +19,7 @@ import { observer,inject } from 'mobx-react/native';
 import { StackNavigator, NavigationActions } from 'react-navigation'
 import Modal from 'react-native-modal'
 import branch from 'react-native-branch'
+// import {vw, vh} from 'react-native-viewport-units'
 
 @inject("appStore") @observer
 export default class Profile extends React.Component {
@@ -164,7 +166,7 @@ export default class Profile extends React.Component {
           >
             <View>
               <View style={styles.infoTitle}>
-                <Text style={{opacity: 0.5, fontWeight: 'bold', fontSize: 20, alignSelf: 'center'}}>INFO</Text>
+                <Text style={{opacity: 0.5, fontWeight: 'bold', fontSize: 20, alignSelf: 'center', justifyContent: 'space-between'}}>INFO</Text>
               </View>
               <View>
                 <Text style={styles.infoHeader}>How does BooXchange work?</Text>
@@ -368,9 +370,12 @@ const styles = RkStyleSheet.create(theme => ({
     // justifyContent: 'flex-start',
     backgroundColor: 'white',
     borderRadius: 4,
-    marginHorizontal: 40,
-    marginTop: 40,
-    marginBottom: 130,
+    width: PixelRatio.getPixelSizeForLayoutSize(90),
+    // height: PixelRatio.getPixelSizeForLayoutSize(100),
+    alignSelf: 'center',
+    // marginHorizontal: 40,
+    marginTop: PixelRatio.getPixelSizeForLayoutSize(20),
+    marginBottom: PixelRatio.getPixelSizeForLayoutSize(40),
   },
 
   modalTitle: {
@@ -408,13 +413,13 @@ const styles = RkStyleSheet.create(theme => ({
 
   infoHeader: {
     fontWeight: 'bold',
-    marginHorizontal: 5,
+    marginHorizontal: 7,
   },
 
   infoExpand: {
     marginBottom: 10,
     // marginTop: 2,
-    marginHorizontal: 5,
+    marginHorizontal: 7,
   },
 
   infoButton:{

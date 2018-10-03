@@ -21,7 +21,7 @@ const slides = [
   {
     key: 'somethun',
     title: 'Access books from all over your university',
-    titleStyle: {color: 'blck'},
+    titleStyle: {color: 'white'},
     image: require('../../assets/images/slide1.jpeg'),
     imageStyle: styles.image,
     backgroundColor: '#1b943b',
