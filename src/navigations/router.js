@@ -196,6 +196,7 @@ export default class LoginState extends Component {
 			signedIn: false,
 			checkSignIn: false,
         	device_id: '',
+        	authprovider: '',
     	}
 	}
 
@@ -213,9 +214,21 @@ export default class LoginState extends Component {
       	// since the function above was reserved, must put .bind(this) if want to execute outside function
       	// or global variable.
 		firebaseRef.auth().onAuthStateChanged((user) => {
-			// user.sendEmailVerification().then(() => {  && user.emailVerified
-			// remember to add email verification after debugging  
-			if (user) {
+			// user.sendEmailVerification().then(() => {  
+			// remember to add email verification after debugging && user.emailVerified 
+			const i = []
+			if (user != null) {
+			  user.providerData.forEach(function (profile) {
+			    console.log("Sign-in provider: " + profile.providerId);
+			    // console.log("  Provider-specific UID: " + profile.uid);
+			    // console.log("  Name: " + profile.displayName);
+			    // console.log("  Email: " + profile.email);
+			    // console.log("  Photo URL: " + profile.photoURL);
+			    i.push(profile.providerId)
+			  });
+			}
+			console.log("here i am ", i[0])
+			if (user && user.emailVerified || user && i[0] == 'facebook.com') {
 				console.log("--------- LOGGED AS " + user.displayName + " ---------")
 				this.props.appStore.user = user
 				this.props.appStore.username = user.displayName

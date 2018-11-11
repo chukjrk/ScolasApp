@@ -59,12 +59,18 @@
       <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_ciC4fQhke0Cgu9ExNFkNOhpmztj63nXC" />
       <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
 
+      <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+
       <!-- Branch install referrer tracking (optional) -->
       <receiver android:name="io.branch.referral.InstallListener" android:exported="true">
         <intent-filter>
             <action android:name="com.android.vending.INSTALL_REFERRER" />
         </intent-filter>
       </receiver>
+
+      <provider android:authorities="com.facebook.app.FacebookContentProvider349033642329979"
+          android:name="com.facebook.FacebookContentProvider"
+          android:exported="true" />
     </application>
 
 </manifest>

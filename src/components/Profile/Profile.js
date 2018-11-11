@@ -19,6 +19,7 @@ import { observer,inject } from 'mobx-react/native';
 import { StackNavigator, NavigationActions } from 'react-navigation'
 import Modal from 'react-native-modal'
 import branch from 'react-native-branch'
+import { firebaseRef } from '../../services/Firebase'
 // import {vw, vh} from 'react-native-viewport-units'
 
 @inject("appStore") @observer
@@ -81,7 +82,19 @@ export default class Profile extends React.Component {
   }
 
   render() {
-    const name = this.props.appStore.username;
+    const i = []
+    var user = firebaseRef.auth().currentUser;
+    if (user != null) {
+      user.providerData.forEach(function (profile) {
+        i.push(profile.providerId)
+      });
+    }
+    if (i[0] == 'facebook.com') {
+      i.push(user.displayName)
+    } else {
+      i.push(JSON.stringify(this.props.appStore.username))
+    }
+    const name = i[1];
     const points = this.props.appStore.user_point;
     const { navigate } = this.props.navigation;
     const memberUid = this.props.appStore.user.uid;
