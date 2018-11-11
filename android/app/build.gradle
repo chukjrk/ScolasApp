@@ -111,8 +111,8 @@ android {
         applicationId "com.scolas"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 23
-        versionName "23"
+        versionCode 25
+        versionName "25"
         multiDexEnabled true
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -162,8 +162,8 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-fbsdk')
     compile project(':react-native-branch')
-    compile project(':react-native-push-notification')
     compile project(':react-native-vector-icons')
     compile project(':react-native-onesignal')
     compile project(':react-native-image-picker')
@@ -171,6 +171,9 @@ dependencies {
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules
+    implementation 'com.facebook.android:facebook-android-sdk:4.34.0'
+    // implementation project(':react-native-fbsdk')
+    // compile ("com.facebook.react:react-native:0.50.4") { force = true } 
     compile "com.google.firebase:firebase-core:11.8.0"
     //-------------------------------------------------------------
     // react-native-firebase dependency for dynamic links
@@ -185,6 +188,5 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
-
 
 apply plugin: 'com.google.gms.google-services'

@@ -8,7 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import io.branch.rnbranch.*; // <-- add this for branch.io
-import android.content.Intent; // <-- and this for branch.io
+import android.content.Intent; 
 
 import com.facebook.react.ReactActivity;
 
@@ -71,10 +71,12 @@ public class MainActivity extends ReactActivity {
         }
     }
 
-    // Window overlay permission intent result
+    // Window overlay permission intent result and facebook SDK
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
       super.onActivityResult(requestCode, resultCode, data);
+      // below the callback is for the fbsdk
+      MainApplication.getCallbackManager().onActivityResult(requestCode, resultCode, data);
       if (requestCode == OVERLAY_PERMISSION_REQ_CODE) {
           checkPerms();
       }
