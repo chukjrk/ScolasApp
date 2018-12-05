@@ -13,6 +13,13 @@ class AppStore {
   @observable user_point = 0   //added
   @observable device_id = ''   //added
   @observable seller_uid = ''   //added
+  @observable address = ''
+  @observable fullname = ''
+  @observable zip = 0
+  @observable aptno = ''
+  @observable city = ''
+  @observable state_us = ''
+  @observable phone_number = ''
 }
 
 const appStore = new AppStore()

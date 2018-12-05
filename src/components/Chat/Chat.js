@@ -19,6 +19,7 @@ import { GiftedChat, Bubble } from 'react-native-gifted-chat'
 import Lightbox from 'react-native-lightbox'
 import Spinner from 'react-native-loading-spinner-overlay'
 import OneSignal from 'react-native-onesignal'
+import
 // import BackgroundTask from 'react-native-background-task'
 
 const screenWidth = Dimensions.get('window').width
@@ -46,6 +47,9 @@ export default class Chat extends Component {
   }
 
   componentWillMount() {
+    OneSignal.init("YOUR_ONESIGNAL_APPID");
+    OneSignal.configure(); //will trigger ids event to fire.
+    OneSignal.addEventListener('ids', this.onIds);
 
     console.log("---- CHAT WILL MOUNT ----- " + this.props.navigation.state.params.uid)
     firebaseRef.database().ref('posts').child(this.props.navigation.state.params.puid).once('value',
@@ -144,9 +148,6 @@ export default class Chat extends Component {
     firebaseRef.database().ref('user_chats/'+this.props.appStore.user.uid+'/posts').child(this.props.navigation.state.params.puid).update( { new_messages:0 } )
   }
 
-  componentDidMount() {
-  }
-
   componentDidUpdate() {
     //console.log("---------------------------------- componentDidUpdate ---------------------------------")
   }
@@ -213,7 +214,7 @@ export default class Chat extends Component {
           if (snapshot.val().include_player_ids.indexOf(this.props.appStore.user.uid) === -1) {
             const playerIds = snapshot.val().include_player_ids
             playerIds.push(this.props.appStore.user.uid)
-            console.log("ADDDDDING NEW PLAYER to " + this.props.navigation.state.params.puid);
+            console.log("ADDING NEW PLAYER to " + this.props.navigation.state.params.puid);
             console.log(playerIds)
             firebaseRef.database().ref('messages_notif').child(this.props.navigation.state.params.puid).set({include_player_ids: playerIds})
             firebaseRef.database().ref('user_chats/'+this.props.appStore.user.uid+'/posts').child(this.props.navigation.state.params.puid).set(this.state.postProps)
@@ -263,6 +264,12 @@ export default class Chat extends Component {
     this.props.appStore.current_puid = ''
     firebaseRef.database().ref('messages').child(this.props.navigation.state.params.puid).off()
     //firebaseRef.database().ref('posts').child(this.props.puid).off()
+    OneSignal.removeEventListener('ids', this.onIds);
+  }
+
+  onIds(device) {
+    // var current_messenger = device
+    console.log('Device info: ', device); //your playerId
   }
 
   renderFooter = (props) => {
