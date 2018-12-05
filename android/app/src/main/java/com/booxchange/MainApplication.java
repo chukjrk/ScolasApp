@@ -3,6 +3,7 @@ package com.booxchange;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.evollu.react.fcm.FIRMessagingPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import io.branch.rnbranch.RNBranchPackage;
 import io.branch.referral.Branch;
@@ -33,6 +34,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new FIRMessagingPackage(),
             new FBSDKPackage(mCallbackManager),
             new RNBranchPackage(),
             new VectorIconsPackage(),
