@@ -38,6 +38,20 @@ export default class Profile extends React.Component {
     console.log("Device_id: ", this.props.appStore.device_id)
   }
 
+  componentWillMount() {
+    OneSignal.init("YOUR_ONESIGNAL_APPID");
+    OneSignal.configure(); //will trigger ids event to fire.
+    OneSignal.addEventListener('ids', this.onIds);
+  }
+
+  componentWillUnmount() {
+    OneSignal.removeEventListener('ids', this.onIds);
+  }
+
+  onIds(device) {
+    console.log('Device info: ', device); //your playerId
+  }
+
   setModalVisible(visible) {
     this.setState({modalVisible: visible});
   }

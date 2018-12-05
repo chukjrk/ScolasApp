@@ -176,7 +176,7 @@ export default class Login extends Component {
 
 	_loginFacebook = () => {
     console.log('---------The Next Stp ------------- 1')
-    LoginManager.logInWithReadPermissions(['public_profile', 'user_friends', 'email'])
+    LoginManager.logInWithReadPermissions(['public_profile', 'email'])
       .then((result) => {
         console.log('---------The Next Stp ------------- 2')
         if (result.isCancelled) {
