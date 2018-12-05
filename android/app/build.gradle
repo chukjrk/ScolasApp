@@ -108,11 +108,11 @@ android {
     buildToolsVersion "26.0.2"
 
     defaultConfig {
-        applicationId "com.scolas"
+        applicationId "com.booxchange"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 25
-        versionName "25"
+        versionCode 26
+        versionName "26"
         multiDexEnabled true
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -162,6 +162,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-fcm')
     compile project(':react-native-fbsdk')
     compile project(':react-native-branch')
     compile project(':react-native-vector-icons')
@@ -174,12 +175,13 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:4.34.0'
     // implementation project(':react-native-fbsdk')
     // compile ("com.facebook.react:react-native:0.50.4") { force = true } 
-    compile "com.google.firebase:firebase-core:11.8.0"
+    implementation "com.google.firebase:firebase-core:11.8.0"
     //-------------------------------------------------------------
     // react-native-firebase dependency for dynamic links
     //-------------------------------------------------------------
     compile "com.google.android.gms:play-services-base:11.8.0"
     compile "com.google.firebase:firebase-invites:11.8.0"
+    implementation 'com.google.firebase:firebase-messaging'
 }
 
 // Run this once to be able to run the application with BUCK
