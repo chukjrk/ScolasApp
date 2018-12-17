@@ -19,7 +19,7 @@ import { GiftedChat, Bubble } from 'react-native-gifted-chat'
 import Lightbox from 'react-native-lightbox'
 import Spinner from 'react-native-loading-spinner-overlay'
 import OneSignal from 'react-native-onesignal'
-import
+
 // import BackgroundTask from 'react-native-background-task'
 
 const screenWidth = Dimensions.get('window').width
@@ -47,9 +47,9 @@ export default class Chat extends Component {
   }
 
   componentWillMount() {
-    OneSignal.init("YOUR_ONESIGNAL_APPID");
-    OneSignal.configure(); //will trigger ids event to fire.
-    OneSignal.addEventListener('ids', this.onIds);
+    // OneSignal.init("YOUR_ONESIGNAL_APPID");
+    // OneSignal.configure(); //will trigger ids event to fire.
+    // OneSignal.addEventListener('ids', this.onIds);
 
     console.log("---- CHAT WILL MOUNT ----- " + this.props.navigation.state.params.uid)
     firebaseRef.database().ref('posts').child(this.props.navigation.state.params.puid).once('value',
