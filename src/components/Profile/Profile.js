@@ -20,6 +20,7 @@ import { StackNavigator, NavigationActions } from 'react-navigation'
 import Modal from 'react-native-modal'
 import branch from 'react-native-branch'
 import { firebaseRef } from '../../services/Firebase'
+import OneSignal from 'react-native-onesignal'
 // import {vw, vh} from 'react-native-viewport-units'
 
 @inject("appStore") @observer
@@ -50,6 +51,7 @@ export default class Profile extends React.Component {
 
   onIds(device) {
     console.log('Device info: ', device); //your playerId
+    firebaseRef.database().ref('users/' + user.uid).update({ device_id: device})
   }
 
   setModalVisible(visible) {

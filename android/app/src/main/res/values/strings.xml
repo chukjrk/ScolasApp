@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">BooXchange</string>
-    <string name="facebook_app_id">349033642329979</string>
+    <string name="facebook_app_id">296081884363386</string>
+	<string name="fb_login_protocol_scheme">fb296081884363386</string>
 </resources>

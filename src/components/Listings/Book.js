@@ -316,13 +316,12 @@ export default class Book extends Component {
                 body: JSON.stringify(
                 {
                   app_id: "e09d00d9-b019-471d-ab1a-17ada2fdcda2",
-                  included_segments: ["All"],
+                  include_player_ids: [firebaseRef.database().ref('users').child(this.props.appStore.seller_uid).once(device_id)]
                   android_sound: "fishing",
                   ios_sound: "fishing.caf",
                   data: {"puid":this.props.navigation.state.params.puid, "new_message":true},
                   headings: {"en": "Sold"},
                   contents: {"en": this.props.appStore.user.displayName + " just bought " +  this.state.postProps.title},
-                  filters: [{"field":"tag","key":"uid","relation":"=","value":playerId}],
                 })
               })
               .then((responseData) => {

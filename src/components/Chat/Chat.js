@@ -19,7 +19,6 @@ import { GiftedChat, Bubble } from 'react-native-gifted-chat'
 import Lightbox from 'react-native-lightbox'
 import Spinner from 'react-native-loading-spinner-overlay'
 import OneSignal from 'react-native-onesignal'
-import
 // import BackgroundTask from 'react-native-background-task'
 
 const screenWidth = Dimensions.get('window').width
@@ -192,13 +191,12 @@ export default class Chat extends Component {
                 },
                 body: JSON.stringify({
                   app_id: "e09d00d9-b019-471d-ab1a-17ada2fdcda2",
-                  included_segments: ["All"], 
+                  include_player_ids: [playerId] 
                   android_sound: "fishing",
                   ios_sound: "fishing.caf",
                   data: {"puid":this.props.navigation.state.params.puid, "new_message":true},
                   headings: {"en": "New message from " + this.props.appStore.username},
                   contents: {"en": messages[i].text },
-                  filters: [{"field":"tag","key":"uid","relation":"=","value": playerId}],
                 })
               })
               .then((responseData) => {
@@ -268,7 +266,6 @@ export default class Chat extends Component {
   }
 
   onIds(device) {
-    // var current_messenger = device
     console.log('Device info: ', device); //your playerId
   }
 

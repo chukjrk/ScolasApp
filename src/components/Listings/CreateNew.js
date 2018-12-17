@@ -72,6 +72,20 @@ export default class CreateNew extends Component {
 		}
 	}
 
+  componentWillMount() {
+    OneSignal.init("YOUR_ONESIGNAL_APPID");
+    OneSignal.configure(); //will trigger ids event to fire.
+    OneSignal.addEventListener('ids', this.onIds); 
+  }
+
+  componentWillUnmount() {
+    OneSignal.removeEventListener('ids', this.onIds); 
+  }
+
+  onIds(device) {
+    console.log('Device info: ', device); //your playerId
+  }
+
 	render() {
     const height = ((screenWidth-40)*this.state.imageHeight/this.state.imageWidth)
     const photo = this.state.imagePath ?
@@ -253,12 +267,6 @@ export default class CreateNew extends Component {
               status: "available",
               clientId: "",
               clientName: "",
-              // if (this.props.appStore.user == postData.username) {
-              //   const seller = this.props.appStore.user
-              // } else {
-              //   const buyer = this.props.appStore.user
-              // },
-              
               new_messages: 0,
               text: this.state.postText.replace(/(\r\n|\n|\r)/gm,""),
               title: this.state.postTitle,

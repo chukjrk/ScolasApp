@@ -67,7 +67,7 @@
 		063B6E8FDA4F4976AF9A5395 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 46681863A1B445B88804BA63 /* libRCTNetwork.a */; };
 		5C0D49A1CB884231B9551B90 /* libRCTNetwork-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D885EB9A64FC41C5875AF3E9 /* libRCTNetwork-tvOS.a */; };
 		C6ADF2FEFDA74E5FA01DBE93 /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9981F4414C6E4E97947D2ADF /* libRCTFBSDK.a */; };
-		1DFB6E0C1D2345E292207463 /* libRNFIRMessaging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E481C2935DC74FA99E58C498 /* libRNFIRMessaging.a */; };
+		DCBD3F0EB4A746959D74EAFC /* libRNFIRMessaging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B6E3F8B296C044ACB1F974AF /* libRNFIRMessaging.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -412,8 +412,8 @@
 		D885EB9A64FC41C5875AF3E9 /* libRCTNetwork-tvOS.a */ = {isa = PBXFileReference; name = "libRCTNetwork-tvOS.a"; path = "libRCTNetwork-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		1D04E08FAB464A5F969048D7 /* RCTFBSDK.xcodeproj */ = {isa = PBXFileReference; name = "RCTFBSDK.xcodeproj"; path = "../node_modules/react-native-fbsdk/ios/RCTFBSDK.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		9981F4414C6E4E97947D2ADF /* libRCTFBSDK.a */ = {isa = PBXFileReference; name = "libRCTFBSDK.a"; path = "libRCTFBSDK.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		39B40A69E7AE4189BCA7C8F9 /* RNFIRMessaging.xcodeproj */ = {isa = PBXFileReference; name = "RNFIRMessaging.xcodeproj"; path = "../node_modules/react-native-fcm/ios/RNFIRMessaging.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		E481C2935DC74FA99E58C498 /* libRNFIRMessaging.a */ = {isa = PBXFileReference; name = "libRNFIRMessaging.a"; path = "libRNFIRMessaging.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		4D8A70B19A4B47059C855496 /* RNFIRMessaging.xcodeproj */ = {isa = PBXFileReference; name = "RNFIRMessaging.xcodeproj"; path = "../node_modules/react-native-fcm/ios/RNFIRMessaging.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		B6E3F8B296C044ACB1F974AF /* libRNFIRMessaging.a */ = {isa = PBXFileReference; name = "libRNFIRMessaging.a"; path = "libRNFIRMessaging.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -449,7 +449,7 @@
 				063B6E8FDA4F4976AF9A5395 /* libRCTNetwork.a in Frameworks */,
 				5C0D49A1CB884231B9551B90 /* libRCTNetwork-tvOS.a in Frameworks */,
 				C6ADF2FEFDA74E5FA01DBE93 /* libRCTFBSDK.a in Frameworks */,
-				1DFB6E0C1D2345E292207463 /* libRNFIRMessaging.a in Frameworks */,
+				DCBD3F0EB4A746959D74EAFC /* libRNFIRMessaging.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -700,7 +700,7 @@
 				7B57B3BC26A540E284153743 /* RNBranch.xcodeproj */,
 				6E6BD063078A449EA1E46AC6 /* RCTNetwork.xcodeproj */,
 				1D04E08FAB464A5F969048D7 /* RCTFBSDK.xcodeproj */,
-				39B40A69E7AE4189BCA7C8F9 /* RNFIRMessaging.xcodeproj */,
+				4D8A70B19A4B47059C855496 /* RNFIRMessaging.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1388,7 +1388,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1422,7 +1421,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1533,7 +1531,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1577,7 +1574,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1607,7 +1603,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.BooXchange-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1632,7 +1627,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.BooXchange-tvOSTests";
