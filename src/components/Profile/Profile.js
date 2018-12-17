@@ -40,9 +40,9 @@ export default class Profile extends React.Component {
   }
 
   componentWillMount() {
-    // OneSignal.init("YOUR_ONESIGNAL_APPID");
-    // OneSignal.configure(); //will trigger ids event to fire.
-    // OneSignal.addEventListener('ids', this.onIds);
+    OneSignal.init("YOUR_ONESIGNAL_APPID");
+    OneSignal.configure(); //will trigger ids event to fire.
+    OneSignal.addEventListener('ids', this.onIds);
   }
 
   componentWillUnmount() {

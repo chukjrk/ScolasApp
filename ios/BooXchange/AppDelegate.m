@@ -16,7 +16,7 @@
 #import "RCTLinkingManager.h"
 
 //---added Firebase import and [FIRApp configure]; for the react-native-firebase package not needed for general firebase-----
-// #import <Firebase.h>
+#import <Firebase.h>
 //---------------------------------------------------------------------------------------------------------------------------
 
 @implementation AppDelegate
@@ -29,6 +29,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 //  [FIRApp configure];
+
   NSURL *jsCodeLocation;
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
@@ -71,5 +72,4 @@
   
   return handledFB || handledRCT;
 }
-
 @end
