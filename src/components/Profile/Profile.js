@@ -20,7 +20,7 @@ import { StackNavigator, NavigationActions } from 'react-navigation'
 import Modal from 'react-native-modal'
 import branch from 'react-native-branch'
 import { firebaseRef } from '../../services/Firebase'
-import OneSignal from 'react-native-onesignal'
+import Onesignal from 'react-native-onesignal'
 // import {vw, vh} from 'react-native-viewport-units'
 
 @inject("appStore") @observer
@@ -146,8 +146,8 @@ export default class Profile extends React.Component {
                 <Text style={{opacity: 0.5}}>N</Text>
               </View>
               <View style={styles.modalHeader}>
-                <Text style={{fontSize: 45, fontFamily: 'sans-serif-condensed'}}>SHARE</Text>
-                <Text style={{fontSize: 45, marginBottom: 15, fontFamily: 'sans-serif-condensed'}}>BOOXCHANGE</Text>
+                <Text style={{fontSize: 45, fontFamily: Platform.OS === 'android' ? 'sans-serif-condensed' : null}}>SHARE</Text>
+                <Text style={{fontSize: 45, marginBottom: 15, fontFamily: Platform.OS === 'android' ? 'sans-serif-condensed' : null}}>BOOXCHANGE</Text>
               </View>
               <View style={styles.modalInfo}>
                 <Text style={{fontSize: 25, color: '#27924a'}}>3 INVITES</Text>

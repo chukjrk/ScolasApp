@@ -49,7 +49,7 @@ export default class Chat extends Component {
     OneSignal.init("YOUR_ONESIGNAL_APPID");
     OneSignal.configure(); //will trigger ids event to fire.
     OneSignal.addEventListener('ids', this.onIds);
-
+    
     console.log("---- CHAT WILL MOUNT ----- " + this.props.navigation.state.params.uid)
     firebaseRef.database().ref('posts').child(this.props.navigation.state.params.puid).once('value',
     (snapshot) => {
