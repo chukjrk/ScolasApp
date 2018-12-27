@@ -46,7 +46,7 @@ export default class Chat extends Component {
   }
 
   componentWillMount() {
-    OneSignal.init("YOUR_ONESIGNAL_APPID");
+    OneSignal.init("e09d00d9-b019-471d-ab1a-17ada2fdcda2");
     OneSignal.configure(); //will trigger ids event to fire.
     OneSignal.addEventListener('ids', this.onIds);
     
@@ -179,33 +179,37 @@ export default class Chat extends Component {
                   return post
                 }
               )
-              console.log("PUSHING NOTIFICATION !!! " + this.props.navigation.state.params.title);
-              // console.log("messages: ", messages[i-1].user._id)
-              fetch('https://onesignal.com/api/v1/notifications',
-              {
-                method: 'POST',
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json; charset=utf-8',
-                  'Authorization': 'Basic NGEwMGZmMjItY2NkNy0xMWUzLTk5ZDUtMDAwYzI5NDBlNjJj',
-                },
-                body: JSON.stringify({
-                  app_id: "e09d00d9-b019-471d-ab1a-17ada2fdcda2",
-                  include_player_ids: [playerId] 
-                  android_sound: "fishing",
-                  ios_sound: "fishing.caf",
-                  data: {"puid":this.props.navigation.state.params.puid, "new_message":true},
-                  headings: {"en": "New message from " + this.props.appStore.username},
-                  contents: {"en": messages[i].text },
+              firebaseRef.database().ref('users').child(playerId).once('value')
+              .then((snapshot) => {
+                console.log('silly me: ', snapshot.val().device_id);
+                console.log("PUSHING NOTIFICATION !!! " + this.props.navigation.state.params.title);
+                // console.log("messages: ", messages[i-1].user._id)
+                fetch('https://onesignal.com/api/v1/notifications',
+                {
+                  method: 'POST',
+                  headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json; charset=utf-8',
+                    'Authorization': 'Basic NGEwMGZmMjItY2NkNy0xMWUzLTk5ZDUtMDAwYzI5NDBlNjJj',
+                  },
+                  body: JSON.stringify({
+                    app_id: "e09d00d9-b019-471d-ab1a-17ada2fdcda2",
+                    include_player_ids: [snapshot.val().device_id],
+                    android_sound: "fishing",
+                    ios_sound: "fishing.caf",
+                    data: {"puid":this.props.navigation.state.params.puid, "new_message":true},
+                    headings: {"en": "New message from " + this.props.appStore.username},
+                    contents: {"en": messages[i].text },
+                  })
                 })
+                .then((responseData) => {
+                  //console.log("Push POST:" + JSON.stringify(responseData))
+                })
+                .catch((errorData) => {
+                  console.log("Push ERROR:" + JSON.stringify(errorData))
+                })
+                .done()
               })
-              .then((responseData) => {
-                //console.log("Push POST:" + JSON.stringify(responseData))
-              })
-              .catch((errorData) => {
-                console.log("Push ERROR:" + JSON.stringify(errorData))
-              })
-              .done()
             }
           })
           console.log(snapshot.val().include_player_ids)

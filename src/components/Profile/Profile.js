@@ -15,12 +15,12 @@ import {
 import { RkText, RkButton, RkStyleSheet } from 'react-native-ui-kitten';
 import { Avatar, Icon, Header, Button } from 'react-native-elements'
 import StickyHeaderFooterScrollView from 'react-native-sticky-header-footer-scroll-view'
-import { observer,inject } from 'mobx-react/native';
+import { observer, inject } from 'mobx-react/native';
 import { StackNavigator, NavigationActions } from 'react-navigation'
 import Modal from 'react-native-modal'
 import branch from 'react-native-branch'
 import { firebaseRef } from '../../services/Firebase'
-import Onesignal from 'react-native-onesignal'
+import OneSignal from 'react-native-onesignal'
 // import {vw, vh} from 'react-native-viewport-units'
 
 @inject("appStore") @observer
@@ -34,13 +34,12 @@ export default class Profile extends React.Component {
     }
   }
 
-  componentDidMount() {
+  componentDidMount(device) {
     this.setModalVisible(true);
-    console.log("Device_id: ", this.props.appStore.device_id)
   }
 
   componentWillMount() {
-    OneSignal.init("YOUR_ONESIGNAL_APPID");
+    OneSignal.init("e09d00d9-b019-471d-ab1a-17ada2fdcda2");
     OneSignal.configure(); //will trigger ids event to fire.
     OneSignal.addEventListener('ids', this.onIds);
   }
@@ -51,7 +50,8 @@ export default class Profile extends React.Component {
 
   onIds(device) {
     console.log('Device info: ', device); //your playerId
-    firebaseRef.database().ref('users/' + user.uid).update({ device_id: device})
+    user_onid = firebaseRef.auth().currentUser.uid;
+    firebaseRef.database().ref('users').child(user_onid).update({ device_id: device.userId})
   }
 
   setModalVisible(visible) {

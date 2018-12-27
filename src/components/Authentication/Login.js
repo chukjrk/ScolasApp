@@ -376,9 +376,9 @@ export default class Login extends Component {
 		  							console.log("user_point:" + this.props.appStore.user_point)		  							
   								});
 								console.log("------Branch Haead-----")
-								if (referrerUid){
-									this.rewardReferrals()
-								}
+								// if (referrerUid){
+								// 	this.rewardReferrals()
+								// }
   							});
               })
 							this.props.navigation.navigate('VerifyMessage')

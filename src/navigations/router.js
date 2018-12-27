@@ -214,7 +214,7 @@ export default class LoginState extends Component {
       	// this.onOpened - can execute anything after user click notification or action button
         OneSignal.addEventListener('opened', this.onOpened.bind(this));
       	// this.registered - show info that the device has been registered
-        OneSignal.addEventListener('registered', this.onRegistered);
+        // OneSignal.addEventListener('registered', this.onRegistered);
       	// this.onIds - show info of access_token and device_id
         OneSignal.addEventListener('ids', this.onIds);
 

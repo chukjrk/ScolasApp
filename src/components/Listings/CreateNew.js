@@ -22,7 +22,7 @@ import { observer,inject } from 'mobx-react/native';
 import { navigationOptions } from 'react-navigation';
 import StickyHeaderFooterScrollView from 'react-native-sticky-header-footer-scroll-view'
 import { Header, Button } from 'react-native-elements'
-
+import OneSignal from 'react-native-onesignal'
 
 const Blob = RNFetchBlob.polyfill.Blob
 const fs = RNFetchBlob.fs

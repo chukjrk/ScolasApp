@@ -9,6 +9,7 @@
 
 #import "AppDelegate.h"
 
+//#import <react-native-branch/RNBranch.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import <React/RCTPushNotificationManager.h>
@@ -16,7 +17,7 @@
 #import "RCTLinkingManager.h"
 
 //---added Firebase import and [FIRApp configure]; for the react-native-firebase package not needed for general firebase-----
-#import <Firebase.h>
+//#import <Firebase.h>
 //---------------------------------------------------------------------------------------------------------------------------
 
 @implementation AppDelegate
@@ -29,6 +30,10 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 //  [FIRApp configure];
+  
+//  // Uncomment this line to use the test key instead of the live one.
+//  // [RNBranch useTestInstance]
+//  [RNBranch initSessionWithLaunchOptions:launchOptions isReferrable:YES];
 
   NSURL *jsCodeLocation;
 
@@ -64,12 +69,23 @@
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
-  BOOL handledFB = [[FBSDKApplicationDelegate sharedInstance] application:application
-                                                        openURL:url
-                                              sourceApplication:sourceApplication
-                                                     annotation:annotation];
-  BOOL handledRCT = [RCTLinkingManager application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
   
-  return handledFB || handledRCT;
+//  if (![RNBranch.branch application:application openURL:url sourceApplication:sourceApplication annotation:annotation]) {
+    // do other deep link routing for the Facebook SDK, Pinterest SDK, etc
+    BOOL handledFB = [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                                    openURL:url
+                                                          sourceApplication:sourceApplication
+                                                                 annotation:annotation];
+    
+    BOOL handledRCT = [RCTLinkingManager application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
+    return handledFB | handledRCT;
+//  }
+  
+//  return YES;
 }
+
+//- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray *restorableObjects))restorationHandler {
+//  return [RNBranch continueUserActivity:userActivity];
+//}
+
 @end
