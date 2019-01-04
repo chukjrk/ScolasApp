@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+ import React, { Component } from 'react';
 import {
   View,
   ScrollView,
@@ -105,11 +105,12 @@ export default class Profile extends React.Component {
         i.push(profile.providerId)
       });
     }
-    if (i[0] == 'facebook.com') {
+    // if (i[0] == 'facebook.com') {
+      console.log("Using display name for the blue circle")
       i.push(user.displayName)
-    } else {
-      i.push(JSON.stringify(this.props.appStore.username))
-    }
+    // } else {
+    //   i.push(JSON.stringify(this.props.appStore.username))
+    // }
     const name = i[1];
     const points = this.props.appStore.user_point;
     const { navigate } = this.props.navigation;

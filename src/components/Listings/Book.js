@@ -304,33 +304,36 @@ export default class Book extends Component {
                   return post
                 }
               )
-              console.log("PUSHING NOTIFICATION !!! " + this.props.navigation.state.params.title);
-              fetch('https://onesignal.com/api/v1/notifications',
-              {
-                method: 'POST',
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json',
-                  'Authorization': "Basic NGEwMGZmMjItY2NkNy0xMWUzLTk5ZDUtMDAwYzI5NDBlNjJj",
-                },
-                body: JSON.stringify(
+              firebaseRef.database().ref('users').child(this.props.appStore.seller_uid).once('value')
+              .then((snapshot) => {
+                console.log("PUSHING NOTIFICATION !!! " + this.props.navigation.state.params.title);
+                fetch('https://onesignal.com/api/v1/notifications',
                 {
-                  app_id: "e09d00d9-b019-471d-ab1a-17ada2fdcda2",
-                  include_player_ids: [firebaseRef.database().ref('users').child(this.props.appStore.seller_uid).once(device_id)],
-                  android_sound: "fishing",
-                  ios_sound: "fishing.caf",
-                  data: {"puid":this.props.navigation.state.params.puid, "new_message":true},
-                  headings: {"en": "Sold"},
-                  contents: {"en": this.props.appStore.user.displayName + " just bought " +  this.state.postProps.title},
+                  method: 'POST',
+                  headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': "Basic NGEwMGZmMjItY2NkNy0xMWUzLTk5ZDUtMDAwYzI5NDBlNjJj",
+                  },
+                  body: JSON.stringify(
+                  {
+                    app_id: "e09d00d9-b019-471d-ab1a-17ada2fdcda2",
+                    include_player_ids: [snapshot.val().device_id],
+                    android_sound: "fishing",
+                    ios_sound: "fishing.caf",
+                    data: {"puid":this.props.navigation.state.params.puid, "new_message":true},
+                    headings: {"en": "Sold"},
+                    contents: {"en": this.props.appStore.user.displayName + " just bought " +  this.state.postProps.title},
+                  })
                 })
+                .then((responseData) => {
+                  //console.log("Push POST:" + JSON.stringify(responseData))
+                })
+                .catch((errorData) => {
+                  console.log("Push ERROR:" + JSON.stringify(errorData))
+                })
+                .done()
               })
-              .then((responseData) => {
-                //console.log("Push POST:" + JSON.stringify(responseData))
-              })
-              .catch((errorData) => {
-                console.log("Push ERROR:" + JSON.stringify(errorData))
-              })
-              .done()
             }
           })
           if (snapshot.val().include_player_ids.indexOf(this.props.appStore.user.uid) === -1) {

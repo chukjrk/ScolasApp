@@ -313,7 +313,7 @@ export default class Login extends Component {
 							firebaseRef.database().ref('usernameList').child(this.state.profile_name.toLowerCase()).set(user.uid)
   							user.updateProfile({displayName: this.state.profile_name})
   							.then(() => {
-                  console.log('---------Here i am ===============')
+                  console.log('--------- ===============>')
   								// this.setState({emailStatus: 0})
   								//Get device_id using OneSignal.getPermissionSubscriptionState() and register it to firebase
   								OneSignal.getPermissionSubscriptionState((status) => {

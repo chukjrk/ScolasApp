@@ -234,7 +234,7 @@ export default class LoginState extends Component {
 			    i.push(profile.providerId)
 			  });
 			}
-			console.log("here i am ", i[0])
+			console.log("Auth login provider", i[0])
 			if (user && user.emailVerified || user && i[0] == 'facebook.com') {
 				console.log("--------- LOGGED AS " + user.displayName + " ---------")
 				this.props.appStore.user = user

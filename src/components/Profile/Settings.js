@@ -51,12 +51,12 @@ export default class Settings extends Component {
   _logOut() {
     firebaseRef.auth().signOut()
     .then(() => {
-      this.props.appStore.username = ''
-      this.props.appStore.user = {}
-      this.props.appStore.uid = ''
-      this.props.appStore.post_count = ''
-      this.props.appStore.chat_count = ''
-      this.props.appStore.order_count = ''
+      // this.props.appStore.username = ''
+      // this.props.appStore.user = {}
+      // this.props.appStore.uid = ''
+      // this.props.appStore.post_count = ''
+      // this.props.appStore.chat_count = ''
+      // this.props.appStore.order_count = ''
       this.props.appsStore.user_point = 0
       // toHome = NavigationActions.reset({
       //   index:0
