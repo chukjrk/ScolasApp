@@ -108,11 +108,11 @@ android {
     buildToolsVersion "27.0.3"
 
     defaultConfig {
-        applicationId "com.booxchange"
+        applicationId "com.scolas"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 27
-        versionName "27"
+        versionCode 28
+        versionName "28"
         multiDexEnabled true
         ndk {
             abiFilters "armeabi-v7a", "x86"
