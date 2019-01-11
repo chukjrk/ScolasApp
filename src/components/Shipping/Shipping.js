@@ -8,10 +8,13 @@ import {
 } from 'react-native'
 import { observer,inject } from 'mobx-react/native'
 import { Button } from 'react-native-elements'
+import { StackNavigator, NavigationActions } from 'react-navigation'
 
 @inject("appStore") @observer
 export default class Shipping extends Component {
 	render() {
+		// const { navigate } = this.props.navigation;
+
 		return (
 			<ScrollView style={styles.root}>
 				<Button
@@ -31,7 +34,7 @@ export default class Shipping extends Component {
 					<Text> Order Total: </Text>
 				</View>
 				
-				<TouchableOpacity style={styles.container}>
+				<TouchableOpacity style={styles.container}> 
 						<Text> Shipping Address</Text>
 						{/*<TouchableOpacity> this.props.appStore.fullname </TouchableOpacity>*/}
 				</TouchableOpacity>

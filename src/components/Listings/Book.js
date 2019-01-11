@@ -323,7 +323,7 @@ export default class Book extends Component {
                     ios_sound: "fishing.caf",
                     data: {"puid":this.props.navigation.state.params.puid, "new_message":true},
                     headings: {"en": "Sold"},
-                    contents: {"en": this.props.appStore.user.displayName + " just bought " +  this.state.postProps.title},
+                    contents: {"en": this.props.appStore.user.displayName + " just bought your book, " +  this.state.postProps.title},
                   })
                 })
                 .then((responseData) => {

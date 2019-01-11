@@ -14,6 +14,7 @@ import Chat from '../components/Chat/Chat'
 import ChatHome from "../components/Chat/ChatHome"
 import Book from '../components/Listings/Book'
 import Shipping from '../components/Shipping/Shipping'
+import ShippingAddress from '../components/Shipping/ShippingAddress'
 import appStore from '../store/AppStore'
 import { observer,inject } from 'mobx-react/native';
 import { Icon } from 'react-native-elements'
@@ -49,6 +50,13 @@ const ChildPage = StackNavigator({
 		navigationOptions:{
 			title: "Delivery Information"
 		}
+	},
+	ShippingAddress: {
+		screen: ShippingAddress,
+		navigationOptions: {
+			title: "Address"
+		}
+
 	}
 })
 
@@ -305,24 +313,24 @@ export default class LoginState extends Component {
 	render() {
         const { checkSignIn, signedIn } = this.state;
 
-        // return (
-        // 	<Shipping />
-        // );
+        return (
+        	<ShippingAddress />
+        );
 
-        if (!checkSignIn) {
-            return null
-        }
+        // if (!checkSignIn) {
+        //     return null
+        // }
         
-        if (signedIn) {
-            return (
-                    <SignedIn>
-                    </SignedIn>
-            );
-        } else {
-            return (
-                < SignedOut />
-            );
-        }
+        // if (signedIn) {
+        //     return (
+        //             <SignedIn>
+        //             </SignedIn>
+        //     );
+        // } else {
+        //     return (
+        //         < SignedOut />
+        //     );
+        // }
     }
 
     componentDidMount() {

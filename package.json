@@ -21,6 +21,7 @@
     "react-native": "^0.50.4",
     "react-native-app-intro-slider": "^0.2.2",
     "react-native-branch": "^2.2.4",
+    "react-native-credit-card-input": "^0.4.1",
     "react-native-elements": "github:react-native-training/react-native-elements#v0.18.0",
     "react-native-fbsdk": "^0.8.0",
     "react-native-fcm": "^16.2.4",
