@@ -53,6 +53,8 @@ functions/
 
 gradle.properties
 
+server.js
+
 .env
 .babelrc
 
