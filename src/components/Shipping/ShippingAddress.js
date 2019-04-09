@@ -15,6 +15,7 @@ import { View,
 } from 'react-native';
 import { observer,inject } from 'mobx-react/native'
 import { FormLabel, FormInput, FormValidationMessage, Button } from 'react-native-elements'
+import { firebaseRef } from '../../services/Firebase'
 
 @inject("appStore") @observer
 export default class ShippingAddress extends Component {
@@ -46,7 +47,6 @@ export default class ShippingAddress extends Component {
 		return (
 			<View>
 				<FormInput
-					onChangeText={(text) => this.setState({fullname: text})}
 					placeholder = "Full Name"
 					placeholderTextColor= "grey"
 					returnKeyType= "next"
@@ -133,7 +133,7 @@ export default class ShippingAddress extends Component {
 					// containerViewStyle={{borderRadius: 25, width: SCREEN_WIDTH - 50, alignSelf: 'center' }}
 					activeOpacity={0.8}
 					title={'Deliver to Address'}
-					onPress={this._handleAddress}
+					onPress={this._handleAddress()}
 					titleStyle={styles.loginTextButton}
 					// loading={isLoading}
 					// disabled={isLoading}
@@ -145,47 +145,23 @@ export default class ShippingAddress extends Component {
 	}
 
 	_handleAddress(){
-		if (this.state.fullname !== null) {
-			this.props.appStore.fullname = this.state.fullname
-		} else {
-			this.setState({errormessage_a: 'This field is required'})
-		}
-
-		if (this.state.address == null) {
-			this.setState({errormessage_b: 'This field is required'})
-		} else {
-			this.props.appStore.address = this.state.address
-		}
-		
-		if (this.state.AptNo !== null) {
-			this.props.appStore.address = this.state.address
-		} else {
-			this.setState({errormessage_c: 'This field is required'})
-		}
-
-		if (this.state.city !== null){
-			this.props.appStore.city = this.state.city
-		} else {
-			this.setState({errormessage_d: 'This field is required'})
-		}
-
-		if (this.state.state_us !== null) {
-			this.props.appStore.state_us = this.state.state_us
-		} else {
-			this.setState({errormessage_e: 'This field is required'})
-		}
-
-		if (this.state.zip !== null) {
-			this.props.appStore.zip = this.state.zip
-		} else {
-			this.setState({errormessage_f: 'This field is required'}) 
-		}
-
-		if (this.state.phone_number !== null) {
-			this.props.appStore.phone_number =  this.state.phone_number
-		} else {
-			this.setState({errormessage_g: 'This field is required'})
-		}
+		this.props.appStore.fullname = this.state.fullname		
+		this.props.appStore.address = this.state.address
+		this.props.appStore.aptno = this.state.AptNo
+		this.props.appStore.city = this.state.city
+		this.props.appStore.state_us = this.state.state_us
+		this.props.appStore.zip = this.state.zip
+		this.props.appStore.phone_number =  this.state.phone_number
+		const user_id= firebaseRef.auth().currentUser.uid;
+		firebaseRef.database().ref('/users').child(user_id).update({
+			fullname:this.props.appStore.fullname,
+			line1:this.props.appStore.address,
+			line2:this.props.appStore.aptno,
+			city:this.props.appStore.city,
+			state:this.props.appStore.state_us,
+			postalCode:this.props.appStore.zip,
+			phone_number:  this.props.appStore.phone_number,
+		})
 	}
 }
 

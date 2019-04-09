@@ -139,7 +139,7 @@ export default class Login extends Component {
 				this.props.appStore.order_count = parseInt(snapshot.val().order_count)
 				this.props.appStore.chat_count = parseInt(snapshot.val().chat_count)
 				this.props.appStore.user_point = parseInt(snapshot.val().user_point)
-				this.props.appStore.uid = parseInt(snapshot.val().user.uid)
+				this.props.appStore.uid = parseInt(snapshot.val().uid)
 			})
 			this.props.appStore.user = user
 			this.props.appStore.username = user.displayName
@@ -269,7 +269,7 @@ export default class Login extends Component {
                   this.props.appStore.order_count = parseInt(snapshot.val().order_count)
                   this.props.appStore.chat_count = parseInt(snapshot.val().chat_count)
                   this.props.appStore.user_point = parseInt(snapshot.val().user_point)
-                  this.props.appStore.uid = parseInt(snapshot.val().user.uid)
+                  this.props.appStore.uid = parseInt(snapshot.val().uid)
                 })
                 this.props.appStore.user = firebase.auth().currentUser
                 this.props.appStore.username = firebase.auth().currentUser.displayName
@@ -313,7 +313,6 @@ export default class Login extends Component {
 							firebaseRef.database().ref('usernameList').child(this.state.profile_name.toLowerCase()).set(user.uid)
   							user.updateProfile({displayName: this.state.profile_name})
   							.then(() => {
-                  console.log('--------- ===============>')
   								// this.setState({emailStatus: 0})
   								//Get device_id using OneSignal.getPermissionSubscriptionState() and register it to firebase
   								OneSignal.getPermissionSubscriptionState((status) => {
@@ -325,6 +324,7 @@ export default class Login extends Component {
 	  								const email = user.email
 	  								const user_point = 1 //added and set user_point default to 1
 	  								const device_id = status.userId // added
+	  								const seller_account = false
 	  								console.log("One_Signal device_id: ", device_id)
 	  								// const refferred_by = this.state.referrerUid
 
@@ -338,7 +338,8 @@ export default class Login extends Component {
 	  									email,
 	  									user_point,
 	  									device_id,
-	  									// referred_by
+	  									// referred_by,
+	  									seller_account
 	  								})
 
 	  								this.props.appStore.uid = user.uid
@@ -376,9 +377,9 @@ export default class Login extends Component {
 		  							console.log("user_point:" + this.props.appStore.user_point)		  							
   								});
 								console.log("------Branch Haead-----")
-								// if (referrerUid){
-								// 	this.rewardReferrals()
-								// }
+								if (referrerUid){
+									this.rewardReferrals()
+								}
   							});
               })
 							this.props.navigation.navigate('VerifyMessage')

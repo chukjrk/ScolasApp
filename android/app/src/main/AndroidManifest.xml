@@ -26,7 +26,7 @@
         android:screenOrientation="portrait"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
         android:windowSoftInputMode="adjustResize"
-        android:launchMode="singleTop">
+        android:launchMode="singleTask">
         <intent-filter>
           <action android:name="android.intent.action.MAIN" />
           <category android:name="android.intent.category.LAUNCHER" />
@@ -83,6 +83,10 @@
       <!-- Fcm notifications meta-data -->
       <!-- <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@mipmap/ic_notif"/> -->
       <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="my_default_channel"/>
+
+      <meta-data
+        android:name="com.google.android.gms.wallet.api.enabled"
+        android:value="true" />
 
       <!-- Branch install referrer tracking (optional) -->
       <receiver android:name="io.branch.referral.InstallListener" android:exported="true">

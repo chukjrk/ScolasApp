@@ -5,8 +5,9 @@ import moment from 'moment';
 import { observer,inject } from 'mobx-react/native'
 import { firebaseRef } from '../../services/Firebase'
 import firebase from 'firebase'
-// import BackgroundTask from 'react-native-background-task'
-// import base from "re-base";
+import Carousel from 'react-native-snap-carousel';
+import SliderEntry from './SliderEntry';
+import { sliderWidth, itemWidth } from '../../styles/SliderEntry.style';
 import {
   Text,
   StyleSheet,
@@ -22,7 +23,6 @@ import {
   TouchableWithoutFeedback,
   AsyncStorage,
 } from 'react-native'
-
 
 const screenWidth = Dimensions.get('window').width
 
@@ -68,19 +68,24 @@ export default class Book extends Component {
             title: snapshot.val().title,
             description: snapshot.val().text,
             createdAt: snapshot.val().createdAt,
+            price: snapshot.val().price,
+            period: snapshot.val().period,
             user: {
               _id: snapshot.val().uid,
               name: snapshot.val().username,
             },
             image: snapshot.val().image,
+            imageHeight: snapshot.val().imageHeight,
           }
         })
       }
     })
   }
+  _renderItem ({item, index}) {
+    return <SliderEntry data={item} even={(index + 1) % 2 === 0} />;
+  }
 
   render(data) {
-
     // const height = screenWidth*data.imageHeight/data.imageWidth
     firebaseRef.database().ref('users/' + this.props.appStore.user.uid).once('value')
     .then(snapshot => {
@@ -96,46 +101,68 @@ export default class Book extends Component {
       });
 
     return(
-      <Container style={{backgroundColor: '#fdfdfd'}}>
+      <Container style={{backgroundColor: '#e6e7e7'}}>
         <Content>
-          <Image
+          <View style={{paddingTop: 5, alignItems: 'center', margin: 10}}>
+            <Grid>
+              <Col size={3}>
+                <Text style={{fontSize: 20, alignSelf: 'flex-start', fontWeight: 'bold', color: 'black'}}>{this.state.postProps.title}</Text>
+              </Col>
+            </Grid>
+            <Grid>
+              <Col size={3}>
+                <Text style={{fontSize: 16, fontStyle: 'italic', alignSelf: 'flex-start'}}> - {this.state.postProps.Author}</Text>
+              </Col>
+            </Grid>
+          </View>
+          {/*<Image
             source={{ uri:this.state.postProps.image }}
             resizeMode='contain'
             style={{
-              height: 480,
+              height: 300,
               width: screenWidth,
               alignSelf: 'center',
-              paddingTop: 5,
+              marginTop: 5,
+              position: absolute
             }}
-          />
-          <View style={{backgroundColor: '#fdfdfd', paddingTop: 10, paddingBottom: 10, paddingLeft: 12, paddingRight: 12, alignItems: 'center'}}>
-            <Grid>
-              <Col size={3}>
-                <Text style={{fontSize: 18, alignSelf: 'center', fontWeight: 'bold', color: 'black'}}>{this.state.postProps.title}</Text>
-              </Col>
-            </Grid>
-            <Grid>
-              <Col size={3}>
-                <Text style={{fontSize: 16, fontStyle: 'italic'}}> - {this.state.postProps.Author}</Text>
-              </Col>
-            </Grid>
-
-            <View style={{marginTop: 15, padding: 10, borderWidth: 1, borderRadius: 3, borderColor: 'rgba(149, 165, 166, 0.3)'}}>
-              <NBText style={{marginBottom: 5}}>Description</NBText>
-              <View style={{width: 50, height: 1, backgroundColor: 'rgba(44, 62, 80, 0.5)', marginLeft: 7, marginBottom: 10}} />
-              <Text note>
+          />*/}
+          <Carousel
+            data={this.state.postProps.image}
+            renderItem={this._renderItem}
+            sliderWidth={sliderWidth}
+            itemWidth={itemWidth}
+            // itemHeight={height}
+            layout={'stack'}
+            layoutCardOffset={18}
+            loop={true}
+            />
+          <Text style={styles.price}> ${this.state.postProps.price}</Text>
+          <View style={styles.infoContainer}>
+            <View style={styles.infoSection}>
+              <NBText style={{marginBottom: 5, alignSelf: 'center'}}>Description</NBText>
+              <View style={styles.descriptionCon} />
+              <Text note style={{alignSelf: 'center', fontSize: 16}} >
                 {this.state.postProps.text}
               </Text>
             </View>
-
+            <View style={styles.renterInfo}>
+              <Text style={styles.renterText}> Renter:</Text>
+              <Text style={{fontSize: 16, alignSelf: 'flex-end',  padding: 10}}>{this.state.postProps.username} </Text> 
+            </View>
+            <View style={styles.renterInfo}>
+              <Text style={styles.renterText}> Rental Period: </Text> 
+              <Text style={{fontSize: 16, alignSelf: 'flex-end',  padding: 10}}>{this.state.postProps.period} </Text> 
+            </View>
             <Grid style={{marginTop: 15}}>
               <Col size={3}>
-              <Button block onPress={() => this._onBuyConfirm(data)}
-                                    style={this.state.disabled == true
-                                      ? {backgroundColor: '#707070'} : {backgroundColor: '#25a1e0'}}
-                                    disabled = {this.state.disabled}>
-                                    <Text style={{color: "#fdfdfd", marginLeft: 5}}>PURCHASE</Text>
-                                    </Button>
+                {/*<Button block onPress={this.props.navigation.navigate('Shipping') }*/}
+                {/*<Button block onPress={() => this._onBuyConfirm(data)}*/}
+                <Button block onPress={() => this._openChat()}
+                  style={this.state.disabled == true
+                    ? {backgroundColor: '#707070'} : {backgroundColor: '#25a1e0'}}
+                  disabled = {this.state.disabled}>
+                  <Text style={{color: "#fdfdfd", marginLeft: 5}}>RENT</Text>
+                </Button>
               </Col>
             </Grid>
           </View>
@@ -149,7 +176,12 @@ export default class Book extends Component {
       seller_id = this.props.appStore.user.uid
     } else {
       buyer_id = this.props.appStore.user.uid
-      this.props.navigation.navigate('Chat',{ title:this.state.postProps.title, puid:this.state.postProps.puid, uid:this.props.appStore.user.uid, wantToBuy:true});
+      this.props.navigation.navigate('Shipping',{ 
+        title:this.state.postProps.title, 
+        puid:this.state.postProps.puid, 
+        uid:this.props.appStore.user.uid, 
+        wantToBuy:true
+      });
       console.log('puid', this.state.postProps.puid)
       console.log('uid', this.props.appStore.user.uid)
     }
@@ -211,9 +243,9 @@ export default class Book extends Component {
     if (this.state.status === 'available') {
       console.log("AVAILABLE")
       this.setState({
-                      status: 'sold',
-                      clientName: this.props.appStore.username,
-                    })
+        status: 'sold',
+        clientName: this.props.appStore.username,
+      })
       firebaseRef.database().ref('posts').child(this.props.navigation.state.params.puid).update(
         {
           updatedAt: firebase.database.ServerValue.TIMESTAMP,
@@ -247,23 +279,6 @@ export default class Book extends Component {
       //******************************************************************************************************
       // End
       //******************************************************************************************************
-
-
-      //******************************************************************************************************
-      // notification for book received 
-      //******************************************************************************************************
-      //run the nofitication. This.constructor.function works if function called has static with it.
-      //commented. uncomment if want notification pop up in foreground after user click buy item.
-          // this.constructor.runSendNotification(this.props.appStore.user.uid);
-
-      // Start and schedule BackgroundTask. See react-native-background-task docs for how to set specific schedule
-      // like run after 30 minutes or etcetra
-      // BackgroundTask.schedule({period: 900}); //period: 86400
-      
-      //******************************************************************************************************
-      // End
-      //******************************************************************************************************
-
 
       firebaseRef.database().ref('user_posts/'+this.state.postProps.uid+'/posts').child(this.props.navigation.state.params.puid).update(
         {
@@ -454,7 +469,8 @@ export default class Book extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: '#e6e7e7'
   },
   waitView: {
     flex: 1,
@@ -494,4 +510,61 @@ const styles = StyleSheet.create({
   bold: {
     fontWeight: 'bold',
   },
+  infoSection:{
+    marginTop: 15,
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 3,
+    borderColor: 'rgba(149, 165, 166, 0.3)',
+    backgroundColor: '#fdfdfd'
+  },
+  renterInfo: {
+    width: screenWidth-17,
+    marginTop: 10,
+    borderWidth: 1,
+    borderRadius: 3,
+    borderColor: 'rgba(149, 165, 166, 0.3)',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#fdfdfd'
+  },
+  renterText: {
+    fontSize: 16, 
+    alignSelf: 'flex-start', 
+    padding: 10, 
+    fontWeight: 'bold'
+  },
+  infoContainer: {
+    backgroundColor: '#e6e7e7', 
+    paddingTop: 10, 
+    paddingBottom: 10, 
+    paddingLeft: 12, 
+    paddingRight: 12, 
+    alignItems: 'center'
+  },
+  descriptionCon: {
+    width: screenWidth-40,
+    height: 1,
+    backgroundColor: 'rgba(44, 62, 80, 0.5)',
+    marginLeft: 7, 
+    marginBottom: 10
+  },
+  price: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white', 
+    fontStyle: 'italic', 
+    alignSelf: 'flex-end',
+    backgroundColor: '#27924a',
+    // width: 100,
+    // height: 100,
+    borderWidth: 1,
+    borderColor: 'white',
+    borderRadius: 50,
+    paddingRight: 30,
+    transform: [
+      {scaleX: 2}
+    ],
+    padding: 3
+  }
 })

@@ -178,6 +178,7 @@ export default class StoreView extends Component {
 
   _renderRow = (data) => {
     //console.log("TIMELINE :::: _renderRow " + data.title)
+    console.log("                                    Image Array use to render preview image:    ", data.image)
     const timeString = moment(data.createdAt).fromNow()
     const height = screenWidth*data.imageHeight/data.imageWidth
     const shareOptions = {
@@ -198,7 +199,7 @@ export default class StoreView extends Component {
         <TouchableWithoutFeedback onPress={() => this._BookPage(data)}>
           <View style={styles.card}>
             <Image
-              source={{ uri:data.image }}
+              source={{ uri: data.image[1]}}
               resizeMode='contain'
               style={{
                 height: 150,

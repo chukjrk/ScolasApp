@@ -9,18 +9,29 @@ import {
   LayoutAnimation,
   Platform,
   UIManager,
+  ScrollView,
+  Alert
 } from 'react-native'
 import _ from 'lodash'
 import moment from 'moment'
 import { firebaseRef } from '../../services/Firebase'
+import firebase from 'firebase';
 // import Icon from 'react-native-vector-icons/Ionicons'
-// import ModalPicker from 'react-native-modal-picker'
 import { observer,inject } from 'mobx-react/native'
-// import { Actions } from 'react-native-mobx'
+import Swipeable from 'react-native-swipeable';
+import { Header, Icon } from 'react-native-elements'
 
 
 @inject("appStore") @observer
 export default class Profile extends Component {
+  static navigationOptions = {
+    // title: `${navigation.state.params.title}`,
+    headerTitleStyle: {
+      alignSelf: 'center',
+      paddingRight: 56,
+    },
+  };
+
   constructor(props) {
     super(props)
     if (Platform.OS === 'android') {
@@ -61,43 +72,22 @@ export default class Profile extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.profileInfoContainer}>
-          {/*<View style={styles.profileNameContainer}>
-            <Text style={styles.profileName}>
-              {this.props.appStore.username}
-            </Text>
-          </View>
-          <View style={styles.profileCountsContainer}>
-            <Text style={styles.profileCounts}>
-              {this.props.appStore.post_count}
-            </Text>
-          </View>*/}
-          <View style={styles.profileCountsContainer}>
-            {/*<TouchableOpacity onPress={this._userEdit}>
-              <Icon name='md-settings' size={30} color='rgba(255,255,255,.9)'/>
-            </TouchableOpacity>*/}
-          </View>
-          <View style={styles.profileCountsContainer}>
-            {/*<TouchableOpacity onPress={this._logOut}>
-              <Icon name='md-log-out' size={30} color='rgba(255,255,255,.9)'/>
-            </TouchableOpacity>*/}
-          </View>
-        </View>
-        <ListView
-          automaticallyAdjustContentInsets={true}
-          initialListSize={1}
-          dataSource={this.state.dataSource}
-          renderRow={this._renderRow}
-          renderFooter={this._renderFooter}
-          onEndReached={this._onEndReached}
-          onEndReachedThreshold={1}
-        />
+
+          <ListView
+            automaticallyAdjustContentInsets={true}
+            initialListSize={1}
+            dataSource={this.state.dataSource}
+            renderRow={this._renderRow}
+            renderFooter={this._renderFooter}
+            onEndReached={this._onEndReached}
+            onEndReachedThreshold={1}
+          />
       </View>
     )
   }
 
   _renderRow = (data) => {
-    let index = 0;
+    // let index = 0;
     // const options = [
     //     { key: index++, section: true, label: 'Status' },
     //     { key: index++, label: 'available' },
@@ -108,24 +98,51 @@ export default class Profile extends Component {
     const timeString = moment(data.updatedAt).fromNow()
     // const Status = (data.status === 'available') ? <Text style={{fontWeight:'bold',color:"green"}}>{data.status.toUpperCase()}</Text> : <Text style={{fontWeight:'bold',color:"red"}}>{data.status.toUpperCase()}</Text>
     return (
-      <TouchableOpacity onPress={() => this._openChat(data)}>
-        <View style={styles.card}>
-          <View style={styles.RawContainer}>
-            <View style={styles.LeftContainer}><Text style={styles.title}>{ data.title }</Text></View>
-          </View>
-          <View style={styles.RawContainer}>
-            <View style={styles.RightContainer}>
-              {/*<ModalPicker data={options} onChange={ (option)=>this._changeStatus(option, data) }>
-                { Status }
-              </ModalPicker>*/}
+      <ScrollView>
+        <Swipeable
+        rightButtons={[
+          <TouchableOpacity style={[styles.rightSwipeItem, {backgroundColor: '#f94a4a'}]} onPress={() => this._flagPost(data)}>
+            <Icon style={[styles.flagicon]} name='close' color='white' />
+          </TouchableOpacity>,
+          // onRightButtonsOpenRelease={onOpen}
+          // onRightButtonsCloseRelease={onClose}
+        ]}>
+        <TouchableOpacity>
+          <View style={styles.card}>
+            <View style={styles.content}>
+              <View style={styles.HeaderContainer}>
+                <Text style={styles.title}>{ data.title }</Text>
+              </View>
             </View>
           </View>
-          <View style={styles.RawContainer}>
-            <Text style={styles.info}>{timeString}</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </Swipeable>
+    </ScrollView>
     )
+  }
+
+  _flagPost = (postData) => {
+    // console.log("--------> FLAG !!!!!!")
+    // console.log(postData)
+    // console.log(postData.puid)
+    const uid = this.props.appStore.user.uid
+    firebaseRef.database().ref('posts').child(postData.puid).remove().then(() =>{
+      Alert.alert(
+        'Post Deleted',
+        'Your book has been removed from the marketplace',
+        [
+          { text: 'OK', onPress: () => {
+            firebaseRef.database().ref('messages_notif/' + postData.puid).update({
+              deleted: true,
+              deletedAt: firebase.database.ServerValue.TIMESTAMP,
+            })
+          }},
+        ]
+      )
+    }).catch((error) => {
+      console.log('deletion error', error)
+    })
+    firebaseRef.database().ref('/user_posts/'+ uid + '/posts').child(postData.puid).remove()
   }
 
   _changeStatus = (option, postData) => {
@@ -190,7 +207,9 @@ export default class Profile extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    paddingTop: 15,
+    backgroundColor: '#f9f9f9'
   },
   profileInfoContainer: {
     flexDirection: 'row',
@@ -232,8 +251,10 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     borderBottomWidth: 1,
-    borderColor: '#999',
-    margin: 2,
+    borderColor: 'grey',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    paddingVertical: 10,
+    backgroundColor: 'white',
   },
   RawContainer: {
     flexDirection: 'row',
@@ -265,4 +286,65 @@ const styles = StyleSheet.create({
     padding: 3,
     fontSize: 13,
   },
+  flagicon: {
+    alignItems: 'flex-start',
+  },
+  rightSwipeItem: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingLeft: 20
+  },
+  content: {
+    marginLeft: 16,
+    flex: 1,
+  },
+
+  HeaderContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 6
+  },
+
 })
+
+// <TouchableOpacity onPress={() => this._openChat(data)}>
+//         <View style={styles.card}>
+//           <View style={styles.RawContainer}>
+//             <View style={styles.LeftContainer}><Text style={styles.title}>{ data.title }</Text></View>
+//           </View>
+//           <View style={styles.RawContainer}>
+//             <View style={styles.RightContainer}>
+//               {/*<ModalPicker data={options} onChange={ (option)=>this._changeStatus(option, data) }>
+//                 { Status }
+//               </ModalPicker>*/}
+//             </View>
+//           </View>
+//           <View style={styles.RawContainer}>
+//             <Text style={styles.info}>{timeString}</Text>
+//           </View>
+//         </View>
+//       </TouchableOpacity>
+
+//for previous return();
+// <View style={styles.profileInfoContainer}>
+//           {/*<View style={styles.profileNameContainer}>
+//             <Text style={styles.profileName}>
+//               {this.props.appStore.username}
+//             </Text>
+//           </View>
+//           <View style={styles.profileCountsContainer}>
+//             <Text style={styles.profileCounts}>
+//               {this.props.appStore.post_count}
+//             </Text>
+//           </View>*/}
+//           <View style={styles.profileCountsContainer}>
+//             {/*<TouchableOpacity onPress={this._userEdit}>
+//               <Icon name='md-settings' size={30} color='rgba(255,255,255,.9)'/>
+//             </TouchableOpacity>*/}
+//           </View>
+//           <View style={styles.profileCountsContainer}>
+//             {/*<TouchableOpacity onPress={this._logOut}>
+//               <Icon name='md-log-out' size={30} color='rgba(255,255,255,.9)'/>
+//             </TouchableOpacity>*/}
+//           </View>
+//         </View>

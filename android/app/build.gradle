@@ -117,6 +117,7 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        vectorDrawables.useSupportLibrary = true
         manifestPlaceholders = [onesignal_app_id: "e09d00d9-b019-471d-ab1a-17ada2fdcda2",
                                 onesignal_google_project_number: "648502346745"]
     }
@@ -162,13 +163,14 @@ android {
 }
 
 dependencies {
+    implementation project(':tipsi-stripe')
+    implementation project(':react-native-payments')
     implementation project(':react-native-fcm')
-    // implementation project(':react-native-fcm')
     implementation project(':react-native-fbsdk')
     implementation project(':react-native-branch')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-onesignal')
-    implementation project(':react-native-image-picker')
+    implementation project(':react-native-image-crop-picker')
     implementation project(':react-native-fetch-blob')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:23.0.1"

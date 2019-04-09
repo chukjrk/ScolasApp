@@ -14,12 +14,18 @@ class AppStore {
   @observable device_id = ''   //added
   @observable seller_uid = ''   //added
   @observable address = ''
-  @observable fullname = ''
-  @observable zip = 0
+  @observable firstname = ''
+  @observable lastname = ''
+  @observable zip = ''
   @observable aptno = ''
   @observable city = ''
   @observable state_us = ''
   @observable phone_number = ''
+  @observable ssn_last_4 = ''
+  @observable dob_day = ''
+  @observable dob_month = ''
+  @observable dob_year = ''
+  @observable buttoncheck = false
 }
 
 const appStore = new AppStore()

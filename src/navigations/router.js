@@ -4,7 +4,7 @@ import { firebaseRef } from '../services/Firebase'
 import Login from '../components/Authentication/Login';
 import PasswordRecovery from '../components/Authentication/PasswordRecovery';
 import Register from '../components/Authentication/Register';
-import Profile from "../components/Profile/Profile";
+import Profile2 from "../components/Profile/Profile2";
 import Settings from "../components/Profile/Settings";
 import CreateNew from "../components/Listings/CreateNew"
 import Purchased from "../components/Listings/Purchased"
@@ -22,6 +22,10 @@ import { Icon } from 'react-native-elements'
 import OneSignal from 'react-native-onesignal';
 import VerifyMessage from '../components/Authentication/VerifyMessage'
 import Intro from '../components/Authentication/Intro'
+import Payment from '../components/Shipping/payment'
+import PersonalInfo from '../components/Shipping/PersonalInfo'
+import PhoneNumber from '../components/Shipping/PhoneNumber'
+import PayoutInfo from '../components/Shipping/PayoutInfo'
 // import BackgroundFetch from "react-native-background-fetch";
 
 // added navigation to Chat using StackNavigator. Somehow using routeName
@@ -39,16 +43,10 @@ const ChildPage = StackNavigator({
 			// title: "Book"
 		}
 	},
-	Chat: {
-		screen: Chat,
-		navigationOptions: {
-			title : "Chat"
-		}
-	},
 	Shipping: {
 		screen: Shipping,
 		navigationOptions:{
-			title: "Delivery Information"
+			// title: "Delivery Information"
 		}
 	},
 	ShippingAddress: {
@@ -56,13 +54,12 @@ const ChildPage = StackNavigator({
 		navigationOptions: {
 			title: "Address"
 		}
-
-	}
+	},
 })
 
 const ChildPage2 = StackNavigator({
 	Home: {
-		screen: Profile,
+		screen: Profile2,
 		navigationOptions: {
 			header: null
 		}
@@ -82,6 +79,36 @@ const ChildPage2 = StackNavigator({
 		screen: Archive,
 		navigationOptions: {
 			title: "Books Posted"
+		}
+	},
+})
+
+const ChildPage3 = StackNavigator({
+	Add: {
+		screen: CreateNew,
+		navigationOptions: {
+			header: null
+		}
+	},
+	PersonalInfo: {
+		screen: PersonalInfo,
+		navigationOptions: {
+			title: "Account",
+			headerLeft: null,
+		}
+	},
+	PhoneNumber: {
+		screen: PhoneNumber,
+		navigationOptions: {
+			title: "Account",
+			headerLeft: null,
+		}
+	},
+	PayoutInfo: {
+		screen: PayoutInfo,
+		navigationOptions: {
+			title: "Account",
+			headerLeft: null,
 		}
 	},
 })
@@ -121,41 +148,6 @@ export const SignedOut = StackNavigator ({
 });
 
 export const SignedIn = TabNavigator({
-	Home: {
-		screen: ChildPage2,
-		navigationOptions: {
-			tabBarLabel: "Home",
-			tabBarIcon: ({ tintColor }) => (
-				<Icon
-                  name='home'
-                  color={tintColor}/>
-            ),
-		}
-	},
-	Add: {
-		screen: CreateNew,
-		navigationOptions: {
-			tabBarLabel: "Add Book",
-			tabBarIcon: ({ tintColor }) => (
-				<Icon
-                  name='add'
-                  color={tintColor}/>
-            ),
-		}
-	},
-
-	ChatHome: {
-		screen: ChatHome,
-		navigationOptions: {
-			tabBarLabel: "Messages",
-			tabBarIcon: ({ tintColor }) => (
-				<Icon
-                  name='chat-bubble-outline'
-                  color={tintColor}/>
-            ),
-		}
-	},
-
 	Store: {
 		screen: ChildPage,
 		navigationOptions: {
@@ -167,6 +159,40 @@ export const SignedIn = TabNavigator({
             ),
 		}
 	},
+	Add: {
+		screen: ChildPage3,
+		navigationOptions: {
+			tabBarLabel: "Add Book",
+			tabBarIcon: ({ tintColor }) => (
+				<Icon
+                  name='add'
+                  color={tintColor}/>
+            ),
+		}
+	},
+	Home: {
+		screen: ChildPage2,
+		navigationOptions: {
+			tabBarLabel: "Home",
+			tabBarIcon: ({ tintColor }) => (
+				<Icon
+                  name='home'
+                  color={tintColor}/>
+            ),
+		}
+	},
+
+	// ChatHome: {
+	// 	screen: ChatHome,
+	// 	navigationOptions: {
+	// 		tabBarLabel: "Messages",
+	// 		tabBarIcon: ({ tintColor }) => (
+	// 			<Icon
+ //                  name='chat-bubble-outline'
+ //                  color={tintColor}/>
+ //            ),
+	// 	}
+	// },
 }, {
 	tabBarComponent: TabBarBottom,
 	tabBarPosition: 'bottom',
@@ -238,12 +264,12 @@ export default class LoginState extends Component {
 			    // console.log("  Provider-specific UID: " + profile.uid);
 			    // console.log("  Name: " + profile.displayName);
 			    // console.log("  Email: " + profile.email);
-			    // console.log("  Photo URL: " + profile.photoURL);
+			    // console.log("  Photo URL: " + profile.photoURL); && user.emailVerified 
 			    i.push(profile.providerId)
 			  });
 			}
 			console.log("Auth login provider", i[0])
-			if (user && user.emailVerified || user && i[0] == 'facebook.com') {
+			if (user || user && i[0] == 'facebook.com') {
 				console.log("--------- LOGGED AS " + user.displayName + " ---------")
 				this.props.appStore.user = user
 				this.props.appStore.username = user.displayName
@@ -255,7 +281,7 @@ export default class LoginState extends Component {
 					this.props.appStore.chat_count = parseInt(snapshot.val().chat_count)
             		// added user_point to appStore.user_point after user login
             		this.props.appStore.user_point = parseInt(snapshot.val().user_point)
-            		this.props.appStore.uid = parseInt(snapshot.val().user.uid)
+            		this.props.appStore.uid = parseInt(snapshot.val().uid)
         		})
 				this.setState({ signedIn: true, checkSignIn: true })
 			} else {
@@ -306,31 +332,31 @@ export default class LoginState extends Component {
       	//execute notification function even device unmount
         OneSignal.removeEventListener('received', this.onReceived);
         OneSignal.removeEventListener('opened', this.onOpened.bind(this));
-        OneSignal.removeEventListener('registered', this.onRegistered);
+        // OneSignal.removeEventListener('registered', this.onRegistered);
         OneSignal.removeEventListener('ids', this.onIds);
     }
 
 	render() {
         const { checkSignIn, signedIn } = this.state;
 
-        return (
-        	<ShippingAddress />
-        );
+        // return (
+        // 	<Profile2 />
+        // );
 
-        // if (!checkSignIn) {
-        //     return null
-        // }
+        if (!checkSignIn) {
+            return null
+        }
         
-        // if (signedIn) {
-        //     return (
-        //             <SignedIn>
-        //             </SignedIn>
-        //     );
-        // } else {
-        //     return (
-        //         < SignedOut />
-        //     );
-        // }
+        if (signedIn) {
+            return (
+                    <SignedIn>
+                    </SignedIn>
+            );
+        } else {
+            return (
+                <SignedOut />
+            );
+        }
     }
 
     componentDidMount() {

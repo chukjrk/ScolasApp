@@ -3,13 +3,15 @@ package com.booxchange;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactnative.ivpusic.imagepicker.PickerPackage;
+import com.gettipsi.stripe.StripeReactPackage;
+import com.reactnativepayments.ReactNativePaymentsPackage;
 import com.evollu.react.fcm.FIRMessagingPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import io.branch.rnbranch.RNBranchPackage;
 import io.branch.referral.Branch;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
-import com.imagepicker.ImagePickerPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -34,12 +36,14 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new PickerPackage(),
+            new StripeReactPackage(),
+            new ReactNativePaymentsPackage(),
             new FIRMessagingPackage(),
             new FBSDKPackage(mCallbackManager),
             new RNBranchPackage(),
             new VectorIconsPackage(),
             new ReactNativeOneSignalPackage(),
-            new ImagePickerPackage(),
             new RNFetchBlobPackage()
       );
     }

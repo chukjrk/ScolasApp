@@ -9,17 +9,24 @@ import {
   LayoutAnimation,
   Platform,
   UIManager,
+  ScrollView
 } from 'react-native'
 import _ from 'lodash'
 import moment from 'moment'
 import { firebaseRef } from '../../services/Firebase'
 // import Icon from 'react-native-vector-icons/Ionicons'
 import { observer,inject } from 'mobx-react/native'
-// import { Actions } from 'react-native-mobx'
 
 
 @inject("appStore") @observer
 export default class Profile extends Component {
+  static navigationOptions = {
+    // title: `${navigation.state.params.title}`,
+    headerTitleStyle: {
+      alignSelf: 'center',
+      paddingRight: 56,
+    },
+  };
   constructor(props) {
     super(props)
     if (Platform.OS === 'android') {
@@ -59,29 +66,7 @@ export default class Profile extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.profileInfoContainer}>
-          {/*<View style={styles.profileNameContainer}>
-            <Text style={styles.profileName}>
-              {this.props.appStore.username}
-            </Text>
-          </View>
-          <View style={styles.profileCountsContainer}>
-            <Text style={styles.profileCounts}>
-              {this.props.appStore.order_count}
-            </Text>
-          </View>*/}
-          <View style={styles.profileCountsContainer}>
-            {/*<TouchableOpacity onPress={this._userEdit}>
-              <Icon name='md-settings' size={30} color='rgba(255,255,255,.9)'/>
-            </TouchableOpacity>*/}
-          </View>
-          <View style={styles.profileCountsContainer}>
-            {/*<TouchableOpacity onPress={this._logOut}>
-              <Icon name='md-log-out' size={30} color='rgba(255,255,255,.9)'/>
-            </TouchableOpacity>*/}
-          </View>
-        </View>
+      <ScrollView style={styles.container}>
         <ListView
           automaticallyAdjustContentInsets={true}
           initialListSize={1}
@@ -91,18 +76,22 @@ export default class Profile extends Component {
           onEndReached={this._onEndReached}
           onEndReachedThreshold={1}
         />
-      </View>
+      </ScrollView>
     )
   }
 
   _renderRow = (data) => {
     const timeString = moment(data.updatedAt).fromNow()
     return (
-      <TouchableOpacity onPress={() => this._openChat(data)}>
+      <TouchableOpacity>
         <View style={styles.card}>
-          <Text style={styles.title}>{ data.title }</Text>
-          <Text style={styles.info}>{data.price}</Text>
-          <Text style={styles.info}>{timeString}</Text>
+          <View style={styles.content}>
+            <View style={styles.HeaderContainer}>
+              <Text style={styles.title}>{ data.title }</Text>
+              <Text style={styles.info}>{data.price}</Text>
+              <Text style={styles.info}>{timeString}</Text>
+            </View>
+          </View>
         </View>
       </TouchableOpacity>
     )
@@ -159,7 +148,9 @@ export default class Profile extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    paddingTop: 15,
+    backgroundColor: '#f9f9f9'
   },
   profileInfoContainer: {
     flexDirection: 'row',
@@ -201,8 +192,10 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     borderBottomWidth: 1,
-    borderColor: '#999',
-    margin: 2,
+    borderColor: 'grey',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    paddingVertical: 10,
+    backgroundColor: 'white',
   },
   title: {
     fontSize: 16,
@@ -214,4 +207,34 @@ const styles = StyleSheet.create({
     padding: 3,
     fontSize: 13,
   },
+  RawContainer: {
+    flexDirection: 'row',
+    flex: 1,
+    //borderWidth: 1,
+  },
+  LeftContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    //borderWidth: 1,
+  },
+  RightContainer: {
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    //borderWidth: 1,
+  },
+  HeaderContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 6
+  },
 })
+
+// renderitem previous display
+// <TouchableOpacity >
+//         <View style={styles.card}>
+//           <Text style={styles.title}>{ data.title }</Text>
+//           <Text style={styles.info}>{data.price}</Text>
+//           <Text style={styles.info}>{timeString}</Text>
+//         </View>
+//       </TouchableOpacity>

@@ -49,9 +49,12 @@ buck-out/
 \.buckd/
 *.keystore
 
+functions/
 
 gradle.properties
 
+.env
+.babelrc
 
 # fastlane
 #
